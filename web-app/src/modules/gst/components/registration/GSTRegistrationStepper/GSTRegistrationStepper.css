@@ -34,12 +34,10 @@
   border: none;
   padding: 0;
   cursor: default;
-  font-family: inherit;
-  transition: all 0.2s ease;
-  min-width: 72px;
 }
 
-.gst-reg-stepper__step--completed {
+.gst-reg-stepper__step--completed,
+.gst-reg-stepper__step--current {
   cursor: pointer;
 }
 

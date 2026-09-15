@@ -3,10 +3,7 @@ import {
   validatePan,
   validateIfsc,
   validatePincode,
-  validateMobileNumber,
   validateEmail,
-  validateDobSignatory,
-  validateCommencementDate,
   isValidBankAccNumber,
   isValidHsnSac,
 } from '@shared/utils'
@@ -84,14 +81,16 @@ export const GSTStepBusiness = ({
     clearErr('aadhaarConsent')
   }
 
+
+
   const validate = (): boolean => {
     const errs: Record<string, string> = {}
 
-    // 1. Business Details validation
+    // 1. Business Details
     if (!data.legalName.trim()) {
       errs.legalName = 'Legal name of business is required'
-    } else if (data.legalName.trim().length < 3) {
-      errs.legalName = 'Legal name must be at least 3 characters'
+    } else if (data.legalName.trim().length < 2) {
+      errs.legalName = 'Legal name must be at least 2 characters'
     }
 
     if (!data.tradeName.trim()) {
@@ -108,9 +107,8 @@ export const GSTStepBusiness = ({
       errs.natureOfBusiness = 'Please select nature of business'
     }
 
-    const commDateErr = validateCommencementDate(data.commencementDate)
-    if (commDateErr) {
-      errs.commencementDate = commDateErr
+    if (!data.commencementDate) {
+      errs.commencementDate = 'Date of commencement is required'
     }
 
     if (!data.registrationReason) {
@@ -154,11 +152,11 @@ export const GSTStepBusiness = ({
       errs.hsnSacCode = 'Enter a valid 2 to 8 digit HSN/SAC code'
     }
 
-    // 2. Bank Details validation
+    // 2. Bank Details
     if (!data.accountHolderName.trim()) {
       errs.accountHolderName = 'Account holder name is required'
-    } else if (data.accountHolderName.trim().length < 3) {
-      errs.accountHolderName = 'Account holder name must be at least 3 characters'
+    } else if (data.accountHolderName.trim().length < 2) {
+      errs.accountHolderName = 'Account holder name must be at least 2 characters'
     }
 
     if (!data.accountNumber.trim()) {
@@ -190,11 +188,11 @@ export const GSTStepBusiness = ({
       errs.accountType = 'Please select account type'
     }
 
-    // 3. Authorised Signatory validation
+    // 3. Authorised Signatory
     if (!data.signatoryName.trim()) {
       errs.signatoryName = 'Authorised signatory name is required'
-    } else if (data.signatoryName.trim().length < 3) {
-      errs.signatoryName = 'Signatory name must be at least 3 characters'
+    } else if (data.signatoryName.trim().length < 2) {
+      errs.signatoryName = 'Signatory name must be at least 2 characters'
     }
 
     const panErr = validatePan(data.signatoryPan)
@@ -202,18 +200,19 @@ export const GSTStepBusiness = ({
       errs.signatoryPan = panErr
     }
 
-    const dobErr = validateDobSignatory(data.dob)
-    if (dobErr) {
-      errs.dob = dobErr
+    if (!data.dob) {
+      errs.dob = 'Date of birth is required'
     }
 
     if (!data.designation.trim()) {
       errs.designation = 'Signatory designation is required'
     }
 
-    const mobErr = validateMobileNumber(data.signatoryMobile)
-    if (mobErr) {
-      errs.signatoryMobile = mobErr
+    const cleanedMobile = data.signatoryMobile.replace(/\D/g, '').trim()
+    if (!cleanedMobile) {
+      errs.signatoryMobile = 'Mobile number is required'
+    } else if (cleanedMobile.length !== 10) {
+      errs.signatoryMobile = 'Mobile number must be exactly 10 digits'
     }
 
     const emailErr = validateEmail(data.signatoryEmail)
@@ -221,7 +220,7 @@ export const GSTStepBusiness = ({
       errs.signatoryEmail = emailErr
     }
 
-    // 4. Aadhaar Consent validation
+    // 4. Aadhaar Consent
     if (!data.aadhaarConsent) {
       errs.aadhaarConsent = 'Please check the box to grant consent for Aadhaar e-KYC authentication'
     }
@@ -237,8 +236,14 @@ export const GSTStepBusiness = ({
         const firstErrorEl = document.querySelector('.gst-field-error, .gst-input--error')
         if (firstErrorEl) {
           firstErrorEl.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          if (firstErrorEl instanceof HTMLInputElement || firstErrorEl instanceof HTMLSelectElement) {
+            firstErrorEl.focus()
+          } else {
+            const inputInside = firstErrorEl.closest('.gst-form-group')?.querySelector('input, select') as HTMLElement | null
+            inputInside?.focus()
+          }
         }
-      }, 50)
+      }, 60)
       return
     }
     onNext()
@@ -312,7 +317,10 @@ export const GSTStepBusiness = ({
           Back
         </button>
 
-        <button type="submit" className="gst-btn-continue">
+        <button
+          type="submit"
+          className="gst-btn-continue"
+        >
           <span>Continue to Documents</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="gst-btn-continue__icon">
             <line x1="5" y1="12" x2="19" y2="12" />

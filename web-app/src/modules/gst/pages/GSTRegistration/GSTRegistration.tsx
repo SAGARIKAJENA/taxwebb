@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom'
 import { routePaths } from '@core/config'
 import { useAppStore, useAuthStore } from '@store/index'
 import { userStorage } from '@core/storage/userStorage'
@@ -23,11 +23,24 @@ export const GSTRegistration = () => {
   const pushToast = useAppStore((state) => state.pushToast)
   const user = useAuthStore((state) => state.user)
 
+  const [searchParams, setSearchParams] = useSearchParams()
+  const location = useLocation()
+
   // Check for saved draft on initial load
   const [existingDraft] = useState(() => userStorage.getDraft('gst-registration'))
   const [isDraftModalOpen, setIsDraftModalOpen] = useState<boolean>(false)
 
   const [currentStep, setCurrentStep] = useState<number>(() => {
+    const stepParam = new URLSearchParams(window.location.search).get('step')?.toLowerCase()
+    if (stepParam === 'documents' || stepParam === '2' || window.location.pathname.includes('document')) {
+      return 2
+    }
+    if (stepParam === 'review' || stepParam === '3' || window.location.pathname.includes('review')) {
+      return 3
+    }
+    if (stepParam === 'payment' || stepParam === '4' || window.location.pathname.includes('payment')) {
+      return 4
+    }
     if (existingDraft && existingDraft.currentStep <= 4) {
       return existingDraft.currentStep
     }
@@ -157,34 +170,51 @@ export const GSTRegistration = () => {
     setIsDraftModalOpen(false)
   }
 
-  const handleStep1Next = () => {
-    setCurrentStep(2)
+  const goToStep = (step: number) => {
+    setCurrentStep(step)
+    const stepNames: Record<number, string> = { 1: 'business', 2: 'documents', 3: 'review', 4: 'payment' }
+    if (stepNames[step]) {
+      setSearchParams({ step: stepNames[step] }, { replace: true })
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  // Keep currentStep in sync when URL search params or location changes
+  useEffect(() => {
+    const stepParam = searchParams.get('step')?.toLowerCase()
+    if (stepParam === 'documents' || stepParam === '2' || location.pathname.includes('document')) {
+      setCurrentStep(2)
+    } else if (stepParam === 'review' || stepParam === '3' || location.pathname.includes('review')) {
+      setCurrentStep(3)
+    } else if (stepParam === 'payment' || stepParam === '4' || location.pathname.includes('payment')) {
+      setCurrentStep(4)
+    } else if (stepParam === 'business' || stepParam === '1') {
+      setCurrentStep(1)
+    }
+  }, [searchParams, location.pathname])
+
+  const handleStep1Next = () => {
+    goToStep(2)
   }
 
   const handleStep2Back = () => {
-    setCurrentStep(1)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    goToStep(1)
   }
 
   const handleStep2Next = () => {
-    setCurrentStep(3)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    goToStep(3)
   }
 
   const handleStep3Back = () => {
-    setCurrentStep(2)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    goToStep(2)
   }
 
   const handleStep3Proceed = () => {
-    setCurrentStep(4)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    goToStep(4)
   }
 
   const handleStep4Back = () => {
-    setCurrentStep(3)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    goToStep(3)
   }
 
   const handlePaymentSuccess = (result: PaymentResult) => {
@@ -233,7 +263,7 @@ export const GSTRegistration = () => {
         <div className="gst-reg-stepper-container">
           <GSTRegistrationStepper
             currentStep={currentStep}
-            onStepClick={(step) => setCurrentStep(step)}
+            onStepClick={(step) => goToStep(step)}
           />
         </div>
       )}

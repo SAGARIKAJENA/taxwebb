@@ -13,9 +13,6 @@ export type { GSTBankDetailsProps } from './GSTBankDetails/GSTBankDetails'
 export { GSTAuthorisedSignatory } from './GSTAuthorisedSignatory/GSTAuthorisedSignatory'
 export type { GSTAuthorisedSignatoryProps } from './GSTAuthorisedSignatory/GSTAuthorisedSignatory'
 
-export { GSTStepAddressBank } from './GSTStepAddressBank/GSTStepAddressBank'
-export type { AddressBankFormData } from './GSTStepAddressBank/GSTStepAddressBank'
-
 export { GSTStepDocuments } from './GSTStepDocuments/GSTStepDocuments'
 export type { UploadedDoc } from './GSTStepDocuments/GSTStepDocuments'
 
