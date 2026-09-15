@@ -1,0 +1,89 @@
+.gst-filing-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  margin: 0 0 24px 0;
+  padding: 0;
+}
+
+.gst-filing-stepper__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.gst-filing-stepper__badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.gst-filing-stepper__badge--completed {
+  background-color: #00b074;
+  color: #ffffff;
+}
+
+.gst-filing-stepper__badge--active {
+  background-color: #ff5722;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(255, 87, 34, 0.3);
+}
+
+.gst-filing-stepper__badge--pending {
+  background-color: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #64748b;
+}
+
+.gst-filing-stepper__check-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.gst-filing-stepper__label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+.gst-filing-stepper__label--completed {
+  color: #1e293b;
+}
+
+.gst-filing-stepper__label--active {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.gst-filing-stepper__label--pending {
+  color: #64748b;
+}
+
+.gst-filing-stepper__line {
+  width: 42px;
+  height: 1px;
+  background-color: #e2e8f0;
+  margin: 0 12px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .gst-filing-stepper {
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+  
+  .gst-filing-stepper__line {
+    width: 20px;
+    margin: 0 8px;
+  }
+}

@@ -14,10 +14,10 @@ import {
 import './GSTFiling.css'
 
 const DEFAULT_FILING_DATA: FilingPeriodData = {
-  gstin: '27AXTPD4419K1ZP',
-  businessName: 'Shree Deshmukh Traders',
-  financialYear: 'FY 2026-27',
-  frequency: 'Monthly',
+  gstin: '',
+  businessName: '',
+  financialYear: '',
+  frequency: '',
   selectedMonth: '',
   returnType: '',
   baseFee: 0,
@@ -99,6 +99,8 @@ export const GSTFiling = () => {
         <GSTFilingDocuments
           selectedMonth={filingData.selectedMonth}
           baseFee={filingData.baseFee}
+          returnType={filingData.returnType}
+          frequency={filingData.frequency}
           onBack={() => {
             setCurrentStep(1)
             navigate('/gst/file-period')
@@ -113,6 +115,7 @@ export const GSTFiling = () => {
         <GSTFilingReview
           selectedMonth={filingData.selectedMonth}
           baseFee={filingData.baseFee}
+          filingData={filingData}
           onBack={() => {
             setCurrentStep(2)
             navigate('/gst/file-upload')

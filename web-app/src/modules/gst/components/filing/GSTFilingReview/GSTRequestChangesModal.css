@@ -1,0 +1,85 @@
+.gst-request-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 1rem;
+  animation: gstModalFadeIn 0.15s ease-out;
+}
+
+.gst-request-modal-card {
+  background: #ffffff;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 440px;
+  padding: 1.75rem 1.75rem 1.25rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  animation: gstModalScaleIn 0.15s ease-out;
+}
+
+.gst-request-modal-title {
+  margin: 0 0 1rem 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: -0.01em;
+}
+
+.gst-request-modal-body {
+  margin: 0 0 1.5rem 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: #374151;
+}
+
+.gst-request-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+
+.gst-request-modal-btn-ok {
+  background: transparent;
+  border: none;
+  color: #0284c7;
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  transition: all 0.15s ease;
+}
+
+.gst-request-modal-btn-ok:hover {
+  background-color: #f0f9ff;
+  color: #0369a1;
+}
+
+.gst-request-modal-btn-ok:active {
+  background-color: #e0f2fe;
+}
+
+@keyframes gstModalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes gstModalScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

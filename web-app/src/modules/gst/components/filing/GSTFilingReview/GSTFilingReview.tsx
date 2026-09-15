@@ -1,217 +1,161 @@
-import { useState } from 'react'
-import { formatCurrency } from '@shared/utils'
+import React, { useState } from 'react'
+import { GSTFilingStepper } from '../GSTFilingPeriod/GSTFilingStepper'
+import type { FilingPeriodData } from '../GSTFilingPeriod/GSTFilingPeriod'
+import {
+  GSTReviewFilingDetailsCard,
+  GSTReviewDocumentsSummaryCard,
+} from './GSTReviewFilingDetails'
+import {
+  GSTReviewTaxComputationCard,
+  GSTReviewFilingFeeCard,
+} from './GSTReviewComputation'
+import {
+  GSTReviewNextStepsCard,
+  GSTReviewAssuranceBox,
+} from './GSTReviewNextSteps'
+import { GSTRequestChangesModal } from './GSTRequestChangesModal'
+import {
+  getResolvedReviewDetails,
+  DEFAULT_TAX_COMPUTATION,
+  NET_TAX_LIABILITY,
+  DEFAULT_FILING_FEES,
+  TOTAL_PAYABLE_FEE,
+  DEFAULT_DOC_SUMMARY,
+} from './gstReviewData'
 import './GSTFilingReview.css'
 
-interface GSTFilingReviewProps {
+export interface GSTFilingReviewProps {
   selectedMonth?: string
   baseFee?: number
+  filingData?: Partial<FilingPeriodData>
   onBack: () => void
   onRequestChange?: () => void
   onApprove: () => void
 }
 
-export const GSTFilingReview = ({
-  selectedMonth = 'August 2026',
-  baseFee = 2500,
+export const GSTFilingReview: React.FC<GSTFilingReviewProps> = ({
+  selectedMonth,
+  filingData,
   onBack,
   onRequestChange,
   onApprove,
-}: GSTFilingReviewProps) => {
-  const [agreed, setAgreed] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+}) => {
+  const [showRequestModal, setShowRequestModal] = useState(false)
 
-  const gstAmount = Math.round(baseFee * 0.18)
-  const totalPayable = baseFee + gstAmount
+  const details = getResolvedReviewDetails({
+    ...filingData,
+    selectedMonth: selectedMonth || filingData?.selectedMonth,
+  })
 
-  const handleApproveClick = () => {
-    if (!agreed) {
-      setError('Please check the declaration box to authorize TaxEdge to file your GST return.')
-      return
-    }
-    setError(null)
-    onApprove()
-  }
-
-  const outwardSupplies = [
-    { desc: 'B2B supplies', taxable: 1284000, cgst: 115560, sgst: 115560, igst: 0 },
-    { desc: 'B2C (large)', taxable: 312500, cgst: 28125, sgst: 28125, igst: 0 },
-    { desc: 'B2C (small)', taxable: 246000, cgst: 22140, sgst: 22140, igst: 0 },
-    { desc: 'Credit notes', taxable: -24800, cgst: -2232, sgst: -2232, igst: 0 },
-  ]
-
-  const totalTaxable = 1817700
-  const totalCGST = 163593
-  const totalSGST = 163593
-  const totalIGST = 0
+  // Format return type and period labels for the top-right badge
+  const returnTypeDisplay = details.returnForm || 'gstr1_3b_monthly'
+  const periodDisplay = details.filingPeriod || 'December 2025'
 
   return (
-    <div className="gst-review-wrapper">
-      <header className="gst-review-header">
-        <div className="gst-review-header__left">
-          <h1 className="gst-review-header__title">Review your return</h1>
-          <p className="gst-review-header__subtitle">Prepared by Rohit Kulkarni on 1 September 2026. Approve it and we file the same day.</p>
+    <div className="gst-review-page">
+      {/* Stepper and Top-Right Meta Badge */}
+      <div className="gst-review-top-bar">
+        <div className="gst-review-stepper-wrap">
+          <GSTFilingStepper currentStep={4} />
         </div>
-        <span className="gst-review-header__badge">
-          <span className="gst-review-badge-dot" /> Awaiting your approval
-        </span>
+        <div className="gst-review-top-meta">
+          <span className="gst-review-top-meta__label">GST Return</span>
+          <span className="gst-review-top-meta__return-type">{returnTypeDisplay}</span>
+          <span className="gst-review-top-meta__period">{periodDisplay}</span>
+        </div>
+      </div>
+
+      {/* Main Page Header */}
+      <header className="gst-review-header">
+        <h1 className="gst-review-title">Filing Review & Computation</h1>
+        <p className="gst-review-subtitle">
+          Review your details, check the computed tax figures and proceed to file your GST return.
+        </p>
       </header>
 
-      <div className="gst-review-layout">
-        <main className="gst-review-main">
-          {/* Outward supplies — GSTR-1 */}
-          <section className="gst-review-card">
-            <h2 className="gst-review-card__title">Outward supplies — GSTR-1</h2>
-            <div className="gst-review-table-wrap">
-              <table className="gst-review-table">
-                <thead>
-                  <tr>
-                    <th>Description</th>
-                    <th>Taxable value</th>
-                    <th>CGST</th>
-                    <th>SGST</th>
-                    <th>IGST</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {outwardSupplies.map((row, idx) => (
-                    <tr key={idx}>
-                      <td><b>{row.desc}</b></td>
-                      <td className="gst-review-num">{formatCurrency(row.taxable)}</td>
-                      <td className="gst-review-num">{formatCurrency(row.cgst)}</td>
-                      <td className="gst-review-num">{formatCurrency(row.sgst)}</td>
-                      <td className="gst-review-num">{formatCurrency(row.igst)}</td>
-                    </tr>
-                  ))}
-                  <tr className="gst-review-table__total-row">
-                    <td><b>Total</b></td>
-                    <td className="gst-review-num"><b>{formatCurrency(totalTaxable)}</b></td>
-                    <td className="gst-review-num"><b>{formatCurrency(totalCGST)}</b></td>
-                    <td className="gst-review-num"><b>{formatCurrency(totalSGST)}</b></td>
-                    <td className="gst-review-num"><b>{formatCurrency(totalIGST)}</b></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
-
-          {/* Summary — GSTR-3B */}
-          <section className="gst-review-card">
-            <h2 className="gst-review-card__title">Summary — GSTR-3B</h2>
-            <div className="gst-review-summary-rows">
-              <div className="gst-review-srow">
-                <span className="gst-review-srow__k">Output tax liability</span>
-                <span className="gst-review-srow__v">{formatCurrency(327186)}</span>
-              </div>
-              <div className="gst-review-srow">
-                <span className="gst-review-srow__k">Input tax credit available</span>
-                <span className="gst-review-srow__v">{formatCurrency(196400)}</span>
-              </div>
-              <div className="gst-review-srow">
-                <span className="gst-review-srow__k">ITC reversed</span>
-                <span className="gst-review-srow__v">{formatCurrency(4200)}</span>
-              </div>
-              <div className="gst-review-srow">
-                <span className="gst-review-srow__k">Cash ledger balance</span>
-                <span className="gst-review-srow__v">{formatCurrency(18000)}</span>
-              </div>
-              <div className="gst-review-srow gst-review-srow--highlight">
-                <span className="gst-review-srow__k-bold">Net tax payable in cash</span>
-                <span className="gst-review-srow__v-bold">{formatCurrency(116986)}</span>
-              </div>
-            </div>
-          </section>
-
-          {/* Declaration Card */}
-          <section className="gst-review-card">
-            <h3 className="gst-review-declaration__title">Your approval</h3>
-            <label className="gst-review-checkbox-label">
-              <input
-                type="checkbox"
-                checked={agreed}
-                onChange={(e) => {
-                  setAgreed(e.target.checked)
-                  if (e.target.checked) setError(null)
-                }}
-                className="gst-review-checkbox"
-              />
-              <span>
-                I have reviewed the figures above and confirm they reflect my books for {selectedMonth}. I authorise TaxEdge to file GSTR-1 and GSTR-3B on my behalf.
-              </span>
-            </label>
-            {error && (
-              <p style={{ margin: '0.75rem 0 0 0', color: '#b91c1c', fontSize: '0.84rem', fontWeight: 600 }}>
-                ⚠️ {error}
-              </p>
-            )}
-          </section>
-
-          {/* Actions */}
-          <div className="gst-review-actions">
-            <button
-              type="button"
-              className="gst-review-btn-ghost"
-              onClick={onRequestChange || onBack}
-            >
-              Request a change
-            </button>
-            <button
-              type="button"
-              className="gst-review-btn-continue"
-              onClick={handleApproveClick}
-            >
-              Approve &amp; pay →
-            </button>
-          </div>
-        </main>
-
-        {/* Sidebar */}
-        <aside className="gst-review-sidebar">
-          {/* Order Summary Card */}
-          <div className="gst-review-order-card">
-            <h3 className="gst-review-order-card__title">Order summary</h3>
-            <div className="gst-review-order-card__table">
-              <div className="gst-review-order-card__row">
-                <span className="gst-review-order-card__label">GST Filing — {selectedMonth.split(' ')[0].substring(0, 3)} {selectedMonth.split(' ')[1]}</span>
-                <span className="gst-review-order-card__value">{formatCurrency(baseFee)}</span>
-              </div>
-              <div className="gst-review-order-card__row">
-                <span className="gst-review-order-card__label">GST @ 18%</span>
-                <span className="gst-review-order-card__value">{formatCurrency(gstAmount)}</span>
-              </div>
-              <div className="gst-review-order-card__divider" />
-              <div className="gst-review-order-card__row gst-review-order-card__row--total">
-                <span className="gst-review-order-card__total-label">Total payable</span>
-                <span className="gst-review-order-card__total-amount">{formatCurrency(totalPayable)}</span>
-              </div>
-            </div>
-            <div className="gst-review-order-card__delivery">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="gst-review-clock-icon">
-                <circle cx="12" cy="12" r="10" />
-                <polyline points="12 6 12 12 16 14" />
-              </svg>
-              <span>Filed within 1 working day</span>
-            </div>
-          </div>
-
-          <div className="gst-review-note">
-            <div className="gst-review-note__icon-box" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" />
-              </svg>
-            </div>
-            <div className="gst-review-note__content">
-              <h4 className="gst-review-note__title">Tax payable is separate</h4>
-              <p className="gst-review-note__desc">
-                {formatCurrency(116986)} of GST must be paid to the department from your cash ledger. The fee above is only the TaxEdge professional fee.
-              </p>
-            </div>
-          </div>
-        </aside>
+      {/* Dark Navy "Ready for Review" Banner */}
+      <div className="gst-review-ready-banner" role="status">
+        <div className="gst-review-ready-banner__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+        <div className="gst-review-ready-banner__content">
+          <h2 className="gst-review-ready-banner__title">Ready for Review</h2>
+          <p className="gst-review-ready-banner__subtitle">
+            TaxEdge CA has prepared return computation based on your verified business records.
+          </p>
+        </div>
       </div>
+
+      {/* 2-Column Responsive Layout */}
+      <div className="gst-review-layout-grid">
+        {/* Left Column */}
+        <div className="gst-review-col-left">
+          <GSTReviewFilingDetailsCard details={details} />
+          <GSTReviewTaxComputationCard
+            items={DEFAULT_TAX_COMPUTATION}
+            netLiability={NET_TAX_LIABILITY}
+          />
+          <GSTReviewFilingFeeCard
+            items={DEFAULT_FILING_FEES}
+            totalFee={TOTAL_PAYABLE_FEE}
+          />
+        </div>
+
+        {/* Right Column */}
+        <div className="gst-review-col-right">
+          <GSTReviewDocumentsSummaryCard summaryItems={DEFAULT_DOC_SUMMARY} />
+          <GSTReviewNextStepsCard />
+          <GSTReviewAssuranceBox />
+        </div>
+      </div>
+
+      {/* Bottom Divider & Action Bar */}
+      <hr className="gst-review-divider" />
+
+      <footer className="gst-review-actions">
+        <button
+          type="button"
+          className="gst-review-btn-back"
+          onClick={onBack}
+        >
+          ← Back
+        </button>
+
+        <div className="gst-review-actions__right">
+          <button
+            type="button"
+            className="gst-review-btn-request"
+            onClick={() => setShowRequestModal(true)}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+            </svg>
+            <span>Request Changes / Recalculate</span>
+          </button>
+
+          <button
+            type="button"
+            className="gst-review-btn-approve"
+            onClick={onApprove}
+          >
+            <span>Proceed to Payment →</span>
+          </button>
+        </div>
+      </footer>
+
+      {/* Confirmation Modal */}
+      <GSTRequestChangesModal
+        isOpen={showRequestModal}
+        onClose={() => {
+          setShowRequestModal(false)
+          if (onRequestChange) {
+            // keep user on page or allow further actions
+          }
+        }}
+      />
     </div>
   )
 }
-
-export default GSTFilingReview

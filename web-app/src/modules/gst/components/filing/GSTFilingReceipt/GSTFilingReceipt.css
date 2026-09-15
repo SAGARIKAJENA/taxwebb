@@ -1,57 +1,592 @@
-.gst-receipt-wrapper { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 640px; margin: 0 auto; gap: 1.25rem; }
-.gst-receipt-top-bar { display: flex; align-items: center; justify-content: space-between; width: 100%; }
-.gst-receipt-btn-back, .gst-receipt-btn-secondary { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1rem; font-size: 0.85rem; font-weight: 600; color: var(--color-text, #172033); background: #ffffff; border: 1px solid var(--color-border, #cbd5e1); border-radius: 9999px; cursor: pointer; transition: all var(--transition-fast, 0.15s ease); }
-.gst-receipt-btn-back:hover, .gst-receipt-btn-secondary:hover { background: #f8fafc; border-color: var(--taxedge-blue, #0b5ed7); }
-.gst-receipt-top-actions { display: flex; align-items: center; gap: 0.5rem; }
-.gst-receipt-btn-primary { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1.15rem; font-size: 0.85rem; font-weight: 700; color: #ffffff; background: var(--taxedge-orange, #f97316); border: none; border-radius: 9999px; cursor: pointer; box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3); transition: all var(--transition-fast, 0.15s ease); }
-.gst-receipt-btn-primary:hover { background: #ea580c; box-shadow: 0 4px 14px rgba(249, 115, 22, 0.4); }
-.gst-receipt-icon-sm { width: 15px; height: 15px; }
-.gst-receipt-card { width: 100%; background: #ffffff; border: 1px solid var(--color-border, #e2e8f0); border-radius: var(--radius-lg, 20px); overflow: hidden; box-shadow: 0 8px 30px rgba(8, 59, 117, 0.08); }
-.gst-receipt-card__header { background: var(--taxedge-gradient, linear-gradient(135deg, #061933 0%, #083b75 50%, #0c4a94 100%)); color: #ffffff; padding: 1.5rem 1.75rem; }
-.gst-receipt-brand-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
-.gst-receipt-brand-left { display: flex; align-items: center; gap: 0.85rem; }
-.gst-receipt-brand-mark { width: 40px; height: 40px; border-radius: 10px; background: rgba(255, 255, 255, 0.18); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1rem; color: #ffffff; flex-shrink: 0; }
-.gst-receipt-brand-name { margin: 0; font-size: 1.15rem; font-weight: 800; color: #ffffff; letter-spacing: -0.01em; }
-.gst-receipt-brand-gstin { margin: 2px 0 0 0; font-size: 0.78rem; color: rgba(255, 255, 255, 0.75); }
-.gst-receipt-brand-right { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
-.gst-receipt-type-tag { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255, 255, 255, 0.7); font-weight: 700; }
-.gst-receipt-inv-num { font-size: 0.95rem; font-weight: 800; color: #ffffff; font-variant-numeric: tabular-nums; }
-.gst-receipt-card__body { padding: 1.75rem; display: flex; flex-direction: column; gap: 1.25rem; }
-.gst-receipt-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-.gst-receipt-meta-col { display: flex; flex-direction: column; }
-.gst-receipt-meta-col--right { align-items: flex-end; text-align: right; }
-.gst-receipt-eyebrow { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted, #64748b); margin-bottom: 0.35rem; }
-.gst-receipt-customer-name { margin: 0 0 0.25rem 0; font-size: 0.95rem; font-weight: 700; color: var(--color-text, #172033); }
-.gst-receipt-customer-addr { margin: 0; font-size: 0.825rem; color: var(--color-text-muted, #64748b); line-height: 1.45; }
-.gst-receipt-customer-gstin { margin: 0.35rem 0 0 0; font-size: 0.8rem; color: var(--taxedge-navy, #083b75); font-weight: 600; }
-.gst-receipt-info-row { font-size: 0.825rem; display: flex; gap: 0.4rem; line-height: 1.5; }
-.gst-receipt-info-k { color: var(--color-text-muted, #64748b); }
-.gst-receipt-info-v { color: var(--color-text, #172033); font-weight: 600; }
-.gst-receipt-perforated-line { position: relative; height: 1px; border-top: 2px dashed var(--color-border, #cbd5e1); margin: 0.25rem -1.75rem; }
-.gst-receipt-perforated-line::before, .gst-receipt-perforated-line::after { content: ''; position: absolute; top: -9px; width: 16px; height: 16px; border-radius: 50%; background: var(--color-bg, #f7f9fc); }
-.gst-receipt-perforated-line::before { left: -8px; }
-.gst-receipt-perforated-line::after { right: -8px; }
-.gst-receipt-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
-.gst-receipt-table th { text-align: left; padding: 0.6rem 0; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-muted, #64748b); border-bottom: 1px solid var(--color-border, #e2e8f0); }
-.gst-receipt-table td { padding: 0.85rem 0; border-bottom: 1px solid var(--color-border, #f1f5f9); color: var(--color-text, #172033); }
-.gst-receipt-sac { color: var(--color-text-muted, #64748b); }
-.gst-receipt-num { text-align: right; font-variant-numeric: tabular-nums; }
-.gst-receipt-item-desc { font-size: 0.78rem; color: var(--color-text-muted, #64748b); margin-top: 2px; }
-.gst-receipt-totals-box { display: flex; flex-direction: column; gap: 0.5rem; margin-left: auto; width: 100%; max-width: 260px; }
-.gst-receipt-totals-row { display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; }
-.gst-receipt-totals-k { color: var(--color-text-muted, #64748b); }
-.gst-receipt-totals-v { font-weight: 600; color: var(--color-text, #172033); font-variant-numeric: tabular-nums; }
-.gst-receipt-totals-row--grand { margin-top: 0.35rem; padding-top: 0.6rem; border-top: 1.5px solid var(--color-border, #cbd5e1); }
-.gst-receipt-totals-grand-k { font-weight: 700; color: var(--color-text, #172033); font-size: 0.95rem; }
-.gst-receipt-totals-grand-v { font-size: 1.15rem; font-weight: 800; color: var(--taxedge-blue, #0b5ed7); font-variant-numeric: tabular-nums; }
-.gst-receipt-payment-footer { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; }
-.gst-receipt-pay-method { font-size: 0.85rem; font-weight: 600; color: var(--color-text, #172033); }
-.gst-receipt-pay-txn { font-size: 0.78rem; color: var(--color-text-muted, #64748b); font-variant-numeric: tabular-nums; }
-.gst-receipt-paid-badge { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.3rem 0.85rem; font-size: 0.8rem; font-weight: 700; background: var(--taxedge-light-blue, #eaf1fe); color: var(--taxedge-navy, #083b75); border-radius: 9999px; }
-.gst-receipt-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--taxedge-blue, #0b5ed7); }
-.gst-receipt-legal-note { margin: 0.5rem 0 0 0; font-size: 0.75rem; color: var(--color-text-muted, #94a3b8); text-align: center; line-height: 1.45; }
+.gst-receipt-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  gap: 1.25rem;
+  padding: 0.5rem 1rem 2.5rem;
+}
+
+/* 1. Transaction Summary Top Card */
+.gst-txn-summary-card {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: 14px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  overflow: hidden;
+  padding: 1.25rem 1.5rem;
+}
+
+.gst-txn-summary-header {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 1.25rem;
+}
+
+.gst-txn-summary-icon-box {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #eff6ff;
+  color: #2563eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gst-txn-summary-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.gst-txn-summary-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.01em;
+}
+
+.gst-txn-summary-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1.3fr 1fr 1.3fr 1fr;
+  gap: 1.25rem;
+}
+
+.gst-txn-summary-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.gst-txn-summary-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #64748b;
+}
+
+.gst-txn-summary-val {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.gst-txn-summary-val--amount {
+  font-size: 1.05rem;
+}
+
+.gst-txn-summary-sub {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.gst-txn-summary-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #16a34a;
+}
+
+.gst-txn-summary-status-icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* 2. Main 2-Column Section */
+.gst-receipt-main-layout {
+  display: grid;
+  grid-template-columns: 1fr 310px;
+  gap: 1.25rem;
+  width: 100%;
+  align-items: start;
+}
+
+/* Left: Tax Invoice Card */
+.gst-receipt-card {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(8, 59, 117, 0.04);
+}
+
+.gst-receipt-card__header {
+  background: #083b75;
+  color: #ffffff;
+  padding: 1.25rem 1.5rem;
+}
+
+.gst-receipt-brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.gst-receipt-brand-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.gst-receipt-brand-mark {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.gst-receipt-brand-name {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.gst-receipt-brand-gstin {
+  margin: 2px 0 0 0;
+  font-size: 0.75rem;
+  color: #93c5fd;
+}
+
+.gst-receipt-brand-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.gst-receipt-type-tag {
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #93c5fd;
+  font-weight: 700;
+}
+
+.gst-receipt-inv-num {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.gst-receipt-card__body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.gst-receipt-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.gst-receipt-meta-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.gst-receipt-meta-col--right {
+  align-items: flex-start;
+}
+
+.gst-receipt-eyebrow {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+  margin-bottom: 0.4rem;
+}
+
+.gst-receipt-customer-name {
+  margin: 0 0 0.2rem 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.gst-receipt-customer-addr {
+  margin: 0;
+  font-size: 0.82rem;
+  color: #64748b;
+  line-height: 1.45;
+}
+
+.gst-receipt-info-row {
+  font-size: 0.82rem;
+  display: flex;
+  gap: 0.4rem;
+  line-height: 1.55;
+}
+
+.gst-receipt-info-k {
+  color: #64748b;
+  min-width: 105px;
+}
+
+.gst-receipt-info-v {
+  color: #0f172a;
+  font-weight: 600;
+}
+
+/* Items Table */
+.gst-receipt-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.25rem;
+}
+
+.gst-receipt-table th {
+  text-align: left;
+  padding: 0.6rem 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+  background: #f8fafc;
+  border-top: 1px solid #f1f5f9;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.gst-receipt-table td {
+  padding: 0.85rem 0.5rem;
+  border-bottom: 1px solid #f1f5f9;
+  color: #0f172a;
+  vertical-align: top;
+}
+
+.gst-receipt-item-title {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.gst-receipt-item-desc {
+  font-size: 0.78rem;
+  color: #64748b;
+  margin-top: 3px;
+}
+
+.gst-receipt-sac {
+  font-size: 0.85rem;
+  color: #0f172a;
+}
+
+.gst-receipt-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.88rem;
+}
+
+/* Totals Box */
+.gst-receipt-totals-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-left: auto;
+  width: 100%;
+  max-width: 260px;
+}
+
+.gst-receipt-totals-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  padding: 0.15rem 0.5rem;
+}
+
+.gst-receipt-totals-k {
+  color: #64748b;
+}
+
+.gst-receipt-totals-v {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.gst-receipt-totals-row--grand {
+  margin-top: 0.25rem;
+  background: #eff6ff;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+}
+
+.gst-receipt-totals-grand-k {
+  font-weight: 700;
+  color: #1e40af;
+  font-size: 0.88rem;
+}
+
+.gst-receipt-totals-grand-v {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #1d4ed8;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Footer of invoice */
+.gst-receipt-payment-footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+.gst-receipt-pay-method {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.gst-receipt-pay-txn {
+  font-size: 0.78rem;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.gst-receipt-paid-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: #e0f2fe;
+  color: #0369a1;
+  border-radius: 9999px;
+}
+
+.gst-receipt-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #0284c7;
+}
+
+/* Right: Sidebar */
+.gst-receipt-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.gst-receipt-side-card {
+  background: #ffffff;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: 14px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.gst-receipt-side-card__header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1.1rem;
+}
+
+.gst-receipt-side-card__icon-box {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #eff6ff;
+  color: #2563eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gst-receipt-side-card__icon {
+  width: 17px;
+  height: 17px;
+}
+
+.gst-receipt-side-card__title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.gst-receipt-stepper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.gst-receipt-step-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.gst-receipt-step-indicator {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #eff6ff;
+  border: 1.5px solid #bfdbfe;
+  color: #2563eb;
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.gst-receipt-step-indicator--completed {
+  background: #16a34a;
+  border-color: #16a34a;
+  color: #ffffff;
+}
+
+.gst-receipt-step-check {
+  width: 13px;
+  height: 13px;
+}
+
+.gst-receipt-step-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.gst-receipt-step-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.gst-receipt-step-desc {
+  font-size: 0.74rem;
+  color: #64748b;
+  line-height: 1.35;
+}
+
+.gst-receipt-help-text {
+  margin: 0 0 1rem 0;
+  font-size: 0.8rem;
+  color: #64748b;
+  line-height: 1.45;
+}
+
+.gst-receipt-help-btn {
+  width: 100%;
+  padding: 0.55rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #2563eb;
+  background: #ffffff;
+  border: 1.5px solid #bfdbfe;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.gst-receipt-help-btn:hover {
+  background: #eff6ff;
+  border-color: #2563eb;
+}
+
+/* 3. Bottom Action Buttons */
+.gst-receipt-bottom-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.gst-receipt-btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1.1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text, #172033);
+  background: #ffffff;
+  border: 1px solid var(--color-border, #cbd5e1);
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.gst-receipt-btn-back:hover {
+  background: #f8fafc;
+  border-color: var(--taxedge-blue, #0b5ed7);
+}
+
+.gst-receipt-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.gst-receipt-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.25rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ffffff;
+  background: var(--taxedge-orange, #f97316);
+  border: none;
+  border-radius: 9999px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
+  transition: all 0.15s ease;
+}
+
+.gst-receipt-btn-primary:hover {
+  background: #ea580c;
+  box-shadow: 0 4px 14px rgba(249, 115, 22, 0.4);
+}
+
+.gst-receipt-icon-sm {
+  width: 15px;
+  height: 15px;
+}
+
+/* Responsive */
+@media (max-width: 860px) {
+  .gst-receipt-main-layout {
+    grid-template-columns: 1fr;
+  }
+  .gst-txn-summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 540px) {
-  .gst-receipt-meta-grid { grid-template-columns: 1fr; }
-  .gst-receipt-meta-col--right { align-items: flex-start; text-align: left; }
-  .gst-receipt-totals-box { max-width: 100%; }
+  .gst-receipt-meta-grid {
+    grid-template-columns: 1fr;
+  }
+  .gst-txn-summary-grid {
+    grid-template-columns: 1fr;
+  }
 }
