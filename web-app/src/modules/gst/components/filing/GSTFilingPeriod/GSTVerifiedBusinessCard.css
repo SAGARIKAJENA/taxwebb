@@ -1,0 +1,90 @@
+.gst-verified-card {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 16px;
+  padding: 18px 22px;
+  margin-top: 14px;
+  box-shadow: 0 1px 3px rgba(16, 185, 129, 0.05);
+  animation: gstCardFadeIn 0.25s ease-out;
+}
+
+@keyframes gstCardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.gst-verified-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.gst-verified-card__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #dcfce7;
+  color: #15803d;
+  border-radius: 9999px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1px;
+}
+
+.gst-verified-card__badge-icon {
+  width: 16px;
+  height: 16px;
+  color: #16a34a;
+  flex-shrink: 0;
+}
+
+.gst-verified-card__state {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.gst-verified-card__content {
+  margin: 12px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.gst-verified-card__trade-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: #064e3b;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.gst-verified-card__legal-name {
+  font-size: 13.5px;
+  color: #475569;
+  margin: 0;
+}
+
+.gst-verified-card__bottom {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.gst-verified-card__scheme-badge {
+  display: inline-block;
+  background-color: #e0f2fe;
+  color: #0369a1;
+  border-radius: 6px;
+  padding: 4px 12px;
+  font-size: 12.5px;
+  font-weight: 600;
+}

@@ -1,0 +1,62 @@
+.gst-filing-frequency {
+  display: flex;
+  flex-direction: column;
+  grid-column: 1 / -1;
+}
+
+.gst-filing-frequency__label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.gst-filing-frequency__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.gst-filing-frequency__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  padding: 0 16px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.gst-filing-frequency__btn:hover {
+  border-color: #cbd5e1;
+  background-color: #fafaf9;
+}
+
+.gst-filing-frequency__btn--active {
+  background-color: #ff5722;
+  background: linear-gradient(135deg, #ff5722 0%, #ea580c 100%);
+  border: 1px solid transparent;
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(255, 87, 34, 0.35);
+}
+
+.gst-filing-frequency__btn--active:hover {
+  background: linear-gradient(135deg, #f4511e 0%, #d84315 100%);
+  color: #ffffff;
+}
+
+@media (max-width: 640px) {
+  .gst-filing-frequency__grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
