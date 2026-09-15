@@ -4,6 +4,7 @@ export interface NavItem {
   label: string
   to: string
   icon: string
+  iconImg?: string
   /** Optional key into the badge map DashboardLayout builds from live data. */
   badgeKey?: 'applications' | 'notifications'
 }
@@ -18,16 +19,18 @@ export const navSections: NavSection[] = [
     title: 'Overview',
     items: [
       { label: 'Dashboard', to: routePaths.dashboard, icon: '⌂' },
-      { label: 'All Services', to: routePaths.services, icon: '▦' },
     ],
   },
   {
     title: 'Services',
     items: [
+      { label: 'Incorporation', to: '#incorporation', icon: '🏢' },
       { label: 'GST', to: routePaths.gst.root, icon: '%' },
       { label: 'ITR & TDS', to: routePaths.itr.root, icon: '₹' },
+      { label: 'Projects', to: '#projects', icon: '📋' },
       { label: 'Loans', to: routePaths.loans, icon: '◈' },
       { label: 'Insurance', to: routePaths.insurance, icon: '☂' },
+      { label: 'Business', to: '#business', icon: '💼' },
     ],
   },
   {

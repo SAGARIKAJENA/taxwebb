@@ -5,11 +5,11 @@
 }
 
 .gst-step-documents-card {
-  background-color: var(--color-surface, #ffffff);
-  border: 1px solid var(--color-border, #e2e8f0);
-  border-radius: var(--radius-lg, 16px);
-  padding: 1.75rem 2rem;
-  box-shadow: var(--shadow-sm);
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
 }
 
 .gst-step-documents-card__header {
@@ -281,4 +281,27 @@
 
 .gst-doc-item__progress-fill--uploading {
   background-color: var(--taxedge-orange, #f97316);
+}
+
+/* Document Upload Validation Error Banner */
+.gst-doc-error-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  background-color: #fef2f2;
+  border: 1.5px solid #fca5a5;
+  color: #b91c1c;
+  padding: 0.75rem 1.15rem;
+  border-radius: 10px;
+  font-size: 0.86rem;
+  font-weight: 500;
+  margin-bottom: 1.25rem;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.gst-doc-error-banner svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  color: #dc2626;
 }

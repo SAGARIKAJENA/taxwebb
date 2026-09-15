@@ -1,20 +1,19 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom'
 import { routePaths } from '@core/config'
 import { useAppStore, useAuthStore } from '@store/index'
 import { userStorage } from '@core/storage/userStorage'
+import { DraftConfirmModal } from '@shared/components'
 
-import { GSTOrderSummary } from '../../components'
 import {
   GSTRegistrationStepper,
   GSTStepBusiness,
-  GSTStepAddressBank,
   GSTStepDocuments,
   GSTStepReview,
   GSTStepPayment,
   GSTPaymentSuccess,
-  type BusinessFormData,
-  type AddressBankFormData,
+  GSTSidebar,
+  type GstBusinessFormData,
   type PaymentResult,
 } from '../../components/registration'
 import './GSTRegistration.css'
@@ -24,34 +23,67 @@ export const GSTRegistration = () => {
   const pushToast = useAppStore((state) => state.pushToast)
   const user = useAuthStore((state) => state.user)
 
-  const [currentStep, setCurrentStep] = useState<number>(1)
-  const [businessData, setBusinessData] = useState<BusinessFormData>(() => ({
-    legalName: user?.fullName || '',
-    tradeName: '',
-    pan: user?.pan || '',
-    aadhaar: user?.aadhaar || '',
-    mobile: user?.mobile || '',
-    email: user?.email || '',
-    constitution: '',
-    natureOfBusiness: '',
-    principalActivity: '',
-    turnover: '',
-    compositionScheme: '',
-  }))
+  const [searchParams, setSearchParams] = useSearchParams()
+  const location = useLocation()
 
-  const [addressBankData, setAddressBankData] = useState<AddressBankFormData>(() => {
+  // Check for saved draft on initial load
+  const [existingDraft] = useState(() => userStorage.getDraft('gst-registration'))
+  const [isDraftModalOpen, setIsDraftModalOpen] = useState<boolean>(false)
+
+  const [currentStep, setCurrentStep] = useState<number>(() => {
+    const stepParam = new URLSearchParams(window.location.search).get('step')?.toLowerCase()
+    if (stepParam === 'documents' || stepParam === '2' || window.location.pathname.includes('document')) {
+      return 2
+    }
+    if (stepParam === 'review' || stepParam === '3' || window.location.pathname.includes('review')) {
+      return 3
+    }
+    if (stepParam === 'payment' || stepParam === '4' || window.location.pathname.includes('payment')) {
+      return 4
+    }
+    if (existingDraft && existingDraft.currentStep <= 4) {
+      return existingDraft.currentStep
+    }
+    return 1
+  })
+
+  const [businessData, setBusinessData] = useState<GstBusinessFormData>(() => {
+    if (existingDraft?.formData?.businessData) {
+      return existingDraft.formData.businessData as GstBusinessFormData
+    }
     const fullAddress = [user?.addressLine1, user?.addressLine2].filter(Boolean).join(', ')
     return {
-      address: fullAddress,
+      legalName: user?.fullName || '',
+      tradeName: '',
+      constitution: 'Proprietorship',
+      natureOfBusiness: '',
+      commencementDate: '',
+      registrationReason: '',
+      compositionScheme: 'No',
+      placeOfBusiness: '',
+      businessAddress: fullAddress || '',
       city: user?.city || '',
-      pinCode: user?.pincode || '',
+      district: '',
       state: user?.state || '',
-      possessionNature: '',
+      pinCode: user?.pincode || '',
+      hsnSacCode: '',
+
       accountHolderName: user?.fullName || '',
       accountNumber: '',
+      confirmAccountNumber: '',
       ifscCode: '',
+      bankName: '',
+      branch: '',
       accountType: '',
-      additionalPlaces: [],
+
+      signatoryName: user?.fullName || '',
+      signatoryPan: user?.pan || '',
+      dob: '',
+      designation: '',
+      signatoryMobile: user?.mobile || '',
+      signatoryEmail: user?.email || '',
+
+      aadhaarConsent: false,
     }
   })
 
@@ -70,73 +102,136 @@ export const GSTRegistration = () => {
     amount: 5900,
   }))
 
-  const handleBusinessChange = (field: keyof BusinessFormData, value: string) => {
+  // Auto-save draft whenever step or critical form data changes (before payment)
+  useEffect(() => {
+    if (currentStep <= 4) {
+      const now = new Date()
+      const timeStr = now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true })
+      userStorage.saveDraft({
+        serviceId: 'gst-registration',
+        serviceTitle: 'GST Registration',
+        currentStep,
+        totalSteps: 4,
+        stepLabel: getStepBreadcrumb(currentStep),
+        formData: {
+          businessData,
+        },
+        savedAt: timeStr,
+        savedTimestamp: Date.now(),
+        resumeRoute: routePaths.gst.registration,
+      })
+    }
+  }, [currentStep, businessData])
+
+  const handleBusinessChange = <K extends keyof GstBusinessFormData>(
+    field: K,
+    value: GstBusinessFormData[K]
+  ) => {
     setBusinessData((prev) => ({ ...prev, [field]: value }))
   }
 
-  const handleAddressBankChange = (
-    field: keyof AddressBankFormData,
-    value: string | string[]
-  ) => {
-    setAddressBankData((prev) => ({ ...prev, [field]: value }))
+  const handleCancel = () => {
+    if (currentStep <= 4) {
+      setIsDraftModalOpen(true)
+    } else {
+      navigate(routePaths.gst.root)
+    }
   }
 
-  const handleCancel = () => {
-    navigate(routePaths.gst.root)
+  const handleSaveAndExit = () => {
+    const now = new Date()
+    const timeStr = now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true })
+    userStorage.saveDraft({
+      serviceId: 'gst-registration',
+      serviceTitle: 'GST Registration',
+      currentStep,
+      totalSteps: 4,
+      stepLabel: getStepBreadcrumb(currentStep),
+      formData: {
+        businessData,
+      },
+      savedAt: timeStr,
+      savedTimestamp: Date.now(),
+      resumeRoute: routePaths.gst.registration,
+    })
+    setIsDraftModalOpen(false)
+    pushToast('Application saved as draft', 'success')
+    navigate(routePaths.dashboard)
   }
+
+  const handleDiscardAndExit = () => {
+    userStorage.deleteDraft('gst-registration')
+    setIsDraftModalOpen(false)
+    pushToast('Draft discarded', 'info')
+    navigate(routePaths.dashboard)
+  }
+
+  const handleKeepEditing = () => {
+    setIsDraftModalOpen(false)
+  }
+
+  const goToStep = (step: number) => {
+    setCurrentStep(step)
+    const stepNames: Record<number, string> = { 1: 'business', 2: 'documents', 3: 'review', 4: 'payment' }
+    if (stepNames[step]) {
+      setSearchParams({ step: stepNames[step] }, { replace: true })
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  // Keep currentStep in sync when URL search params or location changes
+  useEffect(() => {
+    const stepParam = searchParams.get('step')?.toLowerCase()
+    if (stepParam === 'documents' || stepParam === '2' || location.pathname.includes('document')) {
+      setCurrentStep(2)
+    } else if (stepParam === 'review' || stepParam === '3' || location.pathname.includes('review')) {
+      setCurrentStep(3)
+    } else if (stepParam === 'payment' || stepParam === '4' || location.pathname.includes('payment')) {
+      setCurrentStep(4)
+    } else if (stepParam === 'business' || stepParam === '1') {
+      setCurrentStep(1)
+    }
+  }, [searchParams, location.pathname])
 
   const handleStep1Next = () => {
-    setCurrentStep(2)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    goToStep(2)
   }
 
   const handleStep2Back = () => {
-    setCurrentStep(1)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    goToStep(1)
   }
 
   const handleStep2Next = () => {
-    setCurrentStep(3)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    goToStep(3)
   }
 
   const handleStep3Back = () => {
-    setCurrentStep(2)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    goToStep(2)
   }
 
-  const handleStep3Next = () => {
-    setCurrentStep(4)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+  const handleStep3Proceed = () => {
+    goToStep(4)
   }
 
   const handleStep4Back = () => {
-    setCurrentStep(3)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
-  const handleStep4Proceed = () => {
-    setCurrentStep(5)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
-  const handleStep5Back = () => {
-    setCurrentStep(4)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    goToStep(3)
   }
 
   const handlePaymentSuccess = (result: PaymentResult) => {
     setPaymentResult(result)
-    setCurrentStep(6)
+    setCurrentStep(5)
     pushToast('Payment of ₹5,900 successful', 'success')
     window.scrollTo({ top: 0, behavior: 'smooth' })
+
+    // Clear draft upon successful submission
+    userStorage.deleteDraft('gst-registration')
 
     // Keep and persist user application
     userStorage.saveUserApplication({
       id: `app-gst-${Date.now()}`,
       code: result.applicationRef || `GST-${new Date().getFullYear()}-0001`,
       title: 'GST Registration',
-      meta: `${businessData.tradeName || businessData.legalName || 'New Registration'} · ${addressBankData.state || 'India'}`,
+      meta: `${businessData.signatoryName || 'New Registration'} · ${businessData.state || 'India'}`,
       statusLabel: 'Submitted',
       statusTone: 'info',
       progress: 25,
@@ -145,44 +240,35 @@ export const GSTRegistration = () => {
     })
   }
 
-  const getStepBreadcrumb = () => {
-    if (currentStep === 1) return 'Business details'
-    if (currentStep === 2) return 'Address & bank'
-    if (currentStep === 3) return 'Upload'
-    if (currentStep === 4) return 'Review'
-    if (currentStep === 5) return 'Payment'
+  function getStepBreadcrumb(step = currentStep) {
+    if (step === 1) return 'Business'
+    if (step === 2) return 'Documents'
+    if (step === 3) return 'Review'
+    if (step === 4) return 'Payment'
     return 'Confirmation'
   }
 
   return (
     <div className="gst-reg-page">
-      {/* Top Breadcrumbs */}
-      <nav className="gst-reg-breadcrumb" aria-label="Breadcrumb">
-        <span
-          className="gst-reg-breadcrumb__item gst-reg-breadcrumb__item--link"
-          onClick={() => navigate(routePaths.gst.root)}
-        >
-          GST
-        </span>
-        <span className="gst-reg-breadcrumb__separator">→</span>
-        <span className="gst-reg-breadcrumb__item">Registration</span>
-        <span className="gst-reg-breadcrumb__separator">→</span>
-        <span className="gst-reg-breadcrumb__item gst-reg-breadcrumb__item--active">
-          {getStepBreadcrumb()}
-        </span>
-      </nav>
+      {/* Top Header */}
+      <div className="gst-reg-top-header">
+        <div className="gst-reg-header-titles">
+          <h1 className="gst-reg-title">GST Registration</h1>
+          <p className="gst-reg-subtitle">Complete your GST registration in a few simple steps</p>
+        </div>
+      </div>
 
-      {/* Stepper (Steps 1 to 5) */}
-      {currentStep <= 5 && (
+      {/* Stepper (Steps 1 to 4) */}
+      {currentStep <= 4 && (
         <div className="gst-reg-stepper-container">
           <GSTRegistrationStepper
             currentStep={currentStep}
-            onStepClick={(step) => setCurrentStep(step)}
+            onStepClick={(step) => goToStep(step)}
           />
         </div>
       )}
 
-      {/* Steps 1 to 4: Standard 2-column layout */}
+      {/* Steps 1 to 4: 2-column layout */}
       {currentStep <= 4 && (
         <div className="gst-reg-content-grid">
           <main className="gst-reg-main-content">
@@ -196,56 +282,54 @@ export const GSTRegistration = () => {
             )}
 
             {currentStep === 2 && (
-              <GSTStepAddressBank
-                data={addressBankData}
-                onChange={handleAddressBankChange}
-                onNext={handleStep2Next}
+              <GSTStepDocuments
                 onBack={handleStep2Back}
+                onNext={handleStep2Next}
               />
             )}
 
             {currentStep === 3 && (
-              <GSTStepDocuments
+              <GSTStepReview
+                businessData={businessData}
+                onEdit={() => setCurrentStep(1)}
                 onBack={handleStep3Back}
-                onNext={handleStep3Next}
+                onProceed={handleStep3Proceed}
               />
             )}
 
             {currentStep === 4 && (
-              <GSTStepReview
-                businessData={businessData}
-                addressBankData={addressBankData}
-                onEdit={() => setCurrentStep(1)}
+              <GSTStepPayment
+                amount={5900}
+                applicationRef="GST-2026-00118"
+                serviceTitle="GST Registration"
                 onBack={handleStep4Back}
-                onProceed={handleStep4Proceed}
+                onSuccess={handlePaymentSuccess}
               />
             )}
           </main>
 
           <aside className="gst-reg-sidebar">
-            <GSTOrderSummary step={currentStep} />
+            <GSTSidebar step={currentStep} />
           </aside>
         </div>
       )}
 
-      {/* Step 5: Complete Your Payment */}
+      {/* Step 5: Payment Successful Confirmation Screen */}
       {currentStep === 5 && (
-        <GSTStepPayment
-          amount={5900}
-          applicationRef="GST-2026-00118"
-          serviceTitle="GST Registration"
-          onBack={handleStep5Back}
-          onSuccess={handlePaymentSuccess}
-        />
-      )}
-
-      {/* Step 6: Payment Successful Confirmation Screen */}
-      {currentStep === 6 && (
         <GSTPaymentSuccess
           details={paymentResult}
           onBackToDashboard={() => navigate(routePaths.gst.root)}
         />
       )}
+
+      {/* Save Application Progress Confirmation Modal */}
+      <DraftConfirmModal
+        isOpen={isDraftModalOpen}
+        serviceTitle="GST registration"
+        onSaveAndExit={handleSaveAndExit}
+        onDiscardAndExit={handleDiscardAndExit}
+        onKeepEditing={handleKeepEditing}
+      />
     </div>
   )
 }

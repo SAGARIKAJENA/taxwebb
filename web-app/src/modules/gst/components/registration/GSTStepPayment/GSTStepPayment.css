@@ -22,22 +22,16 @@
 }
 
 .gst-step-payment__layout {
-  display: grid;
-  grid-template-columns: 1fr 340px;
-  gap: 1.75rem;
-  align-items: start;
-}
-
-@media (max-width: 960px) {
-  .gst-step-payment__layout {
-    grid-template-columns: 1fr;
-  }
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 .gst-payment-main {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  width: 100%;
 }
 
 .gst-payment-card {

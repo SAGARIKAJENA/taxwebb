@@ -1,25 +1,63 @@
-import { useState, type FormEvent } from 'react'
+import { useState, type FormEvent, type ChangeEvent } from 'react'
+import {
+  validatePan,
+  validateIfsc,
+  validatePincode,
+  validateEmail,
+  isValidBankAccNumber,
+  isValidHsnSac,
+} from '@shared/utils'
+import { GSTBusinessDetails } from '../GSTBusinessDetails/GSTBusinessDetails'
+import { GSTBankDetails } from '../GSTBankDetails/GSTBankDetails'
+import { GSTAuthorisedSignatory } from '../GSTAuthorisedSignatory/GSTAuthorisedSignatory'
 import './GSTStepBusiness.css'
 
-export interface BusinessFormData {
+export interface GstBusinessFormData {
+  // Business Details (matching mobile fields in exact order)
   legalName: string
   tradeName: string
-  pan: string
-  aadhaar: string
-  mobile: string
-  email: string
   constitution: string
   natureOfBusiness: string
-  principalActivity: string
-  turnover: string
+  commencementDate: string
+  registrationReason: string
   compositionScheme: string
+  placeOfBusiness: string
+  businessAddress: string
+  city: string
+  district: string
+  state: string
+  pinCode: string
+  hsnSacCode: string
+
+  // Bank Details (matching mobile fields in exact order)
+  accountHolderName: string
+  accountNumber: string
+  confirmAccountNumber: string
+  ifscCode: string
+  bankName: string
+  branch: string
+  accountType: string
+
+  // Authorised Signatory
+  signatoryName: string
+  signatoryPan: string
+  dob: string
+  designation: string
+  signatoryMobile: string
+  signatoryEmail: string
+
+  // Aadhaar Consent
+  aadhaarConsent: boolean
 }
 
+// Backward compatibility alias
+export type BusinessFormData = GstBusinessFormData
+
 interface GSTStepBusinessProps {
-  data: BusinessFormData
-  onChange: (field: keyof BusinessFormData, value: string) => void
+  data: GstBusinessFormData
+  onChange: <K extends keyof GstBusinessFormData>(field: K, value: GstBusinessFormData[K]) => void
   onNext: () => void
-  onCancel: () => void
+  onCancel?: () => void
 }
 
 export const GSTStepBusiness = ({
@@ -30,91 +68,161 @@ export const GSTStepBusiness = ({
 }: GSTStepBusinessProps) => {
   const [errors, setErrors] = useState<Record<string, string>>({})
 
-  const clearErr = (k: string) =>
+  const clearErr = (k: string) => {
     setErrors((prev) => {
       if (!prev[k]) return prev
       const { [k]: _, ...rest } = prev
       return rest
     })
-
-  const handleLegalNameChange = (val: string) => {
-    // Only text (letters and spaces), no numbers
-    const cleaned = val.replace(/[^a-zA-Z\s]/g, '')
-    onChange('legalName', cleaned)
-    clearErr('legalName')
   }
 
-  const handleTradeNameChange = (val: string) => {
-    // Only text (letters and spaces), no numbers
-    const cleaned = val.replace(/[^a-zA-Z\s]/g, '')
-    onChange('tradeName', cleaned)
-    clearErr('tradeName')
+  const handleConsentChange = (e: ChangeEvent<HTMLInputElement>) => {
+    onChange('aadhaarConsent', e.target.checked)
+    clearErr('aadhaarConsent')
   }
 
-  const handlePanChange = (val: string) => {
-    // Letters automatically uppercase, max 10 alphanumeric
-    const cleaned = val.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 10)
-    onChange('pan', cleaned)
-    clearErr('pan')
-  }
 
-  const handleAadhaarChange = (val: string) => {
-    // Numbers only, max 12 digits
-    const cleaned = val.replace(/\D/g, '').slice(0, 12)
-    onChange('aadhaar', cleaned)
-    clearErr('aadhaar')
-  }
 
-  const handleMobileChange = (val: string) => {
-    // Numbers only, max 10 digits
-    const cleaned = val.replace(/\D/g, '').slice(0, 10)
-    onChange('mobile', cleaned)
-    clearErr('mobile')
-  }
-
-  const handleEmailChange = (val: string) => {
-    onChange('email', val)
-    clearErr('email')
-  }
-
-  const validate = () => {
+  const validate = (): boolean => {
     const errs: Record<string, string> = {}
 
+    // 1. Business Details
     if (!data.legalName.trim()) {
-      errs.legalName = 'Legal name is required (letters only)'
-    } else if (data.legalName.trim().length < 3) {
-      errs.legalName = 'Legal name must be at least 3 characters'
+      errs.legalName = 'Legal name of business is required'
+    } else if (data.legalName.trim().length < 2) {
+      errs.legalName = 'Legal name must be at least 2 characters'
     }
 
-    const panClean = data.pan.trim().toUpperCase()
-    if (!panClean) {
-      errs.pan = 'PAN is required'
-    } else if (panClean.length !== 10) {
-      errs.pan = `PAN must be exactly 10 characters (currently ${panClean.length}/10)`
-    } else if (!/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(panClean)) {
-      errs.pan = 'Invalid PAN format (e.g. AXTPD4419K)'
+    if (!data.tradeName.trim()) {
+      errs.tradeName = 'Trade / brand name is required'
+    } else if (data.tradeName.trim().length < 2) {
+      errs.tradeName = 'Trade name must be at least 2 characters'
     }
 
-    const aadhaarClean = data.aadhaar.replace(/\D/g, '')
-    if (!aadhaarClean) {
-      errs.aadhaar = 'Aadhaar is required'
-    } else if (aadhaarClean.length !== 12) {
-      errs.aadhaar = `Aadhaar must be exactly 12 digits (currently ${aadhaarClean.length}/12)`
+    if (!data.constitution) {
+      errs.constitution = 'Please select constitution of business'
     }
 
-    const mobileClean = data.mobile.replace(/\D/g, '')
-    if (!mobileClean) {
-      errs.mobile = 'Mobile number is required'
-    } else if (mobileClean.length !== 10) {
-      errs.mobile = `Mobile number must be exactly 10 digits (currently ${mobileClean.length}/10)`
-    } else if (!/^[6-9]\d{9}$/.test(mobileClean)) {
-      errs.mobile = 'Enter a valid 10-digit Indian mobile number'
+    if (!data.natureOfBusiness) {
+      errs.natureOfBusiness = 'Please select nature of business'
     }
 
-    if (!data.email.trim()) {
-      errs.email = 'Email is required'
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim())) {
-      errs.email = 'Enter a valid email address'
+    if (!data.commencementDate) {
+      errs.commencementDate = 'Date of commencement is required'
+    }
+
+    if (!data.registrationReason) {
+      errs.registrationReason = 'Please select reason for registration'
+    }
+
+    if (!data.compositionScheme) {
+      errs.compositionScheme = 'Please select Yes or No for composition scheme'
+    }
+
+    if (!data.placeOfBusiness) {
+      errs.placeOfBusiness = 'Please select place of business type'
+    }
+
+    if (!data.businessAddress.trim()) {
+      errs.businessAddress = 'Business address is required'
+    } else if (data.businessAddress.trim().length < 5) {
+      errs.businessAddress = 'Please enter a complete address (minimum 5 characters)'
+    }
+
+    if (!data.city.trim()) {
+      errs.city = 'City is required'
+    }
+
+    if (!data.district.trim()) {
+      errs.district = 'District is required'
+    }
+
+    if (!data.state) {
+      errs.state = 'Please select state / UT'
+    }
+
+    const pinErr = validatePincode(data.pinCode)
+    if (pinErr) {
+      errs.pinCode = pinErr
+    }
+
+    if (!data.hsnSacCode.trim()) {
+      errs.hsnSacCode = 'Primary HSN / SAC code is required'
+    } else if (!isValidHsnSac(data.hsnSacCode)) {
+      errs.hsnSacCode = 'Enter a valid 2 to 8 digit HSN/SAC code'
+    }
+
+    // 2. Bank Details
+    if (!data.accountHolderName.trim()) {
+      errs.accountHolderName = 'Account holder name is required'
+    } else if (data.accountHolderName.trim().length < 2) {
+      errs.accountHolderName = 'Account holder name must be at least 2 characters'
+    }
+
+    if (!data.accountNumber.trim()) {
+      errs.accountNumber = 'Bank account number is required'
+    } else if (!isValidBankAccNumber(data.accountNumber)) {
+      errs.accountNumber = 'Account number must be between 9 and 18 digits'
+    }
+
+    if (!data.confirmAccountNumber.trim()) {
+      errs.confirmAccountNumber = 'Please confirm bank account number'
+    } else if (data.accountNumber !== data.confirmAccountNumber) {
+      errs.confirmAccountNumber = 'Account numbers do not match'
+    }
+
+    const ifscErr = validateIfsc(data.ifscCode)
+    if (ifscErr) {
+      errs.ifscCode = ifscErr
+    }
+
+    if (!data.bankName.trim()) {
+      errs.bankName = 'Bank name is required'
+    }
+
+    if (!data.branch.trim()) {
+      errs.branch = 'Branch name is required'
+    }
+
+    if (!data.accountType) {
+      errs.accountType = 'Please select account type'
+    }
+
+    // 3. Authorised Signatory
+    if (!data.signatoryName.trim()) {
+      errs.signatoryName = 'Authorised signatory name is required'
+    } else if (data.signatoryName.trim().length < 2) {
+      errs.signatoryName = 'Signatory name must be at least 2 characters'
+    }
+
+    const panErr = validatePan(data.signatoryPan)
+    if (panErr) {
+      errs.signatoryPan = panErr
+    }
+
+    if (!data.dob) {
+      errs.dob = 'Date of birth is required'
+    }
+
+    if (!data.designation.trim()) {
+      errs.designation = 'Signatory designation is required'
+    }
+
+    const cleanedMobile = data.signatoryMobile.replace(/\D/g, '').trim()
+    if (!cleanedMobile) {
+      errs.signatoryMobile = 'Mobile number is required'
+    } else if (cleanedMobile.length !== 10) {
+      errs.signatoryMobile = 'Mobile number must be exactly 10 digits'
+    }
+
+    const emailErr = validateEmail(data.signatoryEmail)
+    if (emailErr) {
+      errs.signatoryEmail = emailErr
+    }
+
+    // 4. Aadhaar Consent
+    if (!data.aadhaarConsent) {
+      errs.aadhaarConsent = 'Please check the box to grant consent for Aadhaar e-KYC authentication'
     }
 
     setErrors(errs)
@@ -123,248 +231,105 @@ export const GSTStepBusiness = ({
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
-    if (!validate()) return
+    if (!validate()) {
+      setTimeout(() => {
+        const firstErrorEl = document.querySelector('.gst-field-error, .gst-input--error')
+        if (firstErrorEl) {
+          firstErrorEl.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          if (firstErrorEl instanceof HTMLInputElement || firstErrorEl instanceof HTMLSelectElement) {
+            firstErrorEl.focus()
+          } else {
+            const inputInside = firstErrorEl.closest('.gst-form-group')?.querySelector('input, select') as HTMLElement | null
+            inputInside?.focus()
+          }
+        }
+      }, 60)
+      return
+    }
     onNext()
   }
 
   return (
-    <div className="gst-step-business-card">
-      <div className="gst-step-business-card__header">
-        <h2 className="gst-step-business-card__title">Business details</h2>
-        <p className="gst-step-business-card__subtitle">
-          As they should appear on the GST certificate.
-        </p>
+    <form onSubmit={handleSubmit} noValidate className="gst-step-business-container">
+      {/* 1. Business Details Sub-Component */}
+      <GSTBusinessDetails
+        data={data}
+        onChange={onChange}
+        errors={errors}
+        onClearError={clearErr}
+      />
+
+      {/* 2. Bank Details Sub-Component */}
+      <GSTBankDetails
+        data={data}
+        onChange={onChange}
+        errors={errors}
+        onClearError={clearErr}
+      />
+
+      {/* 3. Authorised Signatory Sub-Component */}
+      <GSTAuthorisedSignatory
+        data={data}
+        onChange={onChange}
+        errors={errors}
+        onClearError={clearErr}
+      />
+
+      {/* Aadhaar Consent */}
+      <div className="gst-consent-section">
+        <label className="gst-consent-checkbox-wrapper">
+          <input
+            type="checkbox"
+            className="gst-consent-checkbox"
+            checked={data.aadhaarConsent}
+            onChange={handleConsentChange}
+          />
+          <span className="gst-consent-text">
+            I consent to Aadhaar authentication (e-KYC) for this GST registration.
+          </span>
+        </label>
+        {errors.aadhaarConsent && (
+          <div className="gst-consent-error">
+            <span className="gst-field-error">{errors.aadhaarConsent}</span>
+          </div>
+        )}
       </div>
 
-      <form onSubmit={handleSubmit} noValidate className="gst-step-business-form">
-        {/* Row 1: Legal Name & Trade Name */}
-        <div className="gst-form-row">
-          <div className="gst-form-group">
-            <label className="gst-form-label" htmlFor="legalName">
-              Legal name of business <span className="gst-form-required">*</span>
-            </label>
-            <input
-              id="legalName"
-              type="text"
-              className={`gst-form-input ${errors.legalName ? 'gst-form-input--error' : ''}`}
-              value={data.legalName}
-              onChange={(e) => handleLegalNameChange(e.target.value)}
-              placeholder="e.g. Shree Deshmukh Traders (text only)"
-            />
-            {errors.legalName && <p className="gst-form-error-text">⚠️ {errors.legalName}</p>}
-          </div>
-
-          <div className="gst-form-group">
-            <label className="gst-form-label" htmlFor="tradeName">
-              Trade name (text only)
-            </label>
-            <input
-              id="tradeName"
-              type="text"
-              className="gst-form-input"
-              value={data.tradeName}
-              onChange={(e) => handleTradeNameChange(e.target.value)}
-              placeholder="e.g. Deshmukh Traders"
-            />
-          </div>
-        </div>
-
-        {/* Row 2: PAN & Aadhaar */}
-        <div className="gst-form-row">
-          <div className="gst-form-group">
-            <label className="gst-form-label" htmlFor="pan">
-              PAN of business <span className="gst-form-required">*</span>
-            </label>
-            <input
-              id="pan"
-              type="text"
-              className={`gst-form-input ${errors.pan ? 'gst-form-input--error' : ''}`}
-              value={data.pan}
-              onChange={(e) => handlePanChange(e.target.value)}
-              placeholder="e.g. AXTPD4419K"
-              maxLength={10}
-            />
-            {errors.pan && <p className="gst-form-error-text">⚠️ {errors.pan}</p>}
-          </div>
-
-          <div className="gst-form-group">
-            <label className="gst-form-label" htmlFor="aadhaar">
-              Aadhaar of proprietor <span className="gst-form-required">*</span>
-            </label>
-            <input
-              id="aadhaar"
-              type="text"
-              inputMode="numeric"
-              className={`gst-form-input ${errors.aadhaar ? 'gst-form-input--error' : ''}`}
-              value={data.aadhaar}
-              onChange={(e) => handleAadhaarChange(e.target.value)}
-              placeholder="12-digit Aadhaar (numbers only)"
-              maxLength={12}
-            />
-            {errors.aadhaar && <p className="gst-form-error-text">⚠️ {errors.aadhaar}</p>}
-          </div>
-        </div>
-
-        {/* Row 3: Mobile & Email */}
-        <div className="gst-form-row">
-          <div className="gst-form-group">
-            <label className="gst-form-label" htmlFor="mobile">
-              Mobile <span className="gst-form-required">*</span>
-            </label>
-            <input
-              id="mobile"
-              type="tel"
-              inputMode="numeric"
-              className={`gst-form-input ${errors.mobile ? 'gst-form-input--error' : ''}`}
-              value={data.mobile}
-              onChange={(e) => handleMobileChange(e.target.value)}
-              placeholder="10-digit mobile number"
-              maxLength={10}
-            />
-            {errors.mobile && <p className="gst-form-error-text">⚠️ {errors.mobile}</p>}
-          </div>
-
-          <div className="gst-form-group">
-            <label className="gst-form-label" htmlFor="email">
-              Email <span className="gst-form-required">*</span>
-            </label>
-            <input
-              id="email"
-              type="email"
-              className={`gst-form-input ${errors.email ? 'gst-form-input--error' : ''}`}
-              value={data.email}
-              onChange={(e) => handleEmailChange(e.target.value)}
-              placeholder="anjali@shreedeshmukh.in"
-            />
-            {errors.email && <p className="gst-form-error-text">⚠️ {errors.email}</p>}
-          </div>
-        </div>
-
-        {/* Row 4: Constitution & Nature of business */}
-        <div className="gst-form-row">
-          <div className="gst-form-group">
-            <label className="gst-form-label" htmlFor="constitution">
-              Constitution of business
-            </label>
-            <div className="gst-form-select-wrapper">
-              <select
-                id="constitution"
-                className="gst-form-select"
-                value={data.constitution}
-                onChange={(e) => onChange('constitution', e.target.value)}
-              >
-                <option value="Proprietorship">Proprietorship</option>
-                <option value="Partnership">Partnership</option>
-                <option value="Limited Liability Partnership">LLP</option>
-                <option value="Private Limited Company">Private Limited Company</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="gst-form-group">
-            <label className="gst-form-label" htmlFor="natureOfBusiness">
-              Nature of business
-            </label>
-            <div className="gst-form-select-wrapper">
-              <select
-                id="natureOfBusiness"
-                className="gst-form-select"
-                value={data.natureOfBusiness}
-                onChange={(e) => onChange('natureOfBusiness', e.target.value)}
-              >
-                <option value="Trading">Trading</option>
-                <option value="Manufacturing">Manufacturing</option>
-                <option value="Services">Services</option>
-                <option value="Export/Import">Export / Import</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        {/* Row 5: Principal business activity */}
-        <div className="gst-form-group gst-form-group--full">
-          <label className="gst-form-label" htmlFor="principalActivity">
-            Principal business activity
-          </label>
-          <textarea
-            id="principalActivity"
-            className="gst-form-textarea"
-            rows={3}
-            value={data.principalActivity}
-            onChange={(e) => onChange('principalActivity', e.target.value)}
-            placeholder="Describe your primary goods or services..."
-          />
-        </div>
-
-        {/* Row 6: Expected annual turnover & Composition scheme */}
-        <div className="gst-form-row">
-          <div className="gst-form-group">
-            <label className="gst-form-label" htmlFor="turnover">
-              Expected annual turnover
-            </label>
-            <div className="gst-form-select-wrapper">
-              <select
-                id="turnover"
-                className="gst-form-select"
-                value={data.turnover}
-                onChange={(e) => onChange('turnover', e.target.value)}
-              >
-                <option value="₹40 lakh – ₹1 crore">₹40 lakh – ₹1 crore</option>
-                <option value="Below ₹40 lakh">Below ₹40 lakh</option>
-                <option value="₹1 crore – ₹5 crore">₹1 crore – ₹5 crore</option>
-                <option value="Above ₹5 crore">Above ₹5 crore</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="gst-form-group">
-            <label className="gst-form-label" htmlFor="compositionScheme">
-              Composition scheme
-            </label>
-            <div className="gst-form-select-wrapper">
-              <select
-                id="compositionScheme"
-                className="gst-form-select"
-                value={data.compositionScheme}
-                onChange={(e) => onChange('compositionScheme', e.target.value)}
-              >
-                <option value="No — regular scheme">No — regular scheme</option>
-                <option value="Yes — composition scheme">Yes — composition scheme</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom Actions */}
-        <div className="gst-step-actions">
-          <button
-            type="button"
-            className="gst-btn-cancel"
-            onClick={onCancel}
+      {/* Action Buttons Row (Back on left, Continue on right in one row) */}
+      <div className="gst-form-actions">
+        <button
+          type="button"
+          className="gst-btn-back"
+          onClick={onCancel || (() => window.history.back())}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="gst-btn-back-arrow"
           >
-            Cancel
-          </button>
+            <line x1="19" y1="12" x2="5" y2="12" />
+            <polyline points="12 19 5 12 12 5" />
+          </svg>
+          Back
+        </button>
 
-          <button
-            type="submit"
-            className="gst-btn-continue"
-          >
-            Continue
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="gst-btn-arrow"
-            >
-              <line x1="5" y1="12" x2="19" y2="12" />
-              <polyline points="12 5 19 12 12 19" />
-            </svg>
-          </button>
-        </div>
-      </form>
-    </div>
+        <button
+          type="submit"
+          className="gst-btn-continue"
+        >
+          <span>Continue to Documents</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="gst-btn-continue__icon">
+            <line x1="5" y1="12" x2="19" y2="12" />
+            <polyline points="12 5 19 12 12 19" />
+          </svg>
+        </button>
+      </div>
+    </form>
   )
 }
+
+export default GSTStepBusiness

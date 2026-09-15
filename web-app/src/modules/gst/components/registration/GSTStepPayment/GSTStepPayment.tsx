@@ -30,11 +30,9 @@ export const GSTStepPayment = ({
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethodType>('upi')
   const [selectedUpiApp, setSelectedUpiApp] = useState<string>('gpay')
   const [upiId, setUpiId] = useState<string>('anjali@okhdfcbank')
-  const [promoCode, setPromoCode] = useState<string>('')
-  const [discount, setDiscount] = useState<number>(0)
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
 
-  const finalPayable = Math.max(0, amount - discount)
+  const finalPayable = amount
 
   const paymentMethods = [
     {
@@ -89,13 +87,7 @@ export const GSTStepPayment = ({
     { id: 'bhim', name: 'BHIM', color: '#008744', letter: 'B' },
   ]
 
-  const handleApplyPromo = () => {
-    if (promoCode.trim().toUpperCase() === 'TAXEDGE10') {
-      setDiscount(590)
-    } else {
-      setDiscount(0)
-    }
-  }
+
 
   const handlePay = (e: FormEvent) => {
     e.preventDefault()
@@ -280,68 +272,6 @@ export const GSTStepPayment = ({
             </button>
           </div>
         </div>
-
-        {/* Right Side: Order Summary & What happens card */}
-        <aside className="gst-payment-sidebar">
-          <div className="gst-order-card">
-            <h3 className="gst-order-card__title">Order summary</h3>
-
-            <div className="gst-order-card__table">
-              <div className="gst-order-card__row">
-                <span className="gst-order-card__label">{serviceTitle}</span>
-                <span className="gst-order-card__value">₹5,000</span>
-              </div>
-
-              <div className="gst-order-card__row">
-                <span className="gst-order-card__label">GST @ 18%</span>
-                <span className="gst-order-card__value">₹900</span>
-              </div>
-
-              {discount > 0 && (
-                <div className="gst-order-card__row">
-                  <span className="gst-order-card__label">Discount</span>
-                  <span className="gst-order-card__value gst-order-card__value--verified">
-                    -₹{discount}
-                  </span>
-                </div>
-              )}
-
-              <div className="gst-order-card__divider" />
-
-              <div className="gst-order-card__row gst-order-card__row--total">
-                <span className="gst-order-card__total-label">Total payable</span>
-                <span className="gst-order-card__total-amount">
-                  ₹{finalPayable.toLocaleString('en-IN')}
-                </span>
-              </div>
-            </div>
-
-            <div className="gst-promo-row">
-              <input
-                type="text"
-                className="gst-promo-input"
-                placeholder="Promo code"
-                value={promoCode}
-                onChange={(e) => setPromoCode(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ''))}
-              />
-              <button
-                type="button"
-                className="gst-btn-promo-apply"
-                onClick={handleApplyPromo}
-              >
-                Apply
-              </button>
-            </div>
-          </div>
-
-          <div className="gst-order-callout gst-order-callout--security">
-            <h4 className="gst-order-callout__title">What happens after payment</h4>
-            <p className="gst-order-callout__body">
-              A GST-compliant receipt is generated instantly and your application moves to
-              active. Your executive is notified the same minute.
-            </p>
-          </div>
-        </aside>
       </div>
     </div>
   )

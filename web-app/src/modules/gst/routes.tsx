@@ -17,6 +17,8 @@ const GSTCancellation = lazy(() => import('./pages/GSTCancellation/GSTCancellati
 export const gstRoutes: RouteObject[] = [
   { path: routePaths.gst.root, element: <GSTDashboard /> },
   { path: routePaths.gst.registration, element: <GSTRegistration /> },
+  { path: '/gst/registration/documents', element: <GSTRegistration /> },
+  { path: '/gst/registration-documents', element: <GSTRegistration /> },
   { path: routePaths.gst.returns, element: <GSTReturn /> },
   { path: routePaths.gst.filing, element: <GSTFiling /> },
   { path: routePaths.gst.amendment, element: <GSTAmendment /> },

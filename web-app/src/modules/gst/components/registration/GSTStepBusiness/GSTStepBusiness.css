@@ -1,179 +1,352 @@
-.gst-step-business-card {
-  background-color: var(--color-surface, #ffffff);
-  border: 1px solid var(--color-border, #e2e8f0);
-  border-radius: var(--radius-lg, 16px);
-  padding: 1.75rem 2rem;
-  box-shadow: var(--shadow-sm);
-}
-
-.gst-step-business-card__header {
-  margin-bottom: 1.75rem;
-}
-
-.gst-step-business-card__title {
-  margin: 0 0 0.25rem 0;
-  font-size: 1.35rem;
-  font-weight: var(--font-weight-bold, 700);
-  color: var(--taxedge-navy, #083b75);
-}
-
-.gst-step-business-card__subtitle {
-  margin: 0;
-  font-size: 0.875rem;
-  color: var(--color-text-muted, #64748b);
-}
-
-.gst-step-business-form {
+/* Step 1: Business Form Container */
+.gst-step-business-container {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 2.25rem;
+  width: 100%;
 }
 
-.gst-form-row {
+/* Form Card (blends seamlessly with background) */
+.gst-form-card {
+  background: transparent;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  transition: none;
+}
+
+.gst-form-card:hover {
+  border-color: transparent;
+  box-shadow: none;
+}
+
+/* Card Header */
+.gst-form-card__header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.35rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1.5px solid #e2e8f0;
+}
+
+.gst-form-card__icon-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+}
+
+.gst-form-card__icon-badge svg {
+  width: 18px;
+  height: 18px;
+}
+
+.gst-form-card__icon-badge--orange {
+  background: #fff7ed;
+  border: 1px solid #ffedd5;
+  color: #ea580c;
+}
+
+.gst-form-card__icon-badge--blue {
+  background: #f0f9ff;
+  border: 1px solid #e0f2fe;
+  color: #0284c7;
+}
+
+.gst-form-card__title {
+  margin: 0;
+  font-size: 1.18rem;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.01em;
+}
+
+/* Card Body */
+.gst-form-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+/* Grid Layouts */
+.gst-form-grid {
   display: grid;
+  gap: 1.15rem;
+  width: 100%;
+  align-items: stretch;
+}
+
+.gst-form-grid--2col {
   grid-template-columns: 1fr 1fr;
-  gap: 1.25rem;
 }
 
-@media (max-width: 768px) {
-  .gst-form-row {
-    grid-template-columns: 1fr;
-  }
+.gst-form-grid--3col {
+  grid-template-columns: 1fr 1fr 1fr;
 }
 
+/* Form Groups */
 .gst-form-group {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
-}
-
-.gst-form-group--full {
-  grid-column: 1 / -1;
+  justify-content: flex-end;
+  width: 100%;
 }
 
 .gst-form-label {
-  font-size: 0.85rem;
-  font-weight: var(--font-weight-semibold, 600);
-  color: var(--color-text, #172033);
+  display: block;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #334155;
+  letter-spacing: -0.005em;
+  line-height: 1.35;
+  margin-bottom: auto;
+  padding-bottom: 0.45rem;
 }
 
-.gst-form-required {
-  color: var(--taxedge-orange, #f97316);
+.gst-required-star {
+  display: inline;
   margin-left: 2px;
+  color: #ef4444;
+  font-weight: 700;
 }
 
+/* Inputs and Selects */
 .gst-form-input,
-.gst-form-select,
-.gst-form-textarea {
+.gst-form-select {
   width: 100%;
-  padding: 0.65rem 0.9rem;
-  font-size: 0.9rem;
-  color: var(--color-text, #172033);
-  background-color: var(--color-surface, #ffffff);
-  border: 1px solid var(--color-border, #cbd5e1);
-  border-radius: var(--radius-md, 8px);
+  height: 42px;
+  padding: 0.55rem 0.85rem;
+  font-size: 0.875rem;
+  font-family: inherit;
+  color: #0f172a;
+  background-color: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
   outline: none;
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  transition: all 0.18s ease;
   box-sizing: border-box;
 }
 
+.gst-form-input::placeholder {
+  color: #94a3b8;
+  font-size: 0.875rem;
+}
+
 .gst-form-input:focus,
-.gst-form-select:focus,
-.gst-form-textarea:focus {
-  border-color: var(--taxedge-blue, #0b5ed7);
-  box-shadow: 0 0 0 3px rgba(11, 94, 215, 0.15);
+.gst-form-select:focus {
+  border-color: #f97316;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
+  background-color: #ffffff;
 }
 
-.gst-form-input--error {
+.gst-input--error {
   border-color: #ef4444 !important;
-  box-shadow: 0 0 0 1px #ef4444 !important;
-  background-color: #fffbfb !important;
+  background-color: #fffafb;
 }
 
-.gst-form-error-text {
-  margin: 0.25rem 0 0 0;
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: #b91c1c;
+.gst-input--error:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
 }
 
-.gst-form-select-wrapper {
+.gst-field-error {
+  font-size: 0.76rem;
+  color: #dc2626;
+  font-weight: 500;
+  margin-top: 0.25rem;
+  line-height: 1.2;
+}
+
+/* Select Wrapper */
+.gst-select-wrapper {
   position: relative;
   width: 100%;
 }
 
-.gst-form-select {
+.gst-select-wrapper .gst-form-select {
   appearance: none;
-  padding-right: 2.2rem;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-  background-repeat: no-repeat;
-  background-position: right 0.75rem center;
-  background-size: 1rem;
+  -webkit-appearance: none;
+  padding-right: 2.25rem;
   cursor: pointer;
 }
 
-.gst-form-textarea {
-  resize: vertical;
-  min-height: 80px;
-  line-height: 1.45;
+.gst-select-arrow {
+  position: absolute;
+  right: 0.85rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #64748b;
+  display: flex;
+  align-items: center;
 }
 
-/* Action Buttons */
-.gst-step-actions {
+.gst-select-arrow svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* Date Input Wrapper */
+.gst-date-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.gst-form-input--date {
+  color-scheme: light;
+}
+
+/* Aadhaar Consent Section */
+.gst-consent-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.5rem 0;
+}
+
+.gst-consent-checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  cursor: pointer;
+  user-select: none;
+  max-width: 600px;
+}
+
+.gst-consent-checkbox {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 1.5px solid #cbd5e1;
+  accent-color: #f97316;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.gst-consent-text {
+  font-size: 0.835rem;
+  color: #334155;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.gst-consent-error {
+  padding: 0 0.15rem;
+}
+
+/* Action Buttons Container (One row: Back on left, Continue on right) */
+.gst-form-actions {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 1.5rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid var(--grey-100, #f1f5f9);
+  gap: 1.5rem;
+  padding: 1.25rem 0 0.5rem 0;
+  border-top: 1px solid #e2e8f0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.gst-btn-cancel {
-  padding: 0.65rem 1.75rem;
-  font-size: 0.9rem;
-  font-weight: var(--font-weight-semibold, 600);
-  color: var(--color-text-muted, #475569);
-  background-color: var(--grey-100, #f8fafc);
-  border: 1px solid var(--color-border, #cbd5e1);
-  border-radius: 9999px;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.gst-btn-cancel:hover {
-  background-color: #f1f5f9;
-  color: var(--color-text, #172033);
-  border-color: #94a3b8;
-}
-
-.gst-btn-continue {
+/* Back Button */
+.gst-btn-back {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
-  padding: 0.7rem 1.75rem;
-  font-size: 0.9rem;
-  font-weight: var(--font-weight-bold, 700);
-  color: #ffffff;
-  background: linear-gradient(135deg, var(--taxedge-orange, #f97316) 0%, #ea580c 100%);
-  border: none;
+  background-color: #ffffff;
+  color: #334155;
+  border: 1.5px solid #cbd5e1;
+  padding: 0.72rem 1.45rem;
   border-radius: 9999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: inherit;
   cursor: pointer;
-  box-shadow: 0 3px 10px rgba(249, 115, 22, 0.35);
-  transition: all var(--transition-fast);
+  transition: all 0.2s ease;
 }
 
-.gst-btn-continue:hover {
-  background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
-  box-shadow: 0 4px 14px rgba(249, 115, 22, 0.45);
+.gst-btn-back:hover {
+  background-color: #f8fafc;
+  border-color: #94a3b8;
+  color: #0f172a;
   transform: translateY(-1px);
 }
 
-.gst-btn-arrow {
-  width: 16px;
-  height: 16px;
-  transition: transform var(--transition-fast);
+.gst-btn-back:active {
+  transform: translateY(0);
 }
 
-.gst-btn-continue:hover .gst-btn-arrow {
-  transform: translateX(3px);
+.gst-btn-back-arrow {
+  width: 17px;
+  height: 17px;
+  transition: transform 0.2s ease;
+}
+
+.gst-btn-back:hover .gst-btn-back-arrow {
+  transform: translateX(-2px);
+}
+
+/* Continue Button */
+.gst-btn-continue {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  background-color: #f97316;
+  color: #ffffff;
+  border: none;
+  padding: 0.75rem 1.65rem;
+  border-radius: 9999px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(249, 115, 22, 0.35);
+  transition: all 0.2s ease;
+}
+
+.gst-btn-continue:hover {
+  background-color: #ea580c;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(249, 115, 22, 0.45);
+}
+
+.gst-btn-continue:active {
+  transform: translateY(0);
+}
+
+.gst-btn-continue__icon {
+  width: 17px;
+  height: 17px;
+  transition: transform 0.2s ease;
+}
+
+.gst-btn-continue:hover .gst-btn-continue__icon {
+  transform: translateX(2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .gst-form-card {
+    padding: 1.25rem 1.15rem;
+  }
+
+  .gst-form-grid--2col,
+  .gst-form-grid--3col {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .gst-form-bottom-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.25rem;
+  }
+
+  .gst-btn-continue {
+    width: 100%;
+    margin-left: 0;
+  }
 }
