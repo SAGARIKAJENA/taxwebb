@@ -1,0 +1,96 @@
+.gst-calc-method {
+  display: flex;
+  flex-direction: column;
+  grid-column: 1 / -1;
+  margin-top: 4px;
+}
+
+.gst-calc-method__label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.gst-calc-method__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.gst-calc-method__card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 20px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background-color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.gst-calc-method__card:hover {
+  border-color: #cbd5e1;
+}
+
+.gst-calc-method__card--active {
+  border-color: #ff5722;
+  background-color: #fffaf8;
+}
+
+.gst-calc-method__radio-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid #9ca3af;
+  background-color: #ffffff;
+  flex-shrink: 0;
+  margin-top: 2px;
+  transition: all 0.2s ease;
+}
+
+.gst-calc-method__card--active .gst-calc-method__radio-circle {
+  border-color: #ff5722;
+}
+
+.gst-calc-method__radio-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: #ff5722;
+}
+
+.gst-calc-method__content {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.gst-calc-method__title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.gst-calc-method__desc {
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+.gst-calc-method__error {
+  font-size: 12px;
+  color: #dc2626;
+  margin-top: 6px;
+}
+
+@media (max-width: 768px) {
+  .gst-calc-method__grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -47,10 +47,6 @@ export const Receipt = () => {
     navigate(-1)
   }
 
-  const handleEmail = () => {
-    pushToast('Receipt emailed to your registered address.', 'success')
-  }
-
   const handleDownloadPdf = () => {
     pushToast('Preparing Tax Invoice PDF for download...', 'info')
     window.print()
@@ -92,17 +88,16 @@ export const Receipt = () => {
         <span className="receipt-view-page__breadcrumb-current">Receipt</span>
       </nav>
 
-      {/* Top Action Bar */}
-      <ReceiptActions
-        onBack={handleBack}
-        onEmail={handleEmail}
-        onDownloadPdf={handleDownloadPdf}
-      />
-
       {/* Main Receipt Card */}
       <main className="receipt-view-page__content">
         <ReceiptCard receipt={receipt} />
       </main>
+
+      {/* Bottom Action Bar */}
+      <ReceiptActions
+        onBack={handleBack}
+        onDownloadPdf={handleDownloadPdf}
+      />
     </div>
   )
 }

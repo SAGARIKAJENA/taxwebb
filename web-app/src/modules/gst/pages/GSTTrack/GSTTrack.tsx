@@ -137,7 +137,7 @@ export const GSTTrack = () => {
                 onClick={handleDownloadReceipt}
                 style={{ padding: '0.625rem 1rem', borderRadius: '8px', cursor: 'pointer', background: '#f1f5f9', color: '#334155', border: '1px solid #cbd5e1', fontWeight: 500 }}
               >
-                Download Receipt
+                View Receipt
               </button>
             </div>
           </div>
