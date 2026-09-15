@@ -1,11 +1,9 @@
 import { useState } from 'react'
-import type { BusinessFormData } from '../GSTStepBusiness/GSTStepBusiness'
-import type { AddressBankFormData } from '../GSTStepAddressBank/GSTStepAddressBank'
+import type { GstBusinessFormData } from '../GSTStepBusiness/GSTStepBusiness'
 import './GSTStepReview.css'
 
 interface GSTStepReviewProps {
-  businessData: BusinessFormData
-  addressBankData: AddressBankFormData
+  businessData: GstBusinessFormData
   onEdit: () => void
   onBack: () => void
   onProceed: () => void
@@ -14,13 +12,12 @@ interface GSTStepReviewProps {
 const ATTACHED_DOCS = [
   'PAN of business / proprietor',
   'Aadhaar of proprietor',
-  'Photograph of proprietor',
-  'Rental agreement',
+  'Proof of place of business',
+  'Cancelled cheque / Bank statement',
 ]
 
 export const GSTStepReview = ({
   businessData,
-  addressBankData,
   onEdit,
   onBack,
   onProceed,
@@ -30,36 +27,70 @@ export const GSTStepReview = ({
 
   const canProceed = decl1 && decl2
 
-  const reviewFields = [
-    { label: 'Legal name', value: businessData.legalName || 'Shree Deshmukh Traders' },
-    { label: 'Trade name', value: businessData.tradeName || 'Deshmukh Traders' },
-    { label: 'PAN', value: businessData.pan || 'AXTPD4419K' },
-    { label: 'Constitution', value: businessData.constitution || 'Proprietorship' },
-    { label: 'Nature of business', value: businessData.natureOfBusiness || 'Trading' },
+  const businessFields = [
+    { label: 'Legal Name (as per PAN)', value: businessData.legalName || 'Shree Enterprises' },
+    { label: 'Trade Name', value: businessData.tradeName || 'Shree Enterprises' },
+    { label: 'Constitution of Business', value: businessData.constitution || 'Proprietorship' },
+    { label: 'Nature of Business', value: businessData.natureOfBusiness || 'Retail Business' },
+    { label: 'Date of Commencement', value: businessData.commencementDate || '2024-04-01' },
+    { label: 'Reason for Registration', value: businessData.registrationReason || 'Crossing the Threshold Limit' },
+    { label: 'Composition Scheme', value: businessData.compositionScheme || 'No' },
+    { label: 'Place of business', value: businessData.placeOfBusiness || 'Owned' },
     {
-      label: 'Principal place',
-      value: `${addressBankData.address || 'Shop 14, Laxmi Complex, FC Road'}, ${addressBankData.city || 'Pune'} ${addressBankData.pinCode || '411004'}`,
+      label: 'Business address',
+      value: [
+        businessData.businessAddress || 'Shop 14, Laxmi Complex, FC Road',
+        businessData.city || 'Pune',
+        businessData.district,
+        businessData.state ? `${businessData.state} - ${businessData.pinCode || '411004'}` : '',
+      ]
+        .filter(Boolean)
+        .join(', '),
     },
-    { label: 'Possession', value: addressBankData.possessionNature || 'Rented' },
+    { label: 'Primary HSN / SAC Code', value: businessData.hsnSacCode || '998311' },
+  ]
+
+  const bankFields = [
+    { label: 'Account Holder Name', value: businessData.accountHolderName || 'Sagarika Sharma' },
     {
-      label: 'Bank',
-      value: `${addressBankData.ifscCode || 'HDFC0000412'} · ${addressBankData.accountType || 'Current'}`,
+      label: 'Bank & Account Number',
+      value: `${businessData.bankName || 'HDFC Bank'} · A/C: ${businessData.accountNumber || '••••••••5678'}`,
     },
     {
-      label: 'Composition scheme',
-      value: businessData.compositionScheme || 'No — regular scheme',
+      label: 'IFSC & Branch',
+      value: `${businessData.ifscCode || 'HDFC0000412'} · ${businessData.branch || 'Madurai Main'}`,
+    },
+    { label: 'Account Type', value: businessData.accountType || 'Current' },
+  ]
+
+  const signatoryFields = [
+    {
+      label: 'Signatory Name & Designation',
+      value: `${businessData.signatoryName || 'Sagarika Sharma'} (${businessData.designation || 'Proprietor'})`,
+    },
+    {
+      label: 'PAN & Date of Birth',
+      value: `PAN: ${businessData.signatoryPan || 'ABCDE1234F'} · DOB: ${businessData.dob || '1995-05-12'}`,
+    },
+    {
+      label: 'Contact Details',
+      value: `${businessData.signatoryMobile || '9876543210'} · ${businessData.signatoryEmail || 'sagarika@example.com'}`,
+    },
+    {
+      label: 'Aadhaar e-KYC',
+      value: businessData.aadhaarConsent ? 'Consent Confirmed (e-KYC Enabled)' : 'Pending',
     },
   ]
 
   return (
     <div className="gst-step-review">
-      {/* 1. Review Details Card */}
+      {/* 1. Business Details Card */}
       <section className="gst-review-card">
         <div className="gst-review-card__header">
           <div>
             <h2 className="gst-review-card__title">Review your application</h2>
             <p className="gst-review-card__subtitle">
-              Check every field. After submission, changes need an amendment application.
+              Check all fields carefully. After submission, corrections require an amendment application.
             </p>
           </div>
           <button
@@ -68,12 +99,33 @@ export const GSTStepReview = ({
             onClick={onEdit}
             aria-label="Edit application fields"
           >
-            Edit
+            Edit Details
           </button>
         </div>
 
+        <div className="gst-review-section-title">Business Details</div>
         <div className="gst-review-grid">
-          {reviewFields.map((field) => (
+          {businessFields.map((field) => (
+            <div key={field.label} className="gst-review-row">
+              <span className="gst-review-label">{field.label}</span>
+              <span className="gst-review-value">{field.value}</span>
+            </div>
+          ))}
+        </div>
+
+        <div className="gst-review-section-title">Bank Details</div>
+        <div className="gst-review-grid">
+          {bankFields.map((field) => (
+            <div key={field.label} className="gst-review-row">
+              <span className="gst-review-label">{field.label}</span>
+              <span className="gst-review-value">{field.value}</span>
+            </div>
+          ))}
+        </div>
+
+        <div className="gst-review-section-title">Authorised Signatory</div>
+        <div className="gst-review-grid">
+          {signatoryFields.map((field) => (
             <div key={field.label} className="gst-review-row">
               <span className="gst-review-label">{field.label}</span>
               <span className="gst-review-value">{field.value}</span>
@@ -102,75 +154,46 @@ export const GSTStepReview = ({
           <label className="gst-decl-label">
             <input
               type="checkbox"
-              className="gst-decl-checkbox"
               checked={decl1}
               onChange={(e) => setDecl1(e.target.checked)}
+              className="gst-decl-checkbox"
             />
             <span className="gst-decl-text">
-              I declare that the information given above is true and correct to the best of my
-              knowledge, and that no fact material to the application has been concealed. I
-              authorise TaxEdge Fin Solutions to file this application on my behalf.
+              I hereby solemnly affirm that the information provided is correct to the best of my
+              knowledge, and no material fact has been concealed.
             </span>
           </label>
-
           <label className="gst-decl-label">
             <input
               type="checkbox"
-              className="gst-decl-checkbox"
               checked={decl2}
               onChange={(e) => setDecl2(e.target.checked)}
+              className="gst-decl-checkbox"
             />
             <span className="gst-decl-text">
-              I agree to the professional fee shown and understand it is non-refundable once
-              the application is submitted to the department.
+              I authorize TaxEdge to submit the registration application and act on our behalf with
+              the GST department.
             </span>
           </label>
         </div>
       </section>
 
-      {/* Actions */}
-      <div className="gst-step-actions">
-        <button
-          type="button"
-          className="gst-btn-back"
-          onClick={onBack}
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="gst-btn-back-arrow"
-          >
-            <line x1="19" y1="12" x2="5" y2="12" />
-            <polyline points="12 19 5 12 12 5" />
-          </svg>
-          Back
+      {/* Action Buttons */}
+      <div className="gst-review-actions">
+        <button type="button" className="gst-btn-secondary" onClick={onBack}>
+          ← Back to Documents
         </button>
-
         <button
           type="button"
-          className="gst-btn-continue"
-          disabled={!canProceed}
+          className="gst-btn-primary"
           onClick={onProceed}
+          disabled={!canProceed}
         >
-          Proceed to payment
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="gst-btn-arrow"
-          >
-            <line x1="5" y1="12" x2="19" y2="12" />
-            <polyline points="12 5 19 12 12 19" />
-          </svg>
+          Proceed to Payment →
         </button>
       </div>
     </div>
   )
 }
+
+export default GSTStepReview

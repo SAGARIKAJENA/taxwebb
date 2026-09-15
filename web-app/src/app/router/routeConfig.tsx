@@ -19,7 +19,6 @@ import { itrRoutes } from '@modules/itr'
 import { loansRoutes } from '@modules/loans'
 import { paymentsRoutes } from '@modules/payments'
 import { profileRoutes } from '@modules/profile'
-import { servicesRoutes } from '@modules/services'
 import { staffRoutes } from '@modules/staff'
 import { supportRoutes } from '@modules/support'
 
@@ -80,7 +79,6 @@ export const routeConfig: RouteObject[] = [
         children: [
           { index: true, element: <Navigate to={routePaths.dashboard} replace /> },
           ...dashboardRoutes,
-          ...servicesRoutes,
           ...gstRoutes,
           ...itrRoutes,
           ...loansRoutes,

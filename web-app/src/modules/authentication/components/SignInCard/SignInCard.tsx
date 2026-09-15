@@ -82,9 +82,7 @@ export const SignInCard: React.FC<SignInCardProps> = ({
         authStorage.setTokens(session.tokens)
         authStorage.setUser(session.user)
         setUser(session.user)
-        navigate(routePaths.auth.register, {
-          state: { mobile: cleanMobile },
-        })
+        navigate(routePaths.dashboard)
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Invalid OTP. Please try again.')

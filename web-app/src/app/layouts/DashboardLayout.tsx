@@ -1,8 +1,9 @@
 import { useMemo, useState } from 'react'
-import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
+import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 
 import { routePaths } from '@core/config'
 import { initialsOf } from '@shared/utils'
+import { CompleteProfileModal } from '@shared/components'
 import { useAuthStore } from '@store/index'
 import { navSections } from './navigation'
 import { useDashboardSummary } from '@modules/dashboard'
@@ -41,24 +42,22 @@ const ChatIcon = () => (
   </svg>
 )
 
-const GridIcon = () => (
-  <svg className="shell__action-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" /><rect x="3" y="14" width="7" height="7" rx="1.5" />
-  </svg>
-)
-
-const ChevronDownIcon = () => (
-  <svg className="shell__chevron-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <polyline points="6 9 12 15 18 9" />
-  </svg>
-)
-
 export const DashboardLayout = () => {
+  const navigate = useNavigate()
   const user = useAuthStore((state) => state.user)
   const signOut = useAuthStore((state) => state.signOut)
   const location = useLocation()
   const { data } = useDashboardSummary()
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false)
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
+  const [selectedServiceTarget, setSelectedServiceTarget] = useState<string>('')
+
+  const handleConfirmCompleteProfile = () => {
+    setIsProfileModalOpen(false)
+    navigate(routePaths.auth.register, {
+      state: { returnTo: selectedServiceTarget, mobile: user?.mobile },
+    })
+  }
 
   const currentNav = useMemo(() => {
     for (const section of navSections) {
@@ -128,10 +127,20 @@ export const DashboardLayout = () => {
               {section.items.map((item) =>
                 item.to.includes('#') ? (
                   <a
-                    key={item.to}
+                    key={item.label}
                     href={item.to}
                     className="shell__nav-link"
-                    onClick={() => setIsMobileNavOpen(false)}
+                    onClick={(e) => {
+                      setIsMobileNavOpen(false)
+                      if (section.title === 'Services' && !user?.isProfileComplete) {
+                        e.preventDefault()
+                        setSelectedServiceTarget(item.to)
+                        setIsProfileModalOpen(true)
+                      } else if (location.pathname === routePaths.dashboard) {
+                        e.preventDefault()
+                        document.getElementById('quick-services')?.scrollIntoView({ behavior: 'smooth' })
+                      }
+                    }}
                   >
                     <span className="shell__nav-icon" aria-hidden="true">{item.icon}</span>
                     <span>{item.label}</span>
@@ -140,8 +149,16 @@ export const DashboardLayout = () => {
                   <NavLink
                     key={item.to}
                     to={item.to}
+                    end={item.to === routePaths.dashboard}
                     className={({ isActive }) => `shell__nav-link${isActive ? ' is-active' : ''}`}
-                    onClick={() => setIsMobileNavOpen(false)}
+                    onClick={(e) => {
+                      setIsMobileNavOpen(false)
+                      if (section.title === 'Services' && !user?.isProfileComplete) {
+                        e.preventDefault()
+                        setSelectedServiceTarget(item.to)
+                        setIsProfileModalOpen(true)
+                      }
+                    }}
                   >
                     <span className="shell__nav-icon" aria-hidden="true">{item.icon}</span>
                     <span>{item.label}</span>
@@ -316,7 +333,7 @@ export const DashboardLayout = () => {
                   <span className="shell__breadcrumb-current">ITR &amp; TDS</span>
                 ) : currentNav.sectionTitle === 'Services' ? (
                   <>
-                    <Link to={routePaths.services}>Services</Link>
+                    <Link to={routePaths.dashboard}>Services</Link>
                     <span className="shell__breadcrumb-sep" aria-hidden="true">→</span>
                     <span className="shell__breadcrumb-current">{currentNav.label}</span>
                   </>
@@ -334,16 +351,20 @@ export const DashboardLayout = () => {
           </div>
 
           <div className="shell__header-actions">
-            {location.pathname !== routePaths.dashboard && (
-              <label className="shell__search shell__search--compact">
-                <SearchIcon />
-                <input
-                  type="search"
-                  placeholder="Search services, applications, documents..."
-                  aria-label="Search services, applications, documents"
-                />
-              </label>
-            )}
+            {location.pathname !== routePaths.dashboard &&
+              location.pathname !== routePaths.gst.registration &&
+              !location.pathname.startsWith('/gst/registration') && (
+                <label className="shell__search-wrapper" htmlFor="header-search-input">
+                  <SearchIcon />
+                  <input
+                    id="header-search-input"
+                    className="shell__search-input"
+                    type="search"
+                    placeholder="Search services, applications, documents..."
+                    aria-label="Search services, applications, documents"
+                  />
+                </label>
+              )}
 
             <button className="shell__icon-button" type="button" aria-label="Notifications" title="Notifications">
               <BellIcon />
@@ -354,18 +375,10 @@ export const DashboardLayout = () => {
               <ChatIcon />
             </NavLink>
 
-            <NavLink className="shell__icon-button" to={routePaths.services} aria-label="All services" title="All Services">
-              <GridIcon />
-            </NavLink>
-
-            <NavLink className="shell__header-profile" to={routePaths.profile} title="View profile">
+            <NavLink className="shell__header-profile" to={routePaths.profile} title="View profile" aria-label="View profile">
               <span className="shell__header-avatar">
-                {initialsOf(user?.fullName || 'Sagarika')}
+                {user?.fullName ? user.fullName.trim().charAt(0).toUpperCase() : 'S'}
               </span>
-              <span className="shell__header-name">
-                {user?.fullName ? user.fullName.split(' ')[0] : 'Sagarika'}
-              </span>
-              <ChevronDownIcon />
             </NavLink>
           </div>
         </header>
@@ -374,6 +387,13 @@ export const DashboardLayout = () => {
           <Outlet />
         </main>
       </div>
+
+      <CompleteProfileModal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+        onCompleteProfile={handleConfirmCompleteProfile}
+      />
     </div>
   )
 }
+

@@ -11,7 +11,19 @@ export interface UploadedDoc {
   errorText?: string
 }
 
-const INITIAL_DOCS: UploadedDoc[] = []
+const INITIAL_DOCS: UploadedDoc[] = [
+  {
+    id: 'doc-pan-default',
+    name: 'Proprietor_PAN_Card.pdf',
+    sizeText: '1.2 MB',
+    dateText: 'Verified automatically',
+    status: 'verified',
+    progress: 100,
+  },
+]
+
+const ALLOWED_EXTENSIONS = ['.pdf', '.jpg', '.jpeg', '.png', '.xlsx', '.docx']
+const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024 // 10 MB
 
 interface GSTStepDocumentsProps {
   onBack: () => void
@@ -20,6 +32,7 @@ interface GSTStepDocumentsProps {
 
 export const GSTStepDocuments = ({ onBack, onNext }: GSTStepDocumentsProps) => {
   const [docs, setDocs] = useState<UploadedDoc[]>(INITIAL_DOCS)
+  const [errorMsg, setErrorMsg] = useState<string | null>(null)
   const [isDragging, setIsDragging] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -47,20 +60,55 @@ export const GSTStepDocuments = ({ onBack, onNext }: GSTStepDocumentsProps) => {
   }
 
   const handleFiles = (files: File[]) => {
-    const newDocs: UploadedDoc[] = files.map((file, idx) => ({
-      id: `doc-${Date.now()}-${idx}`,
-      name: file.name,
-      sizeText: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
-      dateText: 'Uploaded just now',
-      status: 'verified',
-      progress: 100,
-    }))
+    setErrorMsg(null)
+    const newDocs: UploadedDoc[] = []
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i]
+      const ext = '.' + file.name.split('.').pop()?.toLowerCase()
+
+      if (!ALLOWED_EXTENSIONS.includes(ext)) {
+        newDocs.push({
+          id: `doc-${Date.now()}-${i}`,
+          name: file.name,
+          sizeText: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
+          dateText: 'Upload failed',
+          status: 'rejected',
+          progress: 0,
+          errorText: 'Unsupported format. Allowed: PDF, JPG, PNG, XLSX, DOCX',
+        })
+        continue
+      }
+
+      if (file.size > MAX_FILE_SIZE_BYTES) {
+        newDocs.push({
+          id: `doc-${Date.now()}-${i}`,
+          name: file.name,
+          sizeText: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
+          dateText: 'File too large',
+          status: 'rejected',
+          progress: 0,
+          errorText: 'File exceeds 10 MB limit',
+        })
+        continue
+      }
+
+      newDocs.push({
+        id: `doc-${Date.now()}-${i}`,
+        name: file.name,
+        sizeText: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
+        dateText: 'Uploaded just now',
+        status: 'verified',
+        progress: 100,
+      })
+    }
 
     setDocs((prev) => [...prev, ...newDocs])
   }
 
   const handleCancelUpload = (id: string) => {
     setDocs((prev) => prev.filter((d) => d.id !== id))
+    setErrorMsg(null)
   }
 
   const handleReplace = (id: string) => {
@@ -69,14 +117,41 @@ export const GSTStepDocuments = ({ onBack, onNext }: GSTStepDocumentsProps) => {
         d.id === id
           ? {
               ...d,
-              name: 'Address_Proof_v2.jpg',
+              name: 'Address_Proof_v2.pdf',
+              sizeText: '1.4 MB',
               status: 'verified',
               errorText: undefined,
               dateText: 'Uploaded just now',
+              progress: 100,
             }
           : d
       )
     )
+    setErrorMsg(null)
+  }
+
+  const handleProceed = () => {
+    const verifiedDocs = docs.filter((d) => d.status === 'verified')
+    const hasUploading = docs.some((d) => d.status === 'uploading')
+    const hasRejected = docs.some((d) => d.status === 'rejected')
+
+    if (docs.length === 0 || verifiedDocs.length === 0) {
+      setErrorMsg('Please upload at least one required document (e.g. PAN Card, Address Proof, Bank Proof) to proceed.')
+      return
+    }
+
+    if (hasUploading) {
+      setErrorMsg('Please wait for all documents to complete uploading.')
+      return
+    }
+
+    if (hasRejected) {
+      setErrorMsg('Please replace or remove rejected files before continuing.')
+      return
+    }
+
+    setErrorMsg(null)
+    onNext()
   }
 
   return (
@@ -88,6 +163,17 @@ export const GSTStepDocuments = ({ onBack, onNext }: GSTStepDocumentsProps) => {
             Drop files here or pick them from your device.
           </p>
         </div>
+
+        {errorMsg && (
+          <div className="gst-doc-error-banner" role="alert">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            <span>{errorMsg}</span>
+          </div>
+        )}
 
         {/* Dropzone */}
         <div
@@ -101,6 +187,7 @@ export const GSTStepDocuments = ({ onBack, onNext }: GSTStepDocumentsProps) => {
             ref={fileInputRef}
             type="file"
             multiple
+            accept=".pdf,.jpg,.jpeg,.png,.xlsx,.docx"
             className="gst-dropzone__file-input"
             onChange={handleFileInput}
           />
@@ -183,9 +270,19 @@ export const GSTStepDocuments = ({ onBack, onNext }: GSTStepDocumentsProps) => {
 
                 <div className="gst-doc-item__actions">
                   {doc.status === 'verified' && (
-                    <span className="gst-doc-badge gst-doc-badge--verified">
-                      • Verified
-                    </span>
+                    <div className="gst-doc-item__action-group">
+                      <span className="gst-doc-badge gst-doc-badge--verified">
+                        • Verified
+                      </span>
+                      <button
+                        type="button"
+                        className="gst-btn-doc-action"
+                        onClick={() => handleCancelUpload(doc.id)}
+                        title="Remove document"
+                      >
+                        Remove
+                      </button>
+                    </div>
                   )}
 
                   {doc.status === 'uploading' && (
@@ -214,6 +311,13 @@ export const GSTStepDocuments = ({ onBack, onNext }: GSTStepDocumentsProps) => {
                         onClick={() => handleReplace(doc.id)}
                       >
                         Replace
+                      </button>
+                      <button
+                        type="button"
+                        className="gst-btn-doc-action"
+                        onClick={() => handleCancelUpload(doc.id)}
+                      >
+                        Remove
                       </button>
                     </div>
                   )}
@@ -252,13 +356,13 @@ export const GSTStepDocuments = ({ onBack, onNext }: GSTStepDocumentsProps) => {
               <line x1="19" y1="12" x2="5" y2="12" />
               <polyline points="12 19 5 12 12 5" />
             </svg>
-            Back to checklist
+            Back to Business
           </button>
 
           <button
             type="button"
             className="gst-btn-continue"
-            onClick={onNext}
+            onClick={handleProceed}
           >
             Continue to review
             <svg
@@ -279,3 +383,5 @@ export const GSTStepDocuments = ({ onBack, onNext }: GSTStepDocumentsProps) => {
     </div>
   )
 }
+
+export default GSTStepDocuments
