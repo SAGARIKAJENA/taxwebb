@@ -68,6 +68,7 @@ export const REGEX = {
   pan: /^[A-Z]{5}[0-9]{4}[A-Z]$/,
   gstin: /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][0-9A-Z]Z[0-9A-Z]$/,
   mobile: /^[6-9]\d{9}$/,
+  aadhaar: /^[0-9]{12}$/,
   aadhaarMasked: /^\d{4}$/,
   pincode: /^[1-9][0-9]{5}$/,
 } as const

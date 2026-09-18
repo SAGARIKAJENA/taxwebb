@@ -87,7 +87,11 @@ export const GSTFilingReview: React.FC<GSTFilingReviewProps> = ({
       {/* Stepper and Top-Right Meta Badge */}
       <div className="gst-review-top-bar">
         <div className="gst-review-stepper-wrap">
+
           <GSTFilingStepper currentStep={3} onStepClick={onStepClick} />
+
+          <GSTFilingStepper currentStep={3} />
+
         </div>
         <div className="gst-review-top-meta">
           <span className="gst-review-top-meta__label">GST Return</span>
@@ -156,7 +160,7 @@ export const GSTFilingReview: React.FC<GSTFilingReviewProps> = ({
           className="gst-review-btn-back"
           onClick={onBack}
         >
-          ← Back
+          Back
         </button>
 
         <div className="gst-review-actions__right">
@@ -177,7 +181,7 @@ export const GSTFilingReview: React.FC<GSTFilingReviewProps> = ({
             className="gst-review-btn-approve"
             onClick={onApprove}
           >
-            <span>Proceed to Payment →</span>
+            <span>Continue</span>
           </button>
         </div>
       </footer>

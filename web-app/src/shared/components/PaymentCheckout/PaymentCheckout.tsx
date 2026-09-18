@@ -1,0 +1,224 @@
+import React, { useState } from 'react'
+import type {
+  PaymentCheckoutProps,
+  PaymentMethodType,
+  CardDetails,
+  PaymentResult,
+  PaymentBreakdown,
+} from './payment.types'
+import { PaymentMethodSelector } from './PaymentMethodSelector'
+import { PaymentUpiForm } from './PaymentUpiForm'
+import { PaymentCardForm } from './PaymentCardForm'
+import { PaymentNetBankingForm } from './PaymentNetBankingForm'
+import { PaymentSummaryCard } from './PaymentSummaryCard'
+import './PaymentCheckout.css'
+
+export const PaymentCheckout: React.FC<PaymentCheckoutProps> = ({
+  amount,
+  serviceTitle = 'Professional Filing Service',
+  applicationRef = 'APP-2026-00001',
+  applicantName,
+  onBack,
+  onSuccess,
+  showTrustBadges = true,
+  enablePromoCode = true,
+  defaultMethod = 'upi',
+  className = '',
+}) => {
+  const [selectedMethod, setSelectedMethod] = useState<PaymentMethodType>(defaultMethod)
+  const [upiId, setUpiId] = useState('user@okhdfcbank')
+  const [selectedUpiApp, setSelectedUpiApp] = useState('Google Pay')
+  const [selectedBank, setSelectedBank] = useState('State Bank of India')
+  const [cardDetails, setCardDetails] = useState<CardDetails>({
+    cardNumber: '',
+    expiry: '',
+    cvv: '',
+    cardHolder: '',
+  })
+
+  const [discount, setDiscount] = useState<number>(0)
+  const [isProcessing, setIsProcessing] = useState<boolean>(false)
+  const [upiError, setUpiError] = useState<string | null>(null)
+  const [cardErrors, setCardErrors] = useState<Partial<Record<keyof CardDetails, string>>>({})
+  const [bankError, setBankError] = useState<string | null>(null)
+
+  // Calculations: GST 18%
+  const baseAmount = Math.round(amount / 1.18)
+  const gstAmount = amount - baseAmount
+  const totalAmount = Math.max(0, amount - discount)
+
+  const breakdown: PaymentBreakdown = {
+    baseAmount,
+    gstAmount,
+    discountAmount: discount,
+    totalAmount,
+  }
+
+  const handleCardChange = (updated: Partial<CardDetails>) => {
+    setCardDetails((prev) => ({ ...prev, ...updated }))
+    setCardErrors((prev) => {
+      const copy = { ...prev }
+      for (const k of Object.keys(updated) as (keyof CardDetails)[]) {
+        delete copy[k]
+      }
+      return copy
+    })
+  }
+
+  const handleApplyPromo = (code: string) => {
+    if (code === 'TAXEDGE10' || code === 'SAVE10') {
+      setDiscount(Math.round(amount * 0.1))
+    } else if (code === 'FLAT100') {
+      setDiscount(100)
+    } else {
+      setDiscount(Math.round(amount * 0.05))
+    }
+  }
+
+  const validatePayment = (): boolean => {
+    if (selectedMethod === 'upi') {
+      if (!upiId.trim()) {
+        setUpiError('Please enter your UPI ID')
+        return false
+      }
+      if (!/^[\w.-]+@[\w.-]+$/.test(upiId.trim())) {
+        setUpiError('Enter a valid UPI ID (e.g. mobile@upi or username@bank)')
+        return false
+      }
+      setUpiError(null)
+      return true
+    }
+
+    if (selectedMethod === 'card') {
+      const errors: Partial<Record<keyof CardDetails, string>> = {}
+      const cleanNum = cardDetails.cardNumber.replace(/\s+/g, '')
+      if (!cleanNum || cleanNum.length < 16) {
+        errors.cardNumber = 'Enter a valid 16-digit card number'
+      }
+      if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(cardDetails.expiry)) {
+        errors.expiry = 'Valid MM/YY required'
+      }
+      if (!/^\d{3,4}$/.test(cardDetails.cvv)) {
+        errors.cvv = 'Enter 3 or 4-digit CVV'
+      }
+      if (!cardDetails.cardHolder.trim()) {
+        errors.cardHolder = 'Cardholder name is required'
+      }
+      setCardErrors(errors)
+      return Object.keys(errors).length === 0
+    }
+
+    if (selectedMethod === 'netbanking') {
+      if (!selectedBank) {
+        setBankError('Please select your bank to continue')
+        return false
+      }
+      setBankError(null)
+      return true
+    }
+
+    return true
+  }
+
+  const handlePay = () => {
+    if (!validatePayment()) return
+
+    setIsProcessing(true)
+
+    // Simulate safe processing time
+    setTimeout(() => {
+      setIsProcessing(false)
+      const result: PaymentResult = {
+        paymentId: `TXN-${Date.now().toString().slice(-8)}`,
+        method: selectedMethod,
+        amount: totalAmount,
+        applicationRef,
+        timestamp: new Date().toISOString(),
+        status: 'SUCCESS',
+        receiptNumber: `REC-${Date.now().toString().slice(-6)}`,
+      }
+      onSuccess(result)
+    }, 900)
+  }
+
+  return (
+    <div className={`payment-checkout-wrap ${className}`} data-testid="payment-checkout">
+      <div className="payment-checkout-layout">
+        {/* Left Column: Methods & Selected Form */}
+        <div className="payment-checkout-main">
+          <PaymentMethodSelector
+            selectedMethod={selectedMethod}
+            onSelectMethod={(m) => {
+              setSelectedMethod(m)
+              setUpiError(null)
+              setCardErrors({})
+              setBankError(null)
+            }}
+          />
+
+          {selectedMethod === 'upi' && (
+            <PaymentUpiForm
+              upiId={upiId}
+              selectedApp={selectedUpiApp}
+              error={upiError}
+              onUpiIdChange={(id) => {
+                setUpiId(id)
+                setUpiError(null)
+              }}
+              onSelectApp={setSelectedUpiApp}
+            />
+          )}
+
+          {selectedMethod === 'card' && (
+            <PaymentCardForm
+              cardDetails={cardDetails}
+              errors={cardErrors}
+              onChange={handleCardChange}
+            />
+          )}
+
+          {selectedMethod === 'netbanking' && (
+            <PaymentNetBankingForm
+              selectedBank={selectedBank}
+              error={bankError}
+              onSelectBank={(b) => {
+                setSelectedBank(b)
+                setBankError(null)
+              }}
+            />
+          )}
+
+          {/* Action Row */}
+          <div className="payment-checkout-actions">
+            {onBack && (
+              <button
+                type="button"
+                className="payment-checkout-back-btn"
+                onClick={onBack}
+                disabled={isProcessing}
+                data-testid="payment-back-btn"
+              >
+                ← Back
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Right Column: Sticky Summary & Checkout Card */}
+        <div className="payment-checkout-aside">
+          <PaymentSummaryCard
+            breakdown={breakdown}
+            serviceTitle={serviceTitle}
+            applicationRef={applicationRef}
+            applicantName={applicantName}
+            isProcessing={isProcessing}
+            enablePromoCode={enablePromoCode}
+            showTrustBadges={showTrustBadges}
+            onApplyPromo={handleApplyPromo}
+            onPay={handlePay}
+          />
+        </div>
+      </div>
+    </div>
+  )
+}

@@ -335,6 +335,7 @@ export const RevisedItr = () => {
                     ))}
                   </div>
 
+
                   <h3 className="revised-itr-section-heading">Deduction Correction</h3>
                   <div className="revised-itr-detail-rows" style={{ marginBottom: '1.75rem' }}>
                     {[
@@ -500,6 +501,25 @@ export const RevisedItr = () => {
             <div className="revised-itr-modal-footer">
               <button type="button" className="revised-itr-btn-continue" style={{ height: '42px', padding: '0 1.5rem' }} onClick={() => setViewingDoc(null)}>Close Preview</button>
             </div>
+
+          {/* Bottom Action Bar */}
+          <div className="revised-flow-bottom-bar">
+            <button
+              type="button"
+              className="revised-bottom-back-btn"
+              onClick={handlePrevStep}
+            >
+              Back
+            </button>
+
+            <button
+              type="button"
+              className="revised-bottom-next-btn"
+              onClick={handleNextStep}
+            >
+              {currentStep < 5 ? 'Continue' : 'Finish'}
+            </button>
+
           </div>
         </div>
       )}

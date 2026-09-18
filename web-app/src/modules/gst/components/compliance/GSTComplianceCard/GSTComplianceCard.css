@@ -164,6 +164,7 @@
   }
 }
 
+
 /* Dynamic Supporting Documents Card */
 .gst-comp-upload-card {
   margin-top: 1.5rem;
@@ -175,6 +176,34 @@
   flex-direction: column;
   gap: 1.25rem;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+
+.compliance-attached-file-box {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.75rem 1rem;
+  background: var(--taxedge-light-blue, #EAF1FE); border: 1px solid rgba(11, 94, 215, 0.2); border-radius: 12px;
+  .compliance-attached-file-info {
+    display: flex; align-items: center; gap: 0.75rem; min-width: 0;
+    &--clickable { cursor: pointer; transition: opacity 0.15s ease; &:hover .compliance-attached-filename { color: var(--taxedge-orange, #F97316); text-decoration: underline; text-underline-offset: 3px; } }
+  }
+  .compliance-file-icon { width: 22px; height: 22px; color: var(--taxedge-navy, #083B75); flex-shrink: 0; }
+  .compliance-attached-filename { display: block; font-size: 0.92rem; font-weight: 700; color: var(--taxedge-navy, #083B75); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .compliance-attached-filesize { display: block; font-size: 0.78rem; color: var(--color-text-muted, #64748B); }
+}
+
+/* Card Actions */
+.compliance-actions-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 1.5rem; padding-top: 1.25rem;
+  .compliance-btn-secondary {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; background: #FFFFFF; border: 1.5px solid #CBD5E1;
+    color: #0F172A; padding: 0.65rem 1.65rem; font-size: 0.92rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease;
+    &:hover { background: #F8FAFC; border-color: #94A3B8; color: #0F172A; transform: translateY(-1px); }
+  }
+  .compliance-btn-primary {
+    display: inline-flex; align-items: center; gap: 0.6rem; background: linear-gradient(135deg, var(--taxedge-orange, #F97316) 0%, #EA580C 100%);
+    border: none; color: #FFFFFF; padding: 0.85rem 2.25rem; font-size: 0.95rem; box-shadow: 0 4px 14px rgba(249, 115, 22, 0.35);
+    &:hover:not(:disabled) { background: linear-gradient(135deg, #EA580C 0%, #C2410C 100%); box-shadow: 0 6px 20px rgba(249, 115, 22, 0.48); transform: translateY(-1px); }
+    &:disabled { opacity: 0.65; cursor: not-allowed; }
+  }
+
 }
 
 /* Bottom Action Bar */

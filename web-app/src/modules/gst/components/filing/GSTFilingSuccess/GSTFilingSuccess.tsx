@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { formatCurrency } from '@shared/utils'
+import { GSTFilingStepper } from '../GSTFilingPeriod/GSTFilingStepper'
 import type { PaymentResult } from '../../registration/GSTStepPayment/GSTStepPayment'
 import './GSTFilingSuccess.css'
 
@@ -34,6 +35,7 @@ export const GSTFilingSuccess = ({
 
   return (
     <div className="gst-success-wrapper">
+
       {/* 1. Confetti & Checkmark Hero Header */}
       <div className="gst-success-hero">
         <div className="gst-success-confetti-container" aria-hidden="true">
@@ -46,6 +48,12 @@ export const GSTFilingSuccess = ({
           <span className="gst-confetti-dot gst-confetti-7" />
           <span className="gst-confetti-dot gst-confetti-8" />
         </div>
+
+
+      <div className="gst-filing-success-stepper-wrap" style={{ width: '100%', maxWidth: 740, margin: '0 auto 1.5rem auto' }}>
+        <GSTFilingStepper currentStep={5} />
+      </div>
+      <div className="gst-success-card">
 
         <div className="gst-success-ring">
           <svg viewBox="0 0 24 24" className="gst-success-check-svg">

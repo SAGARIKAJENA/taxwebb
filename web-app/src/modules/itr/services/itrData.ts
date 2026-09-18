@@ -1,5 +1,4 @@
 import type {
-  ItrApplicationItem,
   ItrServiceCard,
   ItrStatCard,
   TdsEstimatorValues,
@@ -81,34 +80,6 @@ export const ITR_SERVICES_LIST: ItrServiceCard[] = [
     timeline: 'Within notice deadline',
     icon: 'warning',
     viewKey: 'tax-notice-assistance',
-  },
-]
-
-export const INITIAL_APPLICATIONS: ItrApplicationItem[] = [
-  {
-    id: 'app_itr_2026',
-    title: 'ITR Filing — AY 2026-27',
-    reference: 'ITR-2026-00074',
-    entityType: 'Proprietorship',
-    formType: 'ITR-3',
-    caAssigned: 'Meera Iyer',
-    statusLabel: 'Tax Calculation',
-    statusTone: 'warning',
-    progressPercentage: 46,
-    updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
-  },
-  {
-    id: 'app_tds_2025',
-    title: 'TDS Refund — AY 2025-26',
-    reference: 'ITR-2025-00611',
-    entityType: 'Refund credited',
-    formType: '₹18,420',
-    caAssigned: 'Meera Iyer',
-    statusLabel: 'Completed',
-    statusTone: 'success',
-    progressPercentage: 100,
-    amountCredited: 18420,
-    updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 25).toISOString(),
   },
 ]
 

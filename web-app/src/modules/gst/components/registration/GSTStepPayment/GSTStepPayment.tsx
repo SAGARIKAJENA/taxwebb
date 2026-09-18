@@ -1,31 +1,18 @@
-import { useState, type FormEvent } from 'react'
+import type { FC } from 'react'
+import { PaymentCheckout } from '@shared/components'
+import type { GSTStepPaymentProps } from './gstPayment.types'
 import './GSTStepPayment.css'
 
-interface GSTStepPaymentProps {
-  amount?: number
-  applicationRef?: string
-  serviceTitle?: string
-  onBack: () => void
-  onSuccess: (paymentDetails: PaymentResult) => void
-}
+export type { GSTStepPaymentProps, PaymentResult } from './gstPayment.types'
 
-export interface PaymentResult {
-  transactionId: string
-  receiptNumber: string
-  method: string
-  dateText: string
-  applicationRef: string
-  amount: number
-}
-
-type PaymentMethodType = 'upi' | 'debit' | 'credit' | 'netbanking'
-
-export const GSTStepPayment = ({
-  amount = 5900,
-  applicationRef = 'GST-2026-00118',
-  serviceTitle = 'GST Registration',
+export const GSTStepPayment: FC<GSTStepPaymentProps> = ({
+  amount = 1499,
+  applicationRef = '',
+  serviceTitle = 'GST Registration Filing',
+  applicantName = 'Applicant',
   onBack,
   onSuccess,
+
 }: GSTStepPaymentProps) => {
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethodType>('upi')
   const [selectedUpiApp, setSelectedUpiApp] = useState<string>('gpay')
@@ -107,172 +94,31 @@ export const GSTStepPayment = ({
     }, 600)
   }
 
+
+}) => {
+
   return (
-    <div className="gst-step-payment">
-      <div className="gst-step-payment__heading-block">
-        <h1 className="gst-step-payment__title">Complete your payment</h1>
-        <p className="gst-step-payment__subtitle">
-          {serviceTitle} — application {applicationRef}
-        </p>
-      </div>
-
-      <div className="gst-step-payment__layout">
-        {/* Left Side: Payment Form */}
-        <div className="gst-payment-main">
-          <section className="gst-payment-card">
-            <div className="gst-payment-card__header">
-              <h2 className="gst-payment-card__title">Payment method</h2>
-              <span className="gst-payment-secure-badge">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  className="gst-payment-secure-icon"
-                >
-                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                </svg>
-                Secure
-              </span>
-            </div>
-
-            <div className="gst-payment-methods-list">
-              {paymentMethods.map((method) => {
-                const isSelected = selectedMethod === method.id
-                return (
-                  <div
-                    key={method.id}
-                    className={`gst-payment-method-item ${
-                      isSelected ? 'gst-payment-method-item--active' : ''
-                    }`}
-                    onClick={() => setSelectedMethod(method.id)}
-                  >
-                    <div className="gst-payment-method-item__header">
-                      <div className="gst-payment-method-item__icon-wrap">
-                        {method.icon}
-                      </div>
-
-                      <div className="gst-payment-method-item__info">
-                        <span className="gst-payment-method-item__title">
-                          {method.title}
-                        </span>
-                        <span className="gst-payment-method-item__desc">
-                          {method.description}
-                        </span>
-                      </div>
-
-                      <div className="gst-payment-radio">
-                        <div
-                          className={`gst-payment-radio__circle ${
-                            isSelected ? 'gst-payment-radio__circle--checked' : ''
-                          }`}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Sub-form when UPI is selected */}
-                    {isSelected && method.id === 'upi' && (
-                      <div
-                        className="gst-upi-details-pane"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <span className="gst-upi-label">Pay with</span>
-                        <div className="gst-upi-apps-row">
-                          {upiApps.map((app) => (
-                            <button
-                              key={app.id}
-                              type="button"
-                              className={`gst-upi-app-btn ${
-                                selectedUpiApp === app.id
-                                  ? 'gst-upi-app-btn--active'
-                                  : ''
-                              }`}
-                              onClick={() => setSelectedUpiApp(app.id)}
-                            >
-                              <span
-                                className="gst-upi-app-badge"
-                                style={{ backgroundColor: app.color }}
-                              >
-                                {app.letter}
-                              </span>
-                              <span className="gst-upi-app-name">{app.name}</span>
-                            </button>
-                          ))}
-                        </div>
-
-                        <label className="gst-upi-label" htmlFor="upiIdInput">
-                          Or enter your UPI ID
-                        </label>
-                        <input
-                          id="upiIdInput"
-                          type="text"
-                          className="gst-form-input gst-upi-input"
-                          value={upiId}
-                          onChange={(e) => setUpiId(e.target.value)}
-                          placeholder="username@bank"
-                        />
-                      </div>
-                    )}
-                  </div>
-                )
-              })}
-            </div>
-
-            <button
-              type="button"
-              className="gst-btn-pay-securely"
-              disabled={isProcessing}
-              onClick={handlePay}
-            >
-              {isProcessing ? (
-                'Processing payment...'
-              ) : (
-                <>
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    className="gst-btn-pay-lock"
-                  >
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                  </svg>
-                  Pay ₹{finalPayable.toLocaleString('en-IN')} securely
-                </>
-              )}
-            </button>
-
-            <p className="gst-payment-gateway-note">
-              Payments are processed by a PCI-DSS compliant gateway. TaxEdge never stores your
-              card details.
-            </p>
-          </section>
-
-          <div className="gst-step-actions">
-            <button
-              type="button"
-              className="gst-btn-back"
-              onClick={onBack}
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="gst-btn-back-arrow"
-              >
-                <line x1="19" y1="12" x2="5" y2="12" />
-                <polyline points="12 19 5 12 12 5" />
-              </svg>
-              Back to review
-            </button>
-          </div>
-        </div>
-      </div>
+    <div className="gst-step-payment-page" data-testid="gst-step-payment">
+      <PaymentCheckout
+        amount={amount}
+        serviceTitle={serviceTitle}
+        applicationRef={applicationRef}
+        applicantName={applicantName}
+        onBack={onBack}
+        enablePromoCode={true}
+        onSuccess={(res) => {
+          onSuccess({
+            transactionId: res.paymentId,
+            receiptNumber: res.receiptNumber || `REC-${Date.now().toString().slice(-6)}`,
+            method: res.method.toUpperCase(),
+            dateText: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+            applicationRef: res.applicationRef,
+            amount: res.amount,
+          })
+        }}
+      />
     </div>
   )
 }
+
+export default GSTStepPayment

@@ -266,6 +266,7 @@
 .gst-canc-back-pill-btn:hover { background-color: #eff6ff; }
 .gst-canc-back-pill-btn svg { width: 18px; height: 18px; }
 
+
 .gst-canc-submit-orange-btn {
   display: inline-flex;
   align-items: center;
@@ -284,6 +285,23 @@
 .gst-canc-submit-orange-btn:hover:not(:disabled) {
   transform: translateY(-1px);
   box-shadow: 0 6px 20px rgba(249, 115, 22, 0.45);
+
+/* Actions */
+.cancellation-form-actions {
+  display: flex; align-items: center; justify-content: space-between; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #E2E8F0; gap: 1rem;
+  .cancellation-btn-back {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.65rem 1.65rem; background-color: #FFFFFF;
+    border: 1.5px solid #CBD5E1; border-radius: 9999px; color: #0F172A; font-size: 0.92rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease; font-family: inherit;
+    &:hover { background-color: #F8FAFC; border-color: #94A3B8; color: #0F172A; transform: translateY(-1px); }
+  }
+  .cancellation-btn-submit {
+    display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.9rem 2.25rem; background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
+    color: #FFFFFF; border: none; border-radius: 9999px; font-size: 0.98rem; font-weight: 700; cursor: pointer;
+    transition: all 0.15s ease; box-shadow: 0 4px 14px rgba(249, 115, 22, 0.35); font-family: inherit;
+    &:hover:not(:disabled) { background: linear-gradient(135deg, #EA580C 0%, #C2410C 100%); box-shadow: 0 6px 20px rgba(249, 115, 22, 0.48); transform: translateY(-1px); }
+    &:disabled { opacity: 0.7; cursor: not-allowed; }
+  }
+
 }
 .gst-canc-submit-orange-btn:disabled { opacity: 0.7; cursor: not-allowed; }
 .gst-canc-submit-orange-btn svg { width: 18px; height: 18px; }

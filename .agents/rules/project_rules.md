@@ -1,6 +1,6 @@
 # Project Guidelines & Rules
 
-All development within this repository must strictly adhere to the following 15 rules:
+All development within this repository must strictly adhere to the following 16 rules:
 
 1. **CSS Files**: Must be created separately (no inline styles or tightly coupled single-file styling where separate CSS files are expected).
 2. **Naming Conventions**: File/component names must NOT contain spaces. Always use clean naming conventions (PascalCase for components, camelCase or kebab-case for utilities/styles).
@@ -17,3 +17,4 @@ All development within this repository must strictly adhere to the following 15 
 13. **Data Separation**: Avoid unnecessary hardcoded values where configuration, constants, or mock/API data can be separated.
 14. **Reuse**: Reuse existing project utilities, hooks, design tokens, and components instead of recreating them.
 15. **Code Quality**: Keep the implementation clean, maintainable, and scalable.
+16. **Color Theme & Buttons**: The application color theme is strictly Navy Blue (`#083B75` / `#06152D`) and Orange (`#F97316`). All buttons throughout the application MUST use `#f97316` (orange) background with white text (`#ffffff`). NEVER use green for buttons. For non-button content, use Navy Blue / Blue and Orange accents.

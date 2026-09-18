@@ -1,14 +1,26 @@
+
 import React, { useState, useEffect, useRef, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { routePaths } from '@core/config'
 import { GSTComplianceSubmitted } from './GSTComplianceSubmitted'
 import { GSTComplianceUploadFields } from './GSTComplianceUploadFields'
 import { GSTComplianceConfirmModal } from './GSTComplianceConfirmModal'
+
+import React from 'react'
+import { routePaths } from '@core/config'
+import { GSTComplianceSubmitted } from './GSTComplianceSubmitted'
+import { ComplianceDocPreviewModal } from './GSTComplianceDocPreviewModal'
+import { ChevronIcon, FieldRow } from './GSTComplianceFileDropzone'
+import { GSTComplianceReconFields } from './GSTComplianceReconFields'
+import { GSTComplianceNoticeFields } from './GSTComplianceNoticeFields'
+import { useGSTComplianceForm } from './useGSTComplianceForm'
+
 import './GSTComplianceCard.css'
 
 export interface ComplianceFormData {
   gstin: string
   financialYear: string
+
   requestType: string
 }
 
@@ -85,19 +97,98 @@ export const GSTComplianceCard: React.FC<GSTComplianceCardProps> = ({
     }, 600)
   }
 
+  requestType: 'Reconciliation Support' | 'Notice Response'
+  purchaseDoc: File | null
+  salesDoc: File | null
+  gstr2bRef: string
+  gstr2bDoc?: File | null
+  noticeNumber?: string
+  noticeDoc?: File | null
+  dueDate?: string
+  replyDraft: string
+}
+
+export interface GSTComplianceCardProps {
+  title?: string
+  subtitle?: string
+  initialGstin?: string
+  initialFinancialYear?: string
+  initialRequestType?: 'Reconciliation Support' | 'Notice Response'
+  onAllForms?: () => void
+  onSubmit?: (d: ComplianceFormData) => void
+}
+
+export const GSTComplianceCard: React.FC<GSTComplianceCardProps> = ({
+  title = 'GST Compliance Form',
+  subtitle = 'Live screen — numbered to match the field spec.',
+  initialGstin = '27AXTPD4419K1ZP',
+  initialFinancialYear = 'FY 2026-27',
+  initialRequestType = 'Reconciliation Support',
+  onAllForms,
+  onSubmit,
+}) => {
+  const {
+    navigate,
+    gstin,
+    financialYear,
+    setFinancialYear,
+    requestType,
+    setRequestType,
+    purchaseFile,
+    setPurchaseFile,
+    salesFile,
+    setSalesFile,
+    gstr2bRef,
+    setGstr2bRef,
+    gstr2bFile,
+    setGstr2bFile,
+    noticeNumber,
+    setNoticeNumber,
+    noticeFile,
+    setNoticeFile,
+    dueDate,
+    setDueDate,
+    replyDraft,
+    setReplyDraft,
+    previewDoc,
+    setPreviewDoc,
+    errors,
+    isSubmitting,
+    isSubmitted,
+    applicationId,
+    clearErr,
+    handleGstinChange,
+    handleSubmit,
+  } = useGSTComplianceForm({
+    initialGstin,
+    initialFinancialYear,
+    initialRequestType,
+    onSubmit,
+  })
+
+
   if (isSubmitted) {
     return (
       <GSTComplianceSubmitted
+
         applicationId="GSTC-2026-680427"
         gstin={gstin || '29AAAAA0000A1Z5'}
         requestType={requestType || 'Reconciliation Support'}
         onBackToForm={() => setIsSubmitted(false)}
+
+        applicationId={applicationId}
+        gstin={gstin}
+        requestType={requestType}
+        fieldsCount={requestType === 'Reconciliation Support' ? 7 : 10}
+        onBackToForm={() => navigate(routePaths.gst.compliance, { replace: true })}
+
         onAllForms={onAllForms ?? (() => navigate(routePaths.gst.root))}
       />
     )
   }
 
   return (
+
     <div className="gst-comp-container">
       {/* Page Title */}
       <div className="gst-comp-header">
@@ -122,6 +213,29 @@ export const GSTComplianceCard: React.FC<GSTComplianceCardProps> = ({
               <svg viewBox="0 0 24 24" fill="none" stroke="#083b75" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                 <polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" />
+
+    <div className="gst-compliance-spec-card">
+      <div className="compliance-spec-header">
+        <div className="compliance-spec-header__left">
+          <h2 className="compliance-spec-title">{title}</h2>
+          <p className="compliance-spec-subtitle">{subtitle}</p>
+        </div>
+        <div className="compliance-spec-badge">
+          {requestType === 'Reconciliation Support' ? '7' : '10'} of 10 shown
+        </div>
+      </div>
+
+      <form onSubmit={handleSubmit} noValidate className="compliance-spec-form">
+        <FieldRow
+          num={1}
+          label="GSTIN / PAN"
+          hint="15-character GSTIN or 10-character PAN. Letters auto-capitalize to uppercase."
+          error={errors.gstin}
+          badge={
+            <span className="compliance-autofill-tag">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="compliance-check-icon">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+
               </svg>
             </span>
             <h3 className="gst-comp-card-title">Business & Filing Details</h3>
@@ -138,14 +252,20 @@ export const GSTComplianceCard: React.FC<GSTComplianceCardProps> = ({
               maxLength={15}
               placeholder="e.g. 29AAAAA0000A1Z5"
               value={gstin}
+
               onChange={(e) => {
                 setGstin(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ''))
                 if (errors.gstin) setErrors((prev) => ({ ...prev, gstin: '' }))
               }}
               className={`gst-comp-input ${errors.gstin ? 'has-error' : ''}`}
+
+              onChange={(e) => handleGstinChange(e.target.value)}
+              className={`compliance-gstin-input ${errors.gstin ? 'has-error' : ''}`}
+
             />
             {errors.gstin && <span className="gst-comp-error-msg">{errors.gstin}</span>}
           </div>
+
 
           {/* Row 2: 2-Column Row for Financial Year & Request Type */}
           <div className="gst-comp-grid-row">
@@ -261,6 +381,109 @@ export const GSTComplianceCard: React.FC<GSTComplianceCardProps> = ({
 
         {/* Bottom Action Bar */}
         <div className="gst-comp-actions-row">
+
+        </FieldRow>
+
+        <FieldRow
+          num={2}
+          label="Period / Financial Year"
+          required
+          hint="Which month or year the check covers"
+        >
+          <div className="compliance-select-wrapper">
+            <select
+              id="compliance-fy"
+              name="financialYear"
+              value={financialYear}
+              onChange={(e) => setFinancialYear(e.target.value)}
+              className="compliance-select"
+            >
+              {['FY 2026-27', 'FY 2025-26', 'FY 2024-25', 'FY 2023-24'].map((y) => (
+                <option key={y} value={y}>
+                  {y}
+                </option>
+              ))}
+            </select>
+            <ChevronIcon />
+          </div>
+        </FieldRow>
+
+        <FieldRow
+          num={3}
+          label="Type of Request"
+          required
+          hint="Reconciliation Support or Notice Response"
+        >
+          <div className="compliance-select-wrapper">
+            <select
+              id="compliance-request-type"
+              name="requestType"
+              value={requestType}
+              onChange={(e) =>
+                setRequestType(
+                  e.target.value as 'Reconciliation Support' | 'Notice Response'
+                )
+              }
+              className="compliance-select"
+            >
+              {['Reconciliation Support', 'Notice Response'].map((t) => (
+                <option key={t} value={t}>
+                  {t}
+                </option>
+              ))}
+            </select>
+            <ChevronIcon />
+          </div>
+        </FieldRow>
+
+        {requestType === 'Reconciliation Support' ? (
+          <GSTComplianceReconFields
+            purchaseFile={purchaseFile}
+            setPurchaseFile={setPurchaseFile}
+            salesFile={salesFile}
+            setSalesFile={setSalesFile}
+            gstr2bRef={gstr2bRef}
+            setGstr2bRef={setGstr2bRef}
+            gstr2bFile={gstr2bFile}
+            setGstr2bFile={setGstr2bFile}
+            errors={errors}
+            clearErr={clearErr}
+            setPreviewDoc={setPreviewDoc}
+          />
+        ) : (
+          <>
+            <GSTComplianceNoticeFields
+              noticeNumber={noticeNumber}
+              setNoticeNumber={setNoticeNumber}
+              noticeFile={noticeFile}
+              setNoticeFile={setNoticeFile}
+              dueDate={dueDate}
+              setDueDate={setDueDate}
+              errors={errors}
+              clearErr={clearErr}
+              setPreviewDoc={setPreviewDoc}
+            />
+          </>
+        )}
+
+        <FieldRow
+          num={requestType === 'Reconciliation Support' ? 7 : 10}
+          label="Reply / Response Draft"
+          hint="Optional — can be filled in by staff instead"
+        >
+          <textarea
+            id="compliance-reply-draft"
+            name="replyDraft"
+            rows={4}
+            placeholder="Optional. Leave blank and your GST executive will draft the reply for you."
+            value={replyDraft}
+            onChange={(e) => setReplyDraft(e.target.value)}
+            className="compliance-textarea"
+          />
+        </FieldRow>
+
+        <div className="compliance-actions-row">
+
           <button
             type="button"
             className="gst-comp-back-btn"
@@ -272,11 +495,26 @@ export const GSTComplianceCard: React.FC<GSTComplianceCardProps> = ({
             Back
           </button>
 
+
           <button type="submit" disabled={isSubmitting} className="gst-comp-submit-btn">
             {isSubmitting ? 'Submitting...' : 'Submit Request'}
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
             </svg>
+
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="compliance-btn-primary"
+          >
+            {isSubmitting ? (
+              'Submitting...'
+            ) : (
+              <>
+                Submit GST Compliance <span aria-hidden="true">→</span>
+              </>
+            )}
+
           </button>
         </div>
       </form>
@@ -293,5 +531,10 @@ export const GSTComplianceCard: React.FC<GSTComplianceCardProps> = ({
   )
 }
 
+
 export default GSTComplianceCard
 
+
+
+export default GSTComplianceCard
+   

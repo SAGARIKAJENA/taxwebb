@@ -144,29 +144,30 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 0.5rem;
   background-color: #ffffff;
-  color: #334155;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-size: 14px;
-  font-weight: 600;
+  color: #0f172a;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 9999px;
+  padding: 0.65rem 1.65rem;
+  font-size: 0.92rem;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
 .gst-docs-btn-back:hover {
   background-color: #f8fafc;
-  border-color: #cbd5e1;
+  border-color: #94a3b8;
   color: #0f172a;
+  transform: translateY(-1px);
 }
 
 .gst-docs-btn-continue {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: #ff5722;
+  background-color: #f97316;
   color: #ffffff;
   border: none;
   border-radius: 8px;
@@ -175,17 +176,25 @@
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 6px rgba(255, 87, 34, 0.25);
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.35);
 }
 
 .gst-docs-btn-continue:hover {
-  background-color: #f4511e;
+  background-color: #ea580c;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(255, 87, 34, 0.35);
+  box-shadow: 0 4px 16px rgba(249, 115, 22, 0.45);
 }
 
 .gst-docs-btn-continue:active {
   transform: translateY(0);
+}
+
+.gst-docs-btn-continue:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+  pointer-events: none;
+  box-shadow: none;
+  transform: none;
 }
 
 @media (max-width: 768px) {

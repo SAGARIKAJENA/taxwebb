@@ -35,14 +35,14 @@
 }
 
 .gst-filing-stepper__badge--completed {
-  background-color: #00b074;
+  background-color: #083b75;
   color: #ffffff;
 }
 
 .gst-filing-stepper__badge--active {
-  background-color: #ff5722;
+  background-color: #f97316;
   color: #ffffff;
-  box-shadow: 0 2px 6px rgba(255, 87, 34, 0.3);
+  box-shadow: 0 2px 6px rgba(249, 115, 22, 0.3);
 }
 
 .gst-filing-stepper__badge--pending {
@@ -64,11 +64,12 @@
 }
 
 .gst-filing-stepper__label--completed {
-  color: #1e293b;
+  color: #083b75;
+  font-weight: 600;
 }
 
 .gst-filing-stepper__label--active {
-  color: #0f172a;
+  color: #f97316;
   font-weight: 700;
 }
 
@@ -78,10 +79,15 @@
 
 .gst-filing-stepper__line {
   width: 42px;
-  height: 1px;
+  height: 2px;
   background-color: #e2e8f0;
   margin: 0 12px;
   flex-shrink: 0;
+  transition: background-color 0.2s ease;
+}
+
+.gst-filing-stepper__line--completed {
+  background-color: #083b75;
 }
 
 @media (max-width: 640px) {
