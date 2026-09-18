@@ -18,45 +18,80 @@ import {
   getResolvedReviewDetails,
   DEFAULT_TAX_COMPUTATION,
   NET_TAX_LIABILITY,
-  DEFAULT_FILING_FEES,
-  TOTAL_PAYABLE_FEE,
-  DEFAULT_DOC_SUMMARY,
 } from './gstReviewData'
+import {
+  DEFAULT_DOCUMENT_ITEMS,
+  DEFAULT_FILING_UPLOADED_FILES,
+  calculateDocumentSummary,
+  type UploadedFileInfo,
+} from '../GSTFilingDocuments/gstDocumentsData'
 import './GSTFilingReview.css'
 
 export interface GSTFilingReviewProps {
   selectedMonth?: string
   baseFee?: number
   filingData?: Partial<FilingPeriodData>
+  uploadedFiles?: Record<string, UploadedFileInfo>
+  notApplicableDocs?: Record<string, boolean>
   onBack: () => void
   onRequestChange?: () => void
+  onStepClick?: (step: number) => void
   onApprove: () => void
 }
 
 export const GSTFilingReview: React.FC<GSTFilingReviewProps> = ({
   selectedMonth,
   filingData,
+  uploadedFiles,
+  notApplicableDocs,
   onBack,
   onRequestChange,
+  onStepClick,
   onApprove,
 }) => {
   const [showRequestModal, setShowRequestModal] = useState(false)
 
-  const details = getResolvedReviewDetails({
-    ...filingData,
-    selectedMonth: selectedMonth || filingData?.selectedMonth,
-  })
+  const effectiveUploadedFiles = uploadedFiles ?? DEFAULT_FILING_UPLOADED_FILES
+  const effectiveNotApplicableDocs = notApplicableDocs ?? {}
+
+  const docSummaryResult = calculateDocumentSummary(
+    DEFAULT_DOCUMENT_ITEMS,
+    effectiveUploadedFiles,
+    effectiveNotApplicableDocs
+  )
+
+  const details = getResolvedReviewDetails(
+    {
+      ...filingData,
+      selectedMonth: selectedMonth || filingData?.selectedMonth,
+    },
+    docSummaryResult.totalVerified
+  )
+
 
   // Format return type and period labels for the top-right badge
   const returnTypeDisplay = details.returnForm || 'gstr1_3b_monthly'
   const periodDisplay = details.filingPeriod || 'December 2025'
+
+  const effectiveBaseFee = filingData?.baseFee && filingData.baseFee > 0 ? filingData.baseFee : 2500
+  const gstAmount = Math.round(effectiveBaseFee * 0.18)
+  const totalPayableFee = effectiveBaseFee + gstAmount
+
+  const filingFeeItems = [
+    { particulars: 'CA Consultancy & Reconciliation', amount: effectiveBaseFee },
+    { particulars: 'Platform GST (18%)', amount: gstAmount },
+  ]
 
   return (
     <div className="gst-review-page">
       {/* Stepper and Top-Right Meta Badge */}
       <div className="gst-review-top-bar">
         <div className="gst-review-stepper-wrap">
+
+          <GSTFilingStepper currentStep={3} onStepClick={onStepClick} />
+
           <GSTFilingStepper currentStep={3} />
+
         </div>
         <div className="gst-review-top-meta">
           <span className="gst-review-top-meta__label">GST Return</span>
@@ -67,7 +102,7 @@ export const GSTFilingReview: React.FC<GSTFilingReviewProps> = ({
 
       {/* Main Page Header */}
       <header className="gst-review-header">
-        <h1 className="gst-review-title">Filing Review & Computation</h1>
+        <h1 className="gst-review-title">Filing Review &amp; Computation</h1>
         <p className="gst-review-subtitle">
           Review your details, check the computed tax figures and proceed to file your GST return.
         </p>
@@ -98,17 +133,22 @@ export const GSTFilingReview: React.FC<GSTFilingReviewProps> = ({
             netLiability={NET_TAX_LIABILITY}
           />
           <GSTReviewFilingFeeCard
-            items={DEFAULT_FILING_FEES}
-            totalFee={TOTAL_PAYABLE_FEE}
+            items={filingFeeItems}
+            totalFee={totalPayableFee}
           />
         </div>
 
         {/* Right Column */}
         <div className="gst-review-col-right">
-          <GSTReviewDocumentsSummaryCard summaryItems={DEFAULT_DOC_SUMMARY} />
+          <GSTReviewDocumentsSummaryCard
+            summaryItems={docSummaryResult.items}
+            overallVerifiedCount={docSummaryResult.totalVerified}
+            totalDocsCount={docSummaryResult.totalDocs}
+          />
           <GSTReviewNextStepsCard />
           <GSTReviewAssuranceBox />
         </div>
+
       </div>
 
       {/* Bottom Divider & Action Bar */}

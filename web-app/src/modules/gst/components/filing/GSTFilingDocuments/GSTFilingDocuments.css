@@ -18,6 +18,8 @@
 
 .gst-docs-stepper-wrap {
   flex: 1;
+  display: flex;
+  justify-content: center;
 }
 
 .gst-docs-top-meta {

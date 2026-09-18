@@ -62,17 +62,18 @@ export const GSTServices = ({ services }: GSTServicesProps) => {
   const navigate = useNavigate()
 
   const handleStart = (service: GstService) => {
-    if (service.iconType === 'registration' || service.id === '1') {
+    const titleLower = service.title.toLowerCase()
+    if (service.iconType === 'registration' || titleLower.includes('registration')) {
       navigate(routePaths.gst.registration)
-    } else if (service.iconType === 'filing' || service.id === '2') {
+    } else if (service.iconType === 'filing' || titleLower.includes('filing')) {
       navigate(routePaths.gst.filing)
-    } else if (service.iconType === 'compliance' || service.id === '3') {
+    } else if (service.iconType === 'compliance' || titleLower.includes('compliance')) {
       navigate(routePaths.gst.compliance)
-    } else if (service.iconType === 'cancellation' || service.id === '4') {
-      navigate(routePaths.gst.cancellation)
-    } else if (service.iconType === 'amendment' || service.id === '5') {
+    } else if (service.iconType === 'amendment' || titleLower.includes('amendment')) {
       navigate(routePaths.gst.amendment)
-    } else if (service.iconType === 'certificate' || service.id === '6') {
+    } else if (service.iconType === 'cancellation' || titleLower.includes('cancellation')) {
+      navigate(routePaths.gst.cancellation)
+    } else if (service.iconType === 'certificate' || titleLower.includes('certificate')) {
       navigate(routePaths.gst.certificate)
     } else {
       navigate(routePaths.gst.registration)

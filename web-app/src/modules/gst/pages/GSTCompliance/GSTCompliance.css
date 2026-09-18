@@ -1,17 +1,18 @@
 .gst-compliance-page {
-  padding: 2.5rem 1.5rem;
+  padding: 2rem 2.5rem;
   background-color: var(--color-bg, #f8fafc);
   min-height: calc(100vh - 64px);
   box-sizing: border-box;
 }
 
 .gst-compliance-container {
-  max-width: 860px;
+  max-width: 1100px;
   margin: 0 auto;
 }
 
 @media (max-width: 640px) {
   .gst-compliance-page {
-    padding: 1rem 0.5rem;
+    padding: 1rem 0.75rem;
   }
 }
+

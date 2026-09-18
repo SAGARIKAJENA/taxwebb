@@ -12,7 +12,6 @@ import {
   type SelectOption,
 } from './gstPeriodOptions'
 import './GSTFilingPeriod.css'
-
 export interface FilingPeriodData {
   gstin: string
   businessName: string
@@ -27,12 +26,20 @@ export interface FilingPeriodData {
 
 interface GSTFilingPeriodProps {
   initialData?: Partial<FilingPeriodData>
+  onStepClick?: (step: number) => void
   onContinue: (data: FilingPeriodData) => void
   onCancel: () => void
 }
 
+
+const ChevronDown: React.FC = () => (
+  <svg className="gst-filing-period__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9" /></svg>
+)
+
+
 export const GSTFilingPeriod: React.FC<GSTFilingPeriodProps> = ({
   initialData,
+  onStepClick,
   onContinue,
   onCancel,
 }) => {
@@ -85,9 +92,7 @@ export const GSTFilingPeriod: React.FC<GSTFilingPeriodProps> = ({
       setErrors(newErrors)
       return
     }
-
     const calculatedBaseFee = filingType === 'nil' ? 500 : returnType === 'gstr1' ? 1500 : 2500
-
     onContinue({
       gstin: gstin.toUpperCase().trim(),
       businessName: initialData?.businessName || 'Shree Deshmukh Traders',
@@ -111,8 +116,13 @@ export const GSTFilingPeriod: React.FC<GSTFilingPeriodProps> = ({
 
   return (
     <div className="gst-filing-period-container">
+
+      {/* 4-Step Progress Stepper */}
+      <GSTFilingStepper currentStep={1} onStepClick={onStepClick} />
+
       {/* 5-Step Progress Stepper */}
       <GSTFilingStepper currentStep={1} />
+
 
       {/* Main Page Title and Subtitle */}
       <header className="gst-filing-period__header">

@@ -138,6 +138,22 @@
   transform: none;
 }
 
+
+.gst-btn-pay-lock {
+  width: 17px;
+  height: 17px;
+}
+
+.gst-payment-gateway-note {
+  margin: 0.85rem 0 0 0;
+  font-size: 0.78rem;
+  color: var(--color-text-muted, #64748b);
+  text-align: center;
+  line-height: 1.4;
+}
+
+
+
 /* Trust & Guarantee Card in Sidebar */
 .gst-payment-guarantee-card {
   background: #ffffff;
@@ -171,6 +187,7 @@
   flex-direction: column;
   gap: 10px;
 }
+
 
 .gst-payment-guarantee-list li {
   display: flex;

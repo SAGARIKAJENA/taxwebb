@@ -8,6 +8,39 @@ interface GSTReviewFilingDetailsProps {
 
 interface GSTReviewDocumentsSummaryProps {
   summaryItems: DocumentSummaryItem[]
+  overallVerifiedCount?: number
+  totalDocsCount?: number
+}
+
+const SummaryItemIcon: React.FC<{ status?: string; isComplete?: boolean }> = ({ status, isComplete }) => {
+  if (status === 'verified' || (!status && isComplete)) {
+    return (
+      <span className="gst-review-doc-item__icon-check" aria-hidden="true">
+        <svg viewBox="0 0 20 20" fill="currentColor">
+          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+        </svg>
+      </span>
+    )
+  }
+  if (status === 'pending') {
+    return (
+      <span className="gst-review-doc-item__icon-pending" aria-hidden="true" title="Pending Verification">
+        <svg viewBox="0 0 20 20" fill="currentColor">
+          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+        </svg>
+      </span>
+    )
+  }
+  if (status === 'not_applicable') {
+    return (
+      <span className="gst-review-doc-item__icon-na" aria-hidden="true" title="Not Applicable">
+        <svg viewBox="0 0 20 20" fill="currentColor">
+          <path fillRule="evenodd" d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
+        </svg>
+      </span>
+    )
+  }
+  return <span className="gst-review-doc-item__icon-empty" aria-hidden="true" />
 }
 
 export const GSTReviewFilingDetailsCard: React.FC<GSTReviewFilingDetailsProps> = ({ details }) => {
@@ -72,9 +105,13 @@ export const GSTReviewFilingDetailsCard: React.FC<GSTReviewFilingDetailsProps> =
   )
 }
 
-export const GSTReviewDocumentsSummaryCard: React.FC<GSTReviewDocumentsSummaryProps> = ({ summaryItems }) => {
-  const totalCompleted = summaryItems.reduce((acc, item) => acc + item.completed, 0)
-  const totalRequired = summaryItems.reduce((acc, item) => acc + item.total, 0)
+export const GSTReviewDocumentsSummaryCard: React.FC<GSTReviewDocumentsSummaryProps> = ({
+  summaryItems,
+  overallVerifiedCount,
+  totalDocsCount,
+}) => {
+  const totalCompleted = overallVerifiedCount ?? summaryItems.reduce((acc, item) => acc + item.completed, 0)
+  const totalRequired = totalDocsCount ?? summaryItems.reduce((acc, item) => acc + item.total, 0)
   const displayCount = `${totalCompleted}/${totalRequired || 12}`
 
   return (
@@ -103,7 +140,7 @@ export const GSTReviewDocumentsSummaryCard: React.FC<GSTReviewDocumentsSummaryPr
       <div className="gst-review-doc-overall-banner">
         <div className="gst-review-doc-overall-content">
           <span className="gst-review-doc-overall-label">Verification Status</span>
-          <span className="gst-review-doc-overall-text">All necessary tax records reconciled</span>
+          <span className="gst-review-doc-overall-text">All required documents have been reviewed and verified.</span>
         </div>
         <div className="gst-review-doc-overall-pill">
           <svg viewBox="0 0 20 20" fill="currentColor" className="gst-review-doc-overall-pill-icon">
@@ -116,23 +153,31 @@ export const GSTReviewDocumentsSummaryCard: React.FC<GSTReviewDocumentsSummaryPr
       <div className="gst-review-doc-summary-list">
         {summaryItems.map((item) => {
           const isComplete = item.completed > 0
+          const status = item.status || (item.completed === item.total ? 'verified' : item.completed > 0 ? 'pending' : 'not_added')
+          const statusText =
+            item.statusText ||
+            (status === 'verified'
+              ? 'Verified'
+              : status === 'pending'
+              ? 'Pending Verification'
+              : status === 'not_applicable'
+              ? 'Not Applicable'
+              : 'Not Added')
+
           return (
             <div key={item.id} className="gst-review-doc-item">
               <div className="gst-review-doc-item__left">
-                {isComplete ? (
-                  <span className="gst-review-doc-item__icon-check" aria-hidden="true">
-                    <svg viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                  </span>
-                ) : (
-                  <span className="gst-review-doc-item__icon-empty" aria-hidden="true" />
-                )}
+                <SummaryItemIcon status={status} isComplete={isComplete} />
                 <span>{item.label}</span>
               </div>
-              <span className="gst-review-doc-item__count">
-                {item.completed} / {item.total}
-              </span>
+              <div className="gst-review-doc-item__right">
+                <span className="gst-review-doc-item__count">
+                  {item.completed}/{item.total}
+                </span>
+                <span className={`gst-review-doc-item__status gst-review-doc-item__status--${status}`}>
+                  {statusText}
+                </span>
+              </div>
             </div>
           )
         })}
@@ -140,3 +185,4 @@ export const GSTReviewDocumentsSummaryCard: React.FC<GSTReviewDocumentsSummaryPr
     </div>
   )
 }
+

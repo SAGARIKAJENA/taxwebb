@@ -11,20 +11,30 @@ import './GSTAmendmentForm.css'
 
 interface GSTAmendmentFormProps {
   isSubmitting?: boolean
+  initialGstin?: string
+  initialFieldKey?: string
   onSubmit: (payload: GstAmendmentPayload) => void
   onAllFormsClick?: () => void
+  onBackToSelection?: () => void
 }
 
 export const GSTAmendmentForm = ({
   isSubmitting = false,
+  initialGstin,
+  initialFieldKey,
   onSubmit,
   onAllFormsClick,
+  onBackToSelection,
 }: GSTAmendmentFormProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const [selectedFieldKey, setSelectedFieldKey] = useState<string>(GST_AMENDMENT_FIELD_OPTIONS[0].key)
+  const [selectedFieldKey, setSelectedFieldKey] = useState<string>(
+    initialFieldKey || GST_AMENDMENT_FIELD_OPTIONS[0].key
+  )
   const [newValue, setNewValue] = useState<string>('')
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [errors, setErrors] = useState<{ newValue?: string; document?: string }>({})
+
+  const displayGstin = initialGstin || GST_AMENDMENT_CUSTOMER_RECORD.gstin
 
   const activeOption: AmendmentFieldOption =
     GST_AMENDMENT_FIELD_OPTIONS.find((opt) => opt.key === selectedFieldKey) ||
@@ -70,7 +80,7 @@ export const GSTAmendmentForm = ({
 
     setErrors({})
     onSubmit({
-      gstin: GST_AMENDMENT_CUSTOMER_RECORD.gstin,
+      gstin: displayGstin,
       fieldBeingChanged: activeOption.label,
       fieldKey: activeOption.key,
       oldValue: activeOption.oldValue,
@@ -98,7 +108,7 @@ export const GSTAmendmentForm = ({
             <label className="gst-amend-form__label">GSTIN</label>
             <span className="gst-amend-form__autofill-badge">✓ Auto-filled</span>
           </div>
-          <div className="gst-amend-form__autofill-box">{GST_AMENDMENT_CUSTOMER_RECORD.gstin}</div>
+          <div className="gst-amend-form__autofill-box">{displayGstin}</div>
           <span className="gst-amend-form__hint">Auto-filled from the customer&apos;s GST Registration</span>
         </div>
 
@@ -258,13 +268,23 @@ export const GSTAmendmentForm = ({
 
         {/* Action Buttons */}
         <div className="gst-amend-form__actions">
-          <Link
-            to={routePaths.gst.root}
-            onClick={onAllFormsClick}
-            className="gst-amend-form__btn-all-forms"
-          >
-            ← All forms
-          </Link>
+          {onBackToSelection ? (
+            <button
+              type="button"
+              onClick={onBackToSelection}
+              className="gst-amend-form__btn-all-forms"
+            >
+              ← Back to Selection
+            </button>
+          ) : (
+            <Link
+              to={routePaths.gst.root}
+              onClick={onAllFormsClick}
+              className="gst-amend-form__btn-all-forms"
+            >
+              ← All forms
+            </Link>
+          )}
           <button
             type="submit"
             disabled={isSubmitting}
