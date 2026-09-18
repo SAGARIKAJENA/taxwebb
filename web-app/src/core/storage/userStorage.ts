@@ -18,14 +18,58 @@ export interface ApplicationDraft {
 
 export const userStorage = {
   getUserApplications(): RecentApplication[] {
-    return localStore.get<RecentApplication[]>(USER_APPLICATIONS_KEY) || []
+    const raw = localStore.get<RecentApplication[]>(USER_APPLICATIONS_KEY) || []
+
+    // Filter out dummy/mock placeholders (e.g. empty 'New Registration · India' default submissions or mock references)
+    // and deduplicate by code/service so repeated submissions don't duplicate identical applications
+    const seenCodes = new Set<string>()
+    const cleaned: RecentApplication[] = []
+
+    for (const app of raw) {
+      // Exclude placeholder submissions where no real user details were filled
+      const isDummyMeta =
+        !app.meta ||
+        app.meta.trim() === '' ||
+        app.meta === 'New Registration · India' ||
+        app.meta === 'New Registration · ' ||
+        app.meta.includes('94,53,14,162')
+
+      const isMockId =
+        app.id.startsWith('mock-') ||
+        app.id.startsWith('default-') ||
+        app.id.startsWith('sample-')
+
+      // Exclude legacy hardcoded template mock codes from previous test runs
+      const isMockCode =
+        app.code === 'GST-2026-00118' ||
+        app.code === 'TDS-2026-59303' ||
+        app.code === 'AA29944099962' ||
+        app.code === 'GST-2026-44191' ||
+        app.code === 'ITR-2026-37226' ||
+        app.code === 'ITR-2026-00074'
+
+      if (isDummyMeta || isMockId || isMockCode) continue
+
+      const key = app.code || app.id
+      if (!seenCodes.has(key)) {
+        seenCodes.add(key)
+        cleaned.push(app)
+      }
+    }
+
+    // If cleaned differs from raw (duplicates or mock items removed), sync back to local storage
+    if (cleaned.length !== raw.length) {
+      localStore.set(USER_APPLICATIONS_KEY, cleaned)
+    }
+
+    return cleaned
   },
 
   saveUserApplication(app: RecentApplication): void {
     const apps = this.getUserApplications()
-    const index = apps.findIndex((a) => a.id === app.id)
+    const index = apps.findIndex((a) => a.id === app.id || (a.code && a.code === app.code))
     if (index >= 0) {
-      apps[index] = app
+      apps[index] = { ...apps[index], ...app }
     } else {
       apps.unshift(app)
     }
@@ -44,46 +88,7 @@ export const userStorage = {
   getActiveDraft(): ApplicationDraft | null {
     const drafts = this.getAllDrafts()
     if (drafts.length === 0) {
-      // Default sample draft matching reference Image 1 & 2
-      const sampleDraft: ApplicationDraft = {
-        serviceId: 'gst-registration',
-        serviceTitle: 'GST Registration',
-        currentStep: 3,
-        totalSteps: 4,
-        stepLabel: 'Upload',
-        formData: {
-          businessData: {
-            legalName: 'Sagarika Enterprise',
-            tradeName: 'Sagarika',
-            pan: 'ABCDE1234F',
-            aadhaar: '987654321098',
-            mobile: '9876543210',
-            email: 'sagarika@example.com',
-            constitution: 'proprietorship',
-            natureOfBusiness: 'Retail & Services',
-            principalActivity: 'retail',
-            turnover: '20_to_100',
-            compositionScheme: 'no',
-          },
-          addressBankData: {
-            address: 'Plot 42, Hitech City Main Road, Madhapur',
-            city: 'Hyderabad',
-            pinCode: '500081',
-            state: 'Telangana',
-            possessionNature: 'rented',
-            accountHolderName: 'Sagarika',
-            accountNumber: '526978976846709768',
-            ifscCode: 'HDFC0000123',
-            accountType: 'current',
-            additionalPlaces: [],
-          },
-        },
-        savedAt: '12:17 pm',
-        savedTimestamp: Date.now() - 1000 * 60 * 30,
-        resumeRoute: '/gst/registration',
-      }
-      this.saveDraft(sampleDraft)
-      return sampleDraft
+      return null
     }
     // Sort by most recently saved
     return drafts.sort((a, b) => b.savedTimestamp - a.savedTimestamp)[0] || null

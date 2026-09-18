@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { userStorage } from '@core/storage/userStorage';
 
 export interface GstDocument {
   id: string;
@@ -74,20 +75,27 @@ export const useGstMonthlyFilingDetail = (id?: string) => {
     setIsLoading(true);
     
     setTimeout(() => {
+      const userApps = userStorage.getUserApplications();
+      const matched = userApps.find((a) => a.id === id || a.code === id);
+      const ref = matched?.code || id || 'GST-APP';
+      const title = matched?.title || 'GST Application';
+      const details = matched?.meta || 'GST Details';
+      const progress = matched?.progress ?? 25;
+
       setData({
         id: id || '1',
-        reference: 'GST-2026-00118',
-        title: 'GST Monthly Filing',
-        details: 'August 2026 · GSTR-1 & GSTR-3B',
-        progress: 58,
+        reference: ref,
+        title: title,
+        details: details,
+        progress: progress,
         application: {
-          appId: 'GST-2026-00118',
-          service: 'GST Monthly Filing',
-          period: 'August 2026',
-          gstin: '27AXTPD4419K1ZP',
-          opened: '28 Aug 2026',
-          due: '20 Sep 2026',
-          currentStage: 'ARN Generated',
+          appId: ref,
+          service: title,
+          period: details,
+          gstin: 'GSTIN Verified',
+          opened: 'Recently',
+          due: 'Statutory Date',
+          currentStage: matched?.statusLabel || 'In Progress',
         },
         tracking: {
           arnNumber: 'ARN AA2708260041926',

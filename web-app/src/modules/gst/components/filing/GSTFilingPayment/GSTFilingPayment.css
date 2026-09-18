@@ -37,8 +37,8 @@
 .gst-pay-inp:focus { border-color: var(--taxedge-blue, #0b5ed7); box-shadow: 0 0 0 3px rgba(11, 94, 215, 0.12); }
 .gst-pay-fgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 .gst-pay-actions-box { display: flex; align-items: center; gap: 1rem; margin-top: 0.5rem; }
-.gst-pay-btn-cancel { padding: 0.75rem 1.5rem; font-size: 0.9rem; font-weight: 600; color: var(--color-text, #172033); background: #ffffff; border: 1px solid var(--color-border, #cbd5e1); border-radius: 9999px; cursor: pointer; white-space: nowrap; }
-.gst-pay-btn-cancel:hover { background: #f8fafc; border-color: var(--taxedge-blue, #0b5ed7); }
+.gst-pay-btn-cancel { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.65rem 1.65rem; font-size: 0.92rem; font-weight: 700; color: #0f172a; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 9999px; cursor: pointer; white-space: nowrap; transition: all 0.2s ease; }
+.gst-pay-btn-cancel:hover { background: #f8fafc; border-color: #94a3b8; color: #0f172a; transform: translateY(-1px); }
 .gst-pay-btn-submit { flex: 1; height: 48px; padding: 0 1.5rem; font-size: 0.96rem; font-weight: 700; color: #ffffff; background: var(--taxedge-orange, #f97316); border: none; border-radius: 9999px; cursor: pointer; box-shadow: 0 3px 12px rgba(249, 115, 22, 0.35); transition: all var(--transition-fast, 0.15s ease); display: flex; align-items: center; justify-content: center; }
 .gst-pay-btn-submit:hover:not(:disabled) { background: #ea580c; box-shadow: 0 6px 18px rgba(249, 115, 22, 0.45); transform: translateY(-1px); }
 .gst-pay-btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }

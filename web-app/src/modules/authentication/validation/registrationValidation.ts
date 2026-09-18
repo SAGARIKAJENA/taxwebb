@@ -1,4 +1,4 @@
-import { validateMobileNumber } from '@shared/utils'
+import { validateMobileNumber, validatePan, validateAadhaar } from '@shared/utils'
 
 export interface RegistrationFormState {
   fullName: string
@@ -154,21 +154,11 @@ export const validateField = (
     }
 
     case 'pan': {
-      const str = String(val ?? '').trim().toUpperCase()
-      if (!str) return 'PAN Number is required'
-      if (!/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(str)) {
-        return 'Enter valid PAN Number'
-      }
-      return undefined
+      return validatePan(String(val ?? '')) || undefined
     }
 
     case 'aadhaar': {
-      const str = String(val ?? '').replace(/\D/g, '')
-      if (!str) return 'Aadhaar Number is required'
-      if (str.length !== 12) {
-        return 'Enter valid Aadhaar number'
-      }
-      return undefined
+      return validateAadhaar(String(val ?? '')) || undefined
     }
 
     case 'mobile': {

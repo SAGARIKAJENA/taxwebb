@@ -1,0 +1,94 @@
+/* Summary Card */
+.gst-payment-summary-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 22px 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.gst-payment-summary-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.gst-payment-summary-card__service-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+  border-radius: 9999px;
+  padding: 5px 14px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.gst-payment-summary-card__applicant {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.gst-payment-summary-card__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.gst-payment-summary-card__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.92rem;
+}
+
+.gst-payment-summary-card__label {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.gst-payment-summary-card__value {
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.gst-payment-summary-card__divider {
+  height: 1px;
+  background: #f1f5f9;
+  margin: 16px 0;
+}
+
+.gst-payment-summary-card__total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.gst-payment-summary-card__total-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gst-payment-summary-card__total-label {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.gst-payment-summary-card__total-sub {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #16a34a;
+}
+
+.gst-payment-summary-card__total-amount {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #ea580c;
+}

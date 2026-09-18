@@ -83,7 +83,7 @@ export const GSTFilingDocuments: React.FC<GSTFilingDocumentsProps> = ({
       {/* Stepper and Right Meta Badge */}
       <div className="gst-docs-top-bar">
         <div className="gst-docs-stepper-wrap">
-          <GSTFilingStepper currentStep={3} />
+          <GSTFilingStepper currentStep={2} />
         </div>
         <div className="gst-docs-top-meta">
           <span className="gst-docs-top-meta__label">GST Return</span>
@@ -152,14 +152,15 @@ export const GSTFilingDocuments: React.FC<GSTFilingDocumentsProps> = ({
           className="gst-docs-btn-back"
           onClick={onBack}
         >
-          ← Back
+          Back
         </button>
         <button
           type="button"
           className="gst-docs-btn-continue"
+          disabled={!DEFAULT_DOCUMENT_ITEMS.filter((i) => i.isRequired).every((i) => Boolean(uploadedFiles[i.id]))}
           onClick={onNext}
         >
-          Continue to Review →
+          Continue
         </button>
       </footer>
     </div>
