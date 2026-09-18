@@ -208,7 +208,7 @@ export const RevisedItr = () => {
               className="revised-bottom-back-btn"
               onClick={handlePrevStep}
             >
-              ← Back
+              Back
             </button>
 
             <button
@@ -216,7 +216,7 @@ export const RevisedItr = () => {
               className="revised-bottom-next-btn"
               onClick={handleNextStep}
             >
-              {currentStep < 5 ? 'Next →' : 'Finish flow ✓'}
+              {currentStep < 5 ? 'Continue' : 'Finish'}
             </button>
           </div>
         </div>

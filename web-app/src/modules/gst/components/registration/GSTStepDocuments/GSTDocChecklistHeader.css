@@ -1,0 +1,58 @@
+/* ==========================================================================
+   GST Document Checklist Header Styles
+   ========================================================================== */
+
+.gst-docs-checklist-card {
+  background: var(--gst-doc-card-bg, #ffffff);
+  border: 1px solid var(--gst-doc-border, #e2e8f0);
+  border-radius: var(--gst-doc-radius, 12px);
+  padding: 1.25rem 1.75rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+.gst-docs-checklist-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.95rem;
+}
+
+.gst-docs-checklist-card__title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--gst-doc-text-main, #0f172a);
+  letter-spacing: -0.01em;
+}
+
+.gst-docs-checklist-card__subtitle {
+  margin: 0.25rem 0 0 0;
+  font-size: 0.8125rem;
+  color: var(--gst-doc-text-muted, #64748b);
+}
+
+.gst-docs-checklist-card__badge {
+  background-color: var(--gst-doc-peach-bg, #fff7ed);
+  color: var(--gst-doc-orange-hover, #ea580c);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  border: 1px solid var(--gst-doc-peach-border, #fed7aa);
+}
+
+.gst-docs-checklist-card__progress-track {
+  width: 100%;
+  height: 6px;
+  background-color: #ffedd5;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.gst-docs-checklist-card__progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gst-doc-orange, #f97316) 0%, var(--gst-doc-orange-hover, #ea580c) 100%);
+  border-radius: 9999px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}

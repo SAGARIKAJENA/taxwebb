@@ -145,9 +145,9 @@
 .compliance-actions-row {
   display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 1.5rem; padding-top: 1.25rem;
   .compliance-btn-secondary {
-    display: inline-flex; align-items: center; gap: 0.5rem; background: #FFFFFF; border: 1.5px solid var(--color-border, #CBD5E1);
-    color: var(--taxedge-navy, #083B75); padding: 0.8rem 1.75rem; font-size: 0.95rem;
-    &:hover { background: var(--taxedge-light-blue, #EAF1FE); border-color: var(--taxedge-navy, #083B75); }
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; background: #FFFFFF; border: 1.5px solid #CBD5E1;
+    color: #0F172A; padding: 0.65rem 1.65rem; font-size: 0.92rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease;
+    &:hover { background: #F8FAFC; border-color: #94A3B8; color: #0F172A; transform: translateY(-1px); }
   }
   .compliance-btn-primary {
     display: inline-flex; align-items: center; gap: 0.6rem; background: linear-gradient(135deg, var(--taxedge-orange, #F97316) 0%, #EA580C 100%);

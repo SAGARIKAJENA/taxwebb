@@ -1,0 +1,91 @@
+import type { FC } from 'react'
+import type { DocumentItem } from '../GSTStepDocuments/gstDocuments.types'
+import './GSTReviewDocsList.css'
+
+interface GSTReviewDocsListProps {
+  documents: DocumentItem[]
+  onViewDoc: (title: string, fileName: string) => void
+}
+
+export const GSTReviewDocsList: FC<GSTReviewDocsListProps> = ({ documents, onViewDoc }) => {
+  const uploadedCount = documents.filter((d) => d.isUploaded || d.fileName).length
+  const totalCount = documents.length
+
+  return (
+    <div className="gst-review-card">
+      <div className="gst-review-card__header">
+        <div className="gst-review-card__header-left">
+          <div className="gst-review-card__icon-badge" style={{ backgroundColor: '#e0f2fe' }}>
+            <img
+              src="/assets/icons/gst/doc-checklist.svg"
+              width={20}
+              height={20}
+              alt=""
+              aria-hidden="true"
+            />
+          </div>
+          <h3 className="gst-review-card__title">Uploaded Documents</h3>
+        </div>
+
+        <div className="gst-review-doc-badge">
+          {uploadedCount}/{totalCount} Uploaded
+        </div>
+      </div>
+
+      <div className="gst-review-card__body">
+        <div className="gst-review-docs-list">
+          {documents.map((doc) => {
+            const isUploaded = Boolean(doc.isUploaded && doc.fileName)
+            const fileName = doc.fileName || 'Not uploaded yet'
+
+            return (
+              <div
+                key={doc.id}
+                className={`gst-review-doc-item ${!isUploaded ? 'gst-review-doc-item--pending' : ''}`}
+              >
+                <div className="gst-review-doc-item__left">
+                  <div className="gst-review-doc-item__check">
+                    {isUploaded ? (
+                      <img
+                        src="/assets/icons/gst/check-circle.svg"
+                        width={16}
+                        height={16}
+                        alt="Uploaded"
+                      />
+                    ) : (
+                      <span className="gst-review-doc-item__pending-bullet" />
+                    )}
+                  </div>
+                  <div className="gst-review-doc-item__info">
+                    <h4 className="gst-review-doc-item__title">{doc.title}</h4>
+                    <span className="gst-review-doc-item__filename">{fileName}</span>
+                  </div>
+                </div>
+
+                {isUploaded ? (
+                  <button
+                    type="button"
+                    className="gst-review-doc-item__view-btn"
+                    onClick={() => onViewDoc(doc.title, fileName)}
+                    aria-label={`View ${doc.title}`}
+                  >
+                    <img
+                      src="/assets/icons/gst/view-eye.svg"
+                      width={14}
+                      height={14}
+                      alt=""
+                      aria-hidden="true"
+                    />
+                    <span>View</span>
+                  </button>
+                ) : (
+                  <span className="gst-review-doc-item__status-tag">Pending</span>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </div>
+  )
+}

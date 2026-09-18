@@ -11,13 +11,14 @@ interface GSTFilingStepperProps {
 }
 
 const STEPS: Step[] = [
-  { id: 1, label: 'Select Service' },
-  { id: 2, label: 'Filing Period' },
-  { id: 3, label: 'Documents' },
-  { id: 4, label: 'Review & File' },
+  { id: 1, label: 'Filing Period' },
+  { id: 2, label: 'Documents' },
+  { id: 3, label: 'Review' },
+  { id: 4, label: 'Payment' },
+  { id: 5, label: 'Success' },
 ]
 
-export const GSTFilingStepper: React.FC<GSTFilingStepperProps> = ({ currentStep = 2 }) => {
+export const GSTFilingStepper: React.FC<GSTFilingStepperProps> = ({ currentStep = 1 }) => {
   return (
     <nav className="gst-filing-stepper" aria-label="Filing Progress">
       {STEPS.map((step, index) => {
@@ -58,7 +59,14 @@ export const GSTFilingStepper: React.FC<GSTFilingStepperProps> = ({ currentStep 
               </div>
               <span className={`gst-filing-stepper__label ${labelClass}`}>{step.label}</span>
             </div>
-            {!isLast && <div className="gst-filing-stepper__line" aria-hidden="true" />}
+            {!isLast && (
+              <div
+                className={`gst-filing-stepper__line ${
+                  isCompleted ? 'gst-filing-stepper__line--completed' : ''
+                }`}
+                aria-hidden="true"
+              />
+            )}
           </React.Fragment>
         )
       })}

@@ -1,34 +1,65 @@
-export const titleCase = (value: string): string =>
-  value
-    .replace(/[_-]+/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .replace(/\b\w/g, (char) => char.toUpperCase())
+import { REGEX } from '../constants/common.constants'
 
-export const initialsOf = (fullName: string): string =>
-  fullName
-    .trim()
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((part) => part.charAt(0).toUpperCase())
-    .join('')
+export const isValidGstin = (value: string): boolean =>
+  REGEX.gstin.test(value.trim().toUpperCase())
 
-export const maskMobile = (mobile: string): string =>
-  mobile.length < 4 ? mobile : `${'*'.repeat(mobile.length - 4)}${mobile.slice(-4)}`
-
-export const maskPan = (pan: string): string => (pan.length === 10 ? `${pan.slice(0, 3)}****${pan.slice(-3)}` : pan)
-
-export const formatFileSize = (bytes: number): string => {
-  if (bytes < 1024) return `${bytes} B`
-  const units = ['KB', 'MB', 'GB']
-  let size = bytes / 1024
-  let unitIndex = 0
-  while (size >= 1024 && unitIndex < units.length - 1) {
-    size /= 1024
-    unitIndex += 1
-  }
-  return `${size.toFixed(1)} ${units[unitIndex]}`
+/**
+ * Conditionally joins CSS class names
+ */
+export const classNames = (...classes: (string | boolean | undefined | null)[]): string => {
+  return classes.filter(Boolean).join(' ')
 }
 
-export const classNames = (...values: Array<string | false | null | undefined>): string =>
-  values.filter(Boolean).join(' ')
+/**
+ * Returns initials for a given user name (e.g. "John Doe" -> "JD")
+ */
+export const initialsOf = (name: string): string => {
+  if (!name) return ''
+  const parts = name.trim().split(/\s+/)
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase()
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+}
+
+/**
+ * Formats bytes to human-readable size string
+ */
+export const formatFileSize = (bytes: number): string => {
+  if (bytes === 0) return '0 B'
+  const k = 1024
+  const sizes = ['B', 'KB', 'MB', 'GB']
+  const i = Math.floor(Math.log(bytes) / Math.log(k))
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`
+}
+
+/**
+ * Formats Aadhaar into standard 4-4-4 spacing (e.g. 1234 5678 9012)
+ */
+export const formatAadhaar = (val: string): string => {
+  const digits = val.replace(/\D/g, '').slice(0, 12)
+  return digits.replace(/(\d{4})(?=\d)/g, '$1 ')
+}
+
+/**
+ * Formats PAN to uppercase alphanumeric max 10 chars
+ */
+export const formatPan = (val: string): string => {
+  return val.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 10)
+}
+
+/**
+ * Formats Indian 10-digit mobile number
+ */
+export const formatMobile = (val: string): string => {
+  return val.replace(/\D/g, '').slice(0, 10)
+}
+
+/**
+ * Formats IFSC code to uppercase 11 chars
+ */
+export const formatIfsc = (val: string): string => {
+  return val.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 11)
+}
+
+/** PAN embedded in a GSTIN, characters 3-12. */
+export const panFromGstin = (gstin: string): string | null =>
+  isValidGstin(gstin) ? gstin.slice(2, 12) : null

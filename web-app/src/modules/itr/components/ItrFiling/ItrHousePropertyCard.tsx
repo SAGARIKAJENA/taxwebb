@@ -1,0 +1,117 @@
+import React from 'react'
+import type { HousePropertyDetails } from './itrIncomeSources.constants'
+
+export interface ItrHousePropertyCardProps {
+  housePropertyDetails: HousePropertyDetails
+  onHousePropertyDetailsChange: (details: HousePropertyDetails) => void
+  onToggle: () => void
+}
+
+export const ItrHousePropertyCard: React.FC<ItrHousePropertyCardProps> = ({
+  housePropertyDetails,
+  onHousePropertyDetailsChange,
+  onToggle,
+}) => {
+  const handleHousePropertyChange = (field: keyof HousePropertyDetails, val: string) => {
+    onHousePropertyDetailsChange({ ...housePropertyDetails, [field]: val })
+  }
+
+  return (
+    <div className="itr-salary-card">
+      <div className="itr-salary-card__header">
+        <div className="itr-salary-card__left">
+          <div className="itr-salary-icon-box" aria-hidden="true">🏠</div>
+          <div className="itr-salary-card__titles">
+            <h3 className="itr-salary-card__title">House Property</h3>
+            <p className="itr-salary-card__sub">Self-occupied home loan or rental income</p>
+          </div>
+        </div>
+        <div
+          className="itr-salary-checkbox-wrap"
+          onClick={onToggle}
+          title="Toggle House Property"
+          role="checkbox"
+          aria-checked={true}
+          tabIndex={0}
+        >
+          <div className="itr-checkbox-custom">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      {/* Property Type Toggle */}
+      <div className="itr-form-group">
+        <label className="itr-form-label">Property Classification</label>
+        <div className="itr-toggle-group">
+          <button
+            type="button"
+            className={`itr-toggle-btn ${housePropertyDetails.propertyType === 'self_occupied' ? 'itr-toggle-btn--active' : ''}`}
+            onClick={() => handleHousePropertyChange('propertyType', 'self_occupied')}
+          >
+            Self-Occupied
+          </button>
+          <button
+            type="button"
+            className={`itr-toggle-btn ${housePropertyDetails.propertyType === 'let_out' ? 'itr-toggle-btn--active' : ''}`}
+            onClick={() => handleHousePropertyChange('propertyType', 'let_out')}
+          >
+            Let-Out (Rented)
+          </button>
+        </div>
+      </div>
+
+      {/* Home Loan Interest */}
+      <div className="itr-form-group">
+        <label className="itr-form-label" htmlFor="hp-loan-interest">Home Loan Interest Paid (Sec 24b)</label>
+        <div className="itr-input-currency-wrap">
+          <span className="itr-currency-prefix">₹</span>
+          <input
+            id="hp-loan-interest"
+            type="text"
+            className="itr-input-currency"
+            placeholder={housePropertyDetails.propertyType === 'self_occupied' ? 'Max ₹2,00,000 for self-occupied' : 'e.g. 1,50,000'}
+            value={housePropertyDetails.homeLoanInterest}
+            onChange={(e) => handleHousePropertyChange('homeLoanInterest', e.target.value)}
+          />
+        </div>
+      </div>
+
+      {/* Let-Out specific fields */}
+      {housePropertyDetails.propertyType === 'let_out' && (
+        <div className="itr-grid-2col">
+          <div className="itr-form-group">
+            <label className="itr-form-label" htmlFor="hp-rent">Annual Rent Received</label>
+            <div className="itr-input-currency-wrap">
+              <span className="itr-currency-prefix">₹</span>
+              <input
+                id="hp-rent"
+                type="text"
+                className="itr-input-currency"
+                placeholder="e.g. 1,20,000"
+                value={housePropertyDetails.annualRentReceived}
+                onChange={(e) => handleHousePropertyChange('annualRentReceived', e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="itr-form-group">
+            <label className="itr-form-label" htmlFor="hp-tax">Municipal Tax Paid</label>
+            <div className="itr-input-currency-wrap">
+              <span className="itr-currency-prefix">₹</span>
+              <input
+                id="hp-tax"
+                type="text"
+                className="itr-input-currency"
+                placeholder="e.g. 5,000"
+                value={housePropertyDetails.municipalTaxPaid}
+                onChange={(e) => handleHousePropertyChange('municipalTaxPaid', e.target.value)}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
