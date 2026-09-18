@@ -4,7 +4,6 @@ import { routePaths } from '@core/config'
 
 const Itr = lazy(() => import('./pages/Itr/Itr'))
 const FileItr = lazy(() => import('./components/FileItr/FileItr.tsx'))
-const TrackMyReturn = lazy(() => import('./components/TrackMyReturn/TrackMyReturn.tsx'))
 const ItrFiling = lazy(() => import('./components/ItrFiling/ItrFiling.tsx'))
 const TdsRefund = lazy(() => import('./components/TdsRefund/TdsRefund.tsx'))
 const PreviousYearItr = lazy(() => import('./components/PreviousYearItr/PreviousYearItr.tsx'))
@@ -16,7 +15,6 @@ const TaxComputation = lazy(() => import('./components/TaxComputation/TaxComputa
 export const itrRoutes: RouteObject[] = [
   { path: routePaths.itr.root, element: <Itr /> },
   { path: routePaths.itr.fileItr, element: <FileItr /> },
-  { path: routePaths.itr.trackMyReturn, element: <TrackMyReturn /> },
   { path: routePaths.itr.itrFiling, element: <ItrFiling /> },
   { path: routePaths.itr.tdsRefund, element: <TdsRefund /> },
   { path: routePaths.itr.previousYearItr, element: <PreviousYearItr /> },

@@ -1,94 +1,40 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { routePaths } from '@core/config'
-import { useAppStore } from '@store/index'
 import {
-  validateItrUploadFile,
-  type ItrUploadedFile,
-} from '../../validation/itrUploadValidation'
-import {
-  PREV_YEAR_STEPS_METADATA,
-  PREV_YEAR_DOCUMENTS,
-  type PrevYearStepMeta,
-} from './PreviousYearItr'
-import {
-  PrevYearStep1View,
-  PrevYearStep2View,
-  PrevYearStep3View,
-  PrevYearStep4View,
-} from './PreviousYearItrSteps'
-import { FlowStepper } from '@shared/components/FlowStepper'
+  PREVIOUS_AY_OPTIONS,
+  PREVIOUS_ITR_PREVIEW_STEPS,
+  type AssessmentYearOptionItem,
+} from './PreviousYearItr.ts'
 import './PreviousYearItr.css'
 
-export const PreviousYearItr = () => {
+export const PreviousYearItr: React.FC = () => {
   const navigate = useNavigate()
-  const pushToast = useAppStore((state) => state.pushToast)
-  const [currentStep, setCurrentStep] = useState(1)
-  const [selectedAY, setSelectedAY] = useState('AY 2023-24')
+  const [page, setPage] = useState<1 | 2>(1)
+  const [selectedAy, setSelectedAy] = useState<string>('AY 2024-25')
 
-  const [uploadedDocs, setUploadedDocs] = useState<Record<string, boolean>>({
-    pan: false,
-    aadhaar: false,
-    form16: false,
-    ais_tis: false,
-    bank_statements: false,
-    investment_proofs: false,
-  })
-  const [uploadedFiles, setUploadedFiles] = useState<Record<string, ItrUploadedFile>>({})
-  const [uploadError, setUploadError] = useState('')
+  const selectedItem =
+    PREVIOUS_AY_OPTIONS.find((opt) => opt.ay === selectedAy) ||
+    PREVIOUS_AY_OPTIONS[1]
 
-  const activeMeta: PrevYearStepMeta =
-    PREV_YEAR_STEPS_METADATA.filter((s) => s.stepNumber === currentStep)[0] ||
-    PREV_YEAR_STEPS_METADATA[0]
-
-  const handleFileSelect = (id: string, file: File) => {
-    const res = validateItrUploadFile(file, 10)
-    if (!res.isValid || !res.fileInfo) {
-      setUploadError(res.error || 'Invalid file')
-      pushToast(res.error || 'Invalid file', 'error')
-      return
-    }
-
-    setUploadedFiles((prev) => ({ ...prev, [id]: res.fileInfo! }))
-    setUploadedDocs((prev) => ({ ...prev, [id]: true }))
-    setUploadError('')
-    pushToast(`"${file.name}" uploaded successfully!`, 'success')
+  const handleSelectAy = (opt: AssessmentYearOptionItem) => {
+    if (!opt.isEligible) return
+    setSelectedAy(opt.ay)
   }
 
-  const handleRemoveDoc = (id: string) => {
-    setUploadedFiles((prev) => {
-      const next = { ...prev }
-      delete next[id]
-      return next
-    })
-    setUploadedDocs((prev) => ({ ...prev, [id]: false }))
-    pushToast('Document removed', 'info')
+  const handlePage1Continue = () => {
+    setPage(2)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  const handleNextStep = () => {
-    // Screen 4 validation: Require at least one uploaded document before completing
-    if (currentStep === 4) {
-      const uploadedCount = PREV_YEAR_DOCUMENTS.filter((d) => uploadedDocs[d.id]).length
-      if (uploadedCount === 0) {
-        const msg = 'Please upload at least one earlier year document (e.g. Form 16, AIS, or Bank Statement) to complete.'
-        setUploadError(msg)
-        pushToast('At least 1 document upload is required', 'error')
-        return
-      }
-      setUploadError('')
-    }
-
-    if (currentStep < 4) {
-      setCurrentStep((prev) => prev + 1)
-      window.scrollTo({ top: 0, behavior: 'smooth' })
-    } else {
-      navigate(routePaths.itr.root)
-    }
+  const handlePage2Continue = () => {
+    // Navigate directly into the ITR Filing workflow with the selected previous AY
+    navigate(routePaths.itr.itrFiling)
   }
 
-  const handlePrevStep = () => {
-    if (currentStep > 1) {
-      setCurrentStep((prev) => prev - 1)
+  const handleBack = () => {
+    if (page === 2) {
+      setPage(1)
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } else {
       navigate(routePaths.itr.root)
@@ -96,112 +42,245 @@ export const PreviousYearItr = () => {
   }
 
   return (
-    <div className="prev-year-flow-page">
-      {/* 1. Top Meta & Stepper */}
-      <div className="prev-flow-topbar">
-        <div className="prev-flow-top-meta">
-          <span className="prev-flow-section-tag">SECTION 4 · PREVIOUS YEAR ITR</span>
-          <span className="prev-flow-doc-badge">Recommended design — confirm with client</span>
+    <div className="prev-itr-page-container">
+      {/* --- Top Header --- */}
+      <header className="prev-itr-header">
+        <div className="prev-itr-header-titles">
+          <h1 className="prev-itr-header-title">Previous Year ITR</h1>
+          <p className="prev-itr-header-subtitle">
+            {page === 1
+              ? 'Select the assessment year you want to file.'
+              : `${selectedAy} Filing Overview`}
+          </p>
         </div>
+      </header>
 
-        <FlowStepper
-          steps={PREV_YEAR_STEPS_METADATA}
-          currentStep={currentStep}
-          onStepClick={(step) => setCurrentStep(step)}
-          ariaLabel="Previous Year ITR Steps"
-        />
+      {page === 1 ? (
+        /* ==========================================================================
+           PAGE 1: Choose Assessment Year (2-Column Desktop Grid)
+           ========================================================================== */
+        <div className="prev-itr-page1-grid">
+          {/* Left Column: Assessment Year Options */}
+          <div className="prev-itr-page1-main">
+            {/* Hero Banner */}
+            <section className="prev-itr-hero-card">
+              <div className="prev-itr-hero-icon-box">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="3" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                  <rect x="7" y="14" width="3" height="3" fill="currentColor" />
+                  <rect x="14" y="14" width="3" height="3" fill="currentColor" />
+                </svg>
+              </div>
+              <div className="prev-itr-hero-text-wrap">
+                <h2 className="prev-itr-hero-title">Choose Assessment Year</h2>
+                <p className="prev-itr-hero-desc">
+                  Only assessment years that are eligible for filing are shown below.
+                </p>
+              </div>
+            </section>
 
-        {/* Top Note Box (Screen 1 only) */}
-        {currentStep === 1 && (
-          <div className="prev-top-note-box">
-            <div className="prev-top-note-header">
-              <span className="prev-top-note-icon">⚠️</span>
-              <strong className="prev-top-note-title">Note</strong>
+            {/* Assessment Year Options List */}
+            <div className="prev-itr-ay-list" role="radiogroup" aria-label="Assessment Year Selection">
+              {PREVIOUS_AY_OPTIONS.map((opt) => {
+                const isSelected = selectedAy === opt.ay && opt.isEligible
+                const cardClass = !opt.isEligible
+                  ? 'prev-itr-ay-card prev-itr-ay-card--closed'
+                  : isSelected
+                  ? 'prev-itr-ay-card prev-itr-ay-card--eligible prev-itr-ay-card--selected'
+                  : 'prev-itr-ay-card prev-itr-ay-card--eligible'
+
+                return (
+                  <div
+                    key={opt.id}
+                    className={cardClass}
+                    onClick={() => handleSelectAy(opt)}
+                    role="radio"
+                    aria-checked={isSelected}
+                    tabIndex={opt.isEligible ? 0 : -1}
+                    onKeyDown={(e) => {
+                      if (opt.isEligible && (e.key === 'Enter' || e.key === ' ')) {
+                        e.preventDefault()
+                        handleSelectAy(opt)
+                      }
+                    }}
+                  >
+                    <div className="prev-itr-ay-card-left">
+                      <div className="prev-itr-ay-icon-wrap">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <rect x="3" y="4" width="18" height="18" rx="2" />
+                          <line x1="16" y1="2" x2="16" y2="6" />
+                          <line x1="8" y1="2" x2="8" y2="6" />
+                          <line x1="3" y1="10" x2="21" y2="10" />
+                        </svg>
+                      </div>
+                      <div className="prev-itr-ay-info">
+                        <strong className="prev-itr-ay-title">{opt.ay}</strong>
+                        <span className="prev-itr-ay-subtitle">{opt.subtitle}</span>
+                      </div>
+                    </div>
+
+                    <div className="prev-itr-ay-card-right">
+                      {!opt.isEligible ? (
+                        <span className="prev-itr-badge prev-itr-badge--closed">Closed</span>
+                      ) : isSelected ? (
+                        <>
+                          <span className="prev-itr-badge prev-itr-badge--selected">Selected</span>
+                          <div className="prev-itr-check-circle" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#ffffff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                              <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                          </div>
+                        </>
+                      ) : (
+                        <span className="prev-itr-badge prev-itr-badge--eligible">Eligible</span>
+                      )}
+                    </div>
+                  </div>
+                )
+              })}
             </div>
-            <p className="prev-top-note-text">
-              This sub-service was listed by name in the requirements but not described in detail.
-              The flow below follows standard practice for filing a return for a past (missed)
-              assessment year, and should be reviewed with the client before development.
+          </div>
+
+          {/* Right Column: Summary Card & Eligibility */}
+          <aside className="prev-itr-page1-sidebar">
+            <div className="prev-itr-summary-card">
+              <div className="prev-itr-summary-header">
+                <span className="prev-itr-summary-title">Selected Filing Details</span>
+                <span className="prev-itr-badge prev-itr-badge--selected">{selectedAy}</span>
+              </div>
+
+              <div className="prev-itr-summary-rows">
+                <div className="prev-itr-summary-row">
+                  <span className="prev-itr-summary-label">Return Type</span>
+                  <span className="prev-itr-summary-value">Updated Return (ITR-U)</span>
+                </div>
+                <div className="prev-itr-summary-row">
+                  <span className="prev-itr-summary-label">Filing Status</span>
+                  <span className="prev-itr-summary-value" style={{ color: '#059669' }}>Eligible for E-Filing</span>
+                </div>
+                <div className="prev-itr-summary-row">
+                  <span className="prev-itr-summary-label">Validity Window</span>
+                  <span className="prev-itr-summary-value">{selectedItem.subtitle.replace('Updated Return (ITR-U) can be filed ', '')}</span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                className="prev-itr-continue-btn"
+                onClick={handlePage1Continue}
+              >
+                Continue to Application →
+              </button>
+            </div>
+
+            {/* Eligibility Information Blue Callout */}
+            <div className="prev-itr-info-box">
+              <div className="prev-itr-info-icon-circle" aria-hidden="true">
+                i
+              </div>
+              <div className="prev-itr-info-content">
+                <h3 className="prev-itr-info-title">Eligibility Information</h3>
+                <p className="prev-itr-info-desc">
+                  Assessment years are displayed based on the current Income Tax Department filing rules. Closed years cannot be selected.
+                </p>
+              </div>
+            </div>
+          </aside>
+        </div>
+      ) : (
+        /* ==========================================================================
+           PAGE 2: Same Questions, Different Assessment Year (3-Column Step Grid)
+           ========================================================================== */
+        <div className="prev-itr-page2-container">
+          {/* Pill Tag */}
+          <div className="prev-itr-pill-tag">
+            <span style={{ color: '#ea580c', fontWeight: 800 }}>•</span> Belated Return • {selectedAy}
+          </div>
+
+          {/* Intro Heading */}
+          <div className="prev-itr-intro-group">
+            <h2 className="prev-itr-intro-title">
+              Same Questions, Different Assessment Year
+            </h2>
+            <p className="prev-itr-intro-desc">
+              Your personal details, income information, and deductions are collected exactly like the regular ITR Filing process. Only the assessment year changes.
             </p>
           </div>
-        )}
-      </div>
 
-      {/* 2. Main 2-Column Grid */}
-      <div className="prev-flow-layout">
-        {/* Left Column: Main Card */}
-        <div className="prev-flow-main-card">
-          <span className="prev-card-header-label">WHAT THE CUSTOMER SEES</span>
+          {/* 3 Step Preview Cards in 3-Column Grid */}
+          <div className="prev-itr-step-cards-grid">
+            {PREVIOUS_ITR_PREVIEW_STEPS.map((step) => (
+              <div key={step.stepNumber} className="prev-itr-step-card">
+                <div className="prev-itr-step-card-header">
+                  <div className="prev-itr-step-card-left">
+                    <div className="prev-itr-step-card-icon-box">
+                      {step.stepNumber === 1 && (
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <rect x="2" y="7" width="20" height="14" rx="2" />
+                          <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+                        </svg>
+                      )}
+                      {step.stepNumber === 2 && (
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                          <polyline points="14 2 14 8 20 8" />
+                          <line x1="16" y1="13" x2="8" y2="13" />
+                          <line x1="16" y1="17" x2="8" y2="17" />
+                        </svg>
+                      )}
+                      {step.stepNumber === 3 && (
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <rect x="4" y="2" width="16" height="20" rx="2" />
+                          <line x1="8" y1="6" x2="16" y2="6" />
+                          <line x1="16" y1="14" x2="16" y2="18" />
+                          <path d="M16 10h.01M12 10h.01M8 10h.01M12 14h.01M8 14h.01M12 18h.01M8 18h.01" />
+                        </svg>
+                      )}
+                    </div>
+                    <strong className="prev-itr-step-card-title">{step.title}</strong>
+                  </div>
+                  <span className="prev-itr-step-card-badge">{step.tag}</span>
+                </div>
+                <p className="prev-itr-step-card-desc">{step.description}</p>
+              </div>
+            ))}
+          </div>
 
-          {currentStep === 1 && (
-            <PrevYearStep1View selectedAY={selectedAY} onSelectAY={setSelectedAY} />
-          )}
+          {/* No Need to Rebuild Blue Callout (Full Width) */}
+          <div className="prev-itr-info-box">
+            <div className="prev-itr-info-icon-circle" aria-hidden="true">
+              i
+            </div>
+            <div className="prev-itr-info-content">
+              <h3 className="prev-itr-info-title">No Need to Rebuild</h3>
+              <p className="prev-itr-info-desc">
+                The Previous Year ITR workflow reuses the same forms as the regular ITR Filing process. Only the filing year and return type are different.
+              </p>
+            </div>
+          </div>
 
-          {currentStep === 2 && <PrevYearStep2View selectedAY={selectedAY} />}
-
-          {currentStep === 3 && <PrevYearStep3View selectedAY={selectedAY} />}
-
-          {currentStep === 4 && (
-            <PrevYearStep4View
-              uploadedDocs={uploadedDocs}
-              uploadedFiles={uploadedFiles}
-              onFileSelect={handleFileSelect}
-              onRemoveDoc={handleRemoveDoc}
-              uploadError={uploadError}
-            />
-          )}
-
-          {/* Bottom Action Bar */}
-          <div className="prev-flow-bottom-bar">
+          {/* Single Row Action Buttons Below Notice */}
+          <div className="prev-itr-action-row">
             <button
               type="button"
-              className="prev-bottom-back-btn"
-              onClick={handlePrevStep}
+              className="prev-itr-btn-back"
+              onClick={handleBack}
             >
-              ← Back
+              ← Back to Year Selection
             </button>
-
             <button
               type="button"
-              className="prev-bottom-next-btn"
-              onClick={handleNextStep}
+              className="prev-itr-btn-submit"
+              onClick={handlePage2Continue}
             >
-              {currentStep < 4 ? 'Next →' : 'Finish flow ✓'}
+              Start {selectedAy} Filing →
             </button>
           </div>
         </div>
-
-        {/* Right Column: Side Explanatory Panel */}
-        <aside className="prev-flow-side-panel">
-          <div className="prev-side-card">
-            <div className="prev-side-card-tag">WHAT THE CUSTOMER SEES</div>
-            <p className="prev-side-card-text">{activeMeta.customerSees}</p>
-          </div>
-
-          <div className="prev-side-card">
-            <div className="prev-side-card-tag">WHAT HAPPENS NEXT</div>
-            <p className="prev-side-card-text">{activeMeta.happensNext}</p>
-          </div>
-
-          <div className="prev-side-card">
-            <div className="prev-side-card-title">Flow</div>
-            <div className="prev-flow-list">
-              {PREV_YEAR_STEPS_METADATA.map((s) => (
-                <div
-                  key={s.stepNumber}
-                  className={`prev-flow-item ${
-                    s.stepNumber === currentStep ? 'prev-flow-item--active' : ''
-                  }`}
-                  onClick={() => setCurrentStep(s.stepNumber)}
-                >
-                  <span className="prev-flow-num">{s.stepNumber}</span>
-                  <span>{s.flowLabel}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </aside>
-      </div>
+      )}
     </div>
   )
 }

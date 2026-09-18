@@ -1,61 +1,191 @@
-/* GST COMPLIANCE SUBMITTED CONFIRMATION - ADVANCED CSS */
-.gst-compliance-submitted-wrapper { max-width: 640px; margin: 0 auto; animation: complianceFadeIn 0.25s ease-out; }
-@keyframes complianceFadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
-.compliance-submitted-card {
-  background-color: #FFFFFF; border: 1.5px solid rgba(11, 94, 215, 0.15); border-radius: 24px;
-  padding: 3.5rem 3rem 2.5rem 3rem; box-shadow: 0 12px 36px rgba(8, 59, 117, 0.08);
-  display: flex; flex-direction: column; align-items: center; text-align: center; box-sizing: border-box;
-
-  .compliance-submitted-icon {
-    width: 80px; height: 80px; border-radius: 50%;
-    background: linear-gradient(135deg, var(--taxedge-orange, #F97316) 0%, #EA580C 100%);
-    color: #FFFFFF; border: 3px solid var(--taxedge-orange, #F97316); display: flex;
-    align-items: center; justify-content: center; margin-bottom: 1.5rem;
-    box-shadow: 0 10px 24px rgba(249, 115, 22, 0.35), 0 0 0 6px #FEF0E6;
-    svg { width: 38px; height: 38px; }
-  }
-  .compliance-submitted-title { margin: 0 0 0.5rem; font-size: 2rem; font-weight: 800; color: var(--taxedge-navy, #083B75); letter-spacing: -0.02em; line-height: 1.2; }
-  .compliance-submitted-subtitle { margin: 0 0 1.75rem; font-size: 0.98rem; color: var(--color-text-muted, #64748B); line-height: 1.45; }
-  .compliance-submitted-divider { width: 100%; height: 1px; background-color: rgba(11, 94, 215, 0.12); margin-bottom: 1.25rem; }
-
-  .compliance-submitted-actions {
-    display: flex; align-items: center; justify-content: center; gap: 0.85rem; margin-bottom: 2rem;
-    :is(.compliance-submitted-btn-primary, .compliance-submitted-btn-secondary) {
-      border-radius: 9999px; padding: 0.85rem 2rem; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.15s ease; font-family: inherit;
-    }
-    .compliance-submitted-btn-primary {
-      background: linear-gradient(135deg, #F97316 0%, #EA580C 100%); color: #FFFFFF; border: none; box-shadow: 0 4px 14px rgba(249, 115, 22, 0.35);
-      &:hover { background: linear-gradient(135deg, #EA580C 0%, #C2410C 100%); box-shadow: 0 6px 20px rgba(249, 115, 22, 0.48); transform: translateY(-1px); }
-    }
-    .compliance-submitted-btn-secondary {
-      background-color: #EAF1FE; color: #083B75; border: 1.5px solid rgba(11, 94, 215, 0.2);
-      &:hover { background-color: #DDE8FA; border-color: #083B75; color: #052750; }
-    }
-  }
-
-  .compliance-submitted-details {
-    width: 100%; display: flex; flex-direction: column;
-    .compliance-submitted-row {
-      display: flex; align-items: center; justify-content: space-between; padding: 0.95rem 0;
-      border-bottom: 1px dashed rgba(11, 94, 215, 0.15); font-size: 0.95rem;
-      &:last-child { border-bottom: none; }
-      .compliance-detail-label { color: var(--color-text-muted, #64748B); font-weight: 500; }
-      .compliance-detail-value { color: #083B75; font-weight: 700; text-align: right; }
-      .compliance-status-new {
-        display: inline-flex; align-items: center; gap: 0.35rem; background-color: #FEF0E6;
-        color: #C2410C !important; border: 1px solid #FED7AA; padding: 0.25rem 0.8rem; border-radius: 9999px; font-size: 0.85rem; font-weight: 700;
-        .compliance-status-dot { font-size: 0.65rem; color: #F97316; }
-      }
-    }
-  }
+.gst-comp-success-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.75rem;
+}
+.gst-comp-success-banner {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: 600px;
+}
+.gst-comp-success-badge {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: #22c55e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 25px -4px rgba(34, 197, 94, 0.4);
+}
+.gst-comp-success-badge svg { width: 32px; height: 32px; }
+.gst-comp-success-title {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+.gst-comp-success-subtitle {
+  font-size: 0.95rem;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.5;
 }
 
+/* Details Card */
+.gst-comp-success-card {
+  width: 100%;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 1.75rem 2rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.gst-comp-success-top-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
 @media (max-width: 640px) {
-  .compliance-submitted-card { padding: 2.25rem 1.5rem 2rem; border-radius: 20px; }
-  .compliance-submitted-title { font-size: 1.6rem; }
-  .compliance-submitted-actions {
-    flex-direction: column; width: 100%; gap: 0.75rem;
-    :is(.compliance-submitted-btn-primary, .compliance-submitted-btn-secondary) { width: 100%; justify-content: center; }
-  }
+  .gst-comp-success-top-grid { grid-template-columns: 1fr; gap: 1.25rem; }
 }
+.gst-comp-success-col { display: flex; flex-direction: column; gap: 0.4rem; }
+.gst-comp-meta-label {
+  font-size: 0.725rem;
+  font-weight: 800;
+  color: #94a3b8;
+  letter-spacing: 0.06em;
+}
+.gst-comp-ref-id-row { display: flex; align-items: center; gap: 0.75rem; }
+.gst-comp-ref-id { font-size: 1.15rem; font-weight: 800; color: #2563eb; }
+.gst-comp-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.75rem;
+  background-color: #eff6ff;
+  color: #2563eb;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.7875rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.gst-comp-copy-btn:hover { background-color: #dbeafe; }
+.gst-comp-copy-btn svg { width: 14px; height: 14px; }
+.gst-comp-meta-val-row { display: flex; align-items: center; gap: 0.5rem; }
+.gst-comp-meta-val-row svg { width: 18px; height: 18px; }
+.gst-comp-meta-text { font-size: 0.9375rem; font-weight: 700; color: #0f172a; }
+.gst-comp-meta-text.highlight-blue { color: #2563eb; }
+.gst-comp-success-divider { height: 1px; background-color: #f1f5f9; }
+
+.gst-comp-success-bottom-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 1.5rem;
+}
+@media (max-width: 640px) {
+  .gst-comp-success-bottom-grid { grid-template-columns: 1fr; }
+}
+.gst-comp-info-block { display: flex; align-items: center; gap: 1rem; }
+.gst-comp-block-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.gst-comp-block-icon.bg-orange { background-color: #fff7ed; }
+.gst-comp-block-icon.bg-blue { background-color: #eff6ff; }
+.gst-comp-block-icon svg { width: 22px; height: 22px; }
+.gst-comp-block-text { display: flex; flex-direction: column; gap: 0.2rem; }
+.gst-comp-block-title { font-size: 1rem; font-weight: 800; color: #0f172a; margin: 0; }
+.gst-comp-block-desc { font-size: 0.8125rem; color: #64748b; margin: 0; line-height: 1.35; }
+
+/* What Happens Next Card */
+.gst-comp-next-card {
+  width: 100%;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 1.75rem 2rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.gst-comp-next-title { font-size: 1.1rem; font-weight: 800; color: #083b75; margin: 0; }
+.gst-comp-steps-grid {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.25rem;
+}
+@media (max-width: 640px) {
+  .gst-comp-steps-grid { flex-direction: column; }
+  .gst-comp-step-arrow { display: none; }
+}
+.gst-comp-step-item { display: flex; align-items: flex-start; gap: 0.875rem; flex: 1; }
+.gst-comp-step-num {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-weight: 800;
+  font-size: 0.9375rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.gst-comp-step-num.num-orange { background-color: #fff7ed; color: #ea580c; }
+.gst-comp-step-num.num-blue { background-color: #eff6ff; color: #2563eb; }
+.gst-comp-step-num.num-green { background-color: #f0fdf4; color: #16a34a; }
+.gst-comp-step-content { display: flex; flex-direction: column; gap: 0.25rem; }
+.gst-comp-step-heading { font-size: 0.875rem; font-weight: 800; color: #0f172a; margin: 0; }
+.gst-comp-step-desc, .gst-comp-step-text { font-size: 0.8125rem; color: #475569; margin: 0; line-height: 1.4; }
+.gst-comp-step-arrow { font-size: 1.5rem; color: #cbd5e1; font-weight: 300; align-self: center; }
+
+/* Bottom Actions */
+.gst-comp-success-actions { display: flex; align-items: center; gap: 1.25rem; margin-top: 0.5rem; }
+.gst-comp-track-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.875rem 2.25rem;
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 9999px;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(249, 115, 22, 0.35);
+}
+.gst-comp-track-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(249, 115, 22, 0.45); }
+.gst-comp-track-btn svg { width: 18px; height: 18px; }
+.gst-comp-dashboard-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.875rem 2.25rem;
+  background-color: #ffffff;
+  color: #2563eb;
+  border: 1.5px solid #2563eb;
+  border-radius: 9999px;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.gst-comp-dashboard-btn:hover { background-color: #eff6ff; }
+.gst-comp-dashboard-btn svg { width: 18px; height: 18px; }

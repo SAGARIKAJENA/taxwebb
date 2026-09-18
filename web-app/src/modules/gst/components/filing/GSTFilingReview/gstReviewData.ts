@@ -11,6 +11,8 @@ export interface DocumentSummaryItem {
   completed: number
   total: number
   type: 'required' | 'if_applicable' | 'recommended' | 'optional'
+  status?: 'verified' | 'not_added' | 'not_applicable' | 'pending'
+  statusText?: string
 }
 
 export interface ReviewDetailsData {
@@ -34,7 +36,7 @@ export const DEFAULT_REVIEW_DETAILS: ReviewDetailsData = {
   frequency: 'Monthly',
   filingType: 'Regular Return',
   returnForm: 'gstr1_3b_monthly',
-  attachedDocsCount: 12,
+  attachedDocsCount: 11,
 }
 
 export const DEFAULT_TAX_COMPUTATION: TaxComputationItem[] = [
@@ -53,10 +55,10 @@ export const DEFAULT_FILING_FEES: TaxComputationItem[] = [
 export const TOTAL_PAYABLE_FEE = 2950
 
 export const DEFAULT_DOC_SUMMARY: DocumentSummaryItem[] = [
-  { id: '1', label: 'Required Documents', completed: 8, total: 8, type: 'required' },
-  { id: '2', label: 'If Applicable Documents', completed: 3, total: 3, type: 'if_applicable' },
-  { id: '3', label: 'Recommended Documents', completed: 1, total: 1, type: 'recommended' },
-  { id: '4', label: 'Optional Documents', completed: 0, total: 0, type: 'optional' },
+  { id: '1', label: 'Required Documents', completed: 3, total: 3, type: 'required', status: 'verified', statusText: 'Verified' },
+  { id: '2', label: 'If Applicable Documents', completed: 4, total: 4, type: 'if_applicable', status: 'verified', statusText: 'Verified' },
+  { id: '3', label: 'Recommended Documents', completed: 4, total: 4, type: 'recommended', status: 'verified', statusText: 'Verified' },
+  { id: '4', label: 'Optional Documents', completed: 0, total: 1, type: 'optional', status: 'not_added', statusText: 'Not Added' },
 ]
 
 export const WHAT_HAPPENS_NEXT_STEPS = [
@@ -66,7 +68,10 @@ export const WHAT_HAPPENS_NEXT_STEPS = [
   { step: 4, text: 'You will receive a confirmation and ARN' },
 ]
 
-export const getResolvedReviewDetails = (filingData?: Partial<FilingPeriodData>): ReviewDetailsData => {
+export const getResolvedReviewDetails = (
+  filingData?: Partial<FilingPeriodData>,
+  attachedDocsCount?: number
+): ReviewDetailsData => {
   return {
     gstin: filingData?.gstin?.trim() || DEFAULT_REVIEW_DETAILS.gstin,
     businessName: filingData?.businessName?.trim() || DEFAULT_REVIEW_DETAILS.businessName,
@@ -76,6 +81,7 @@ export const getResolvedReviewDetails = (filingData?: Partial<FilingPeriodData>)
     frequency: filingData?.frequency?.trim() || DEFAULT_REVIEW_DETAILS.frequency,
     filingType: filingData?.filingType === 'nil' ? 'Nil Return' : DEFAULT_REVIEW_DETAILS.filingType,
     returnForm: filingData?.returnType?.trim() || DEFAULT_REVIEW_DETAILS.returnForm,
-    attachedDocsCount: DEFAULT_REVIEW_DETAILS.attachedDocsCount,
+    attachedDocsCount: typeof attachedDocsCount === 'number' ? attachedDocsCount : DEFAULT_REVIEW_DETAILS.attachedDocsCount,
   }
 }
+

@@ -1,178 +1,106 @@
-import { useState, useRef, type ChangeEvent, type DragEvent } from 'react'
+import type { FC } from 'react'
+import type { GSTStepDocumentsProps, DocumentCategory } from './gstDocuments.types'
+import { useGstDocuments } from './useGstDocuments'
+import { GSTDocChecklistHeader } from './GSTDocChecklistHeader'
+import { GSTDocCard } from './GSTDocCard'
+import { GSTDocPreviewModal } from './GSTDocPreviewModal'
+import { AlertCircleIcon, SecurityShieldIcon } from './GSTDocIcons'
+import { StepActionBar } from '@shared/components'
 import './GSTStepDocuments.css'
 
-export interface UploadedDoc {
-  id: string
-  name: string
-  sizeText: string
-  dateText: string
-  status: 'verified' | 'uploading' | 'rejected'
-  progress: number
-  errorText?: string
-}
+export type { GSTStepDocumentsProps, UploadedDoc } from './gstDocuments.types'
 
-const INITIAL_DOCS: UploadedDoc[] = [
-  {
-    id: 'doc-pan-default',
-    name: 'Proprietor_PAN_Card.pdf',
-    sizeText: '1.2 MB',
-    dateText: 'Verified automatically',
-    status: 'verified',
-    progress: 100,
-  },
+const SECTION_CONFIG: Array<{ key: DocumentCategory; title: string }> = [
+  { key: 'identity', title: 'IDENTITY PROOF' },
+  { key: 'business', title: 'BUSINESS PROOF' },
+  { key: 'financial', title: 'FINANCIAL & SIGNATORY' },
 ]
 
-const ALLOWED_EXTENSIONS = ['.pdf', '.jpg', '.jpeg', '.png', '.xlsx', '.docx']
-const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024 // 10 MB
-
-interface GSTStepDocumentsProps {
-  onBack: () => void
-  onNext: () => void
-}
-
-export const GSTStepDocuments = ({ onBack, onNext }: GSTStepDocumentsProps) => {
-  const [docs, setDocs] = useState<UploadedDoc[]>(INITIAL_DOCS)
-  const [errorMsg, setErrorMsg] = useState<string | null>(null)
-  const [isDragging, setIsDragging] = useState(false)
-  const fileInputRef = useRef<HTMLInputElement>(null)
-
-  const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
-    e.preventDefault()
-    setIsDragging(true)
-  }
-
-  const handleDragLeave = () => {
-    setIsDragging(false)
-  }
-
-  const handleDrop = (e: DragEvent<HTMLDivElement>) => {
-    e.preventDefault()
-    setIsDragging(false)
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      handleFiles(Array.from(e.dataTransfer.files))
-    }
-  }
-
-  const handleFileInput = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      handleFiles(Array.from(e.target.files))
-    }
-  }
-
-  const handleFiles = (files: File[]) => {
-    setErrorMsg(null)
-    const newDocs: UploadedDoc[] = []
-
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i]
-      const ext = '.' + file.name.split('.').pop()?.toLowerCase()
-
-      if (!ALLOWED_EXTENSIONS.includes(ext)) {
-        newDocs.push({
-          id: `doc-${Date.now()}-${i}`,
-          name: file.name,
-          sizeText: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
-          dateText: 'Upload failed',
-          status: 'rejected',
-          progress: 0,
-          errorText: 'Unsupported format. Allowed: PDF, JPG, PNG, XLSX, DOCX',
-        })
-        continue
-      }
-
-      if (file.size > MAX_FILE_SIZE_BYTES) {
-        newDocs.push({
-          id: `doc-${Date.now()}-${i}`,
-          name: file.name,
-          sizeText: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
-          dateText: 'File too large',
-          status: 'rejected',
-          progress: 0,
-          errorText: 'File exceeds 10 MB limit',
-        })
-        continue
-      }
-
-      newDocs.push({
-        id: `doc-${Date.now()}-${i}`,
-        name: file.name,
-        sizeText: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
-        dateText: 'Uploaded just now',
-        status: 'verified',
-        progress: 100,
-      })
-    }
-
-    setDocs((prev) => [...prev, ...newDocs])
-  }
-
-  const handleCancelUpload = (id: string) => {
-    setDocs((prev) => prev.filter((d) => d.id !== id))
-    setErrorMsg(null)
-  }
-
-  const handleReplace = (id: string) => {
-    setDocs((prev) =>
-      prev.map((d) =>
-        d.id === id
-          ? {
-              ...d,
-              name: 'Address_Proof_v2.pdf',
-              sizeText: '1.4 MB',
-              status: 'verified',
-              errorText: undefined,
-              dateText: 'Uploaded just now',
-              progress: 100,
-            }
-          : d
-      )
-    )
-    setErrorMsg(null)
-  }
-
-  const handleProceed = () => {
-    const verifiedDocs = docs.filter((d) => d.status === 'verified')
-    const hasUploading = docs.some((d) => d.status === 'uploading')
-    const hasRejected = docs.some((d) => d.status === 'rejected')
-
-    if (docs.length === 0 || verifiedDocs.length === 0) {
-      setErrorMsg('Please upload at least one required document (e.g. PAN Card, Address Proof, Bank Proof) to proceed.')
-      return
-    }
-
-    if (hasUploading) {
-      setErrorMsg('Please wait for all documents to complete uploading.')
-      return
-    }
-
-    if (hasRejected) {
-      setErrorMsg('Please replace or remove rejected files before continuing.')
-      return
-    }
-
-    setErrorMsg(null)
-    onNext()
-  }
+export const GSTStepDocuments: FC<GSTStepDocumentsProps> = ({
+  initialDocuments,
+  onDocumentsChange,
+  onBack,
+  onNext,
+}) => {
+  const {
+    groupedDocs,
+    completedCount,
+    totalCount,
+    progressPercent,
+    replacingDocId,
+    previewDoc,
+    validationError,
+    fileInputRef,
+    cameraInputRef,
+    handleTriggerUpload,
+    handleTriggerCamera,
+    handleFileSelected,
+    handleDelete,
+    handleStartReplace,
+    handleCancelReplace,
+    handleView,
+    handleClosePreview,
+    handleAddressProofTypeChange,
+    handleProceed,
+  } = useGstDocuments(initialDocuments, onDocumentsChange)
 
   return (
-    <div className="gst-step-documents">
-      <div className="gst-step-documents-card">
-        <div className="gst-step-documents-card__header">
-          <h2 className="gst-step-documents-card__title">Upload documents</h2>
-          <p className="gst-step-documents-card__subtitle">
-            Drop files here or pick them from your device.
-          </p>
-        </div>
+    <div className="gst-docs-page">
+      {/* Hidden inputs for document file picker & mobile camera capture */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        hidden
+        accept=".pdf,.jpg,.jpeg,.png,.docx"
+        onChange={handleFileSelected}
+        aria-label="Upload document file"
+      />
+      <input
+        type="file"
+        ref={cameraInputRef}
+        hidden
+        accept="image/*"
+        capture="environment"
+        onChange={handleFileSelected}
+        aria-label="Capture document via camera"
+      />
 
-        {errorMsg && (
-          <div className="gst-doc-error-banner" role="alert">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="12" cy="12" r="10" />
-              <line x1="12" y1="8" x2="12" y2="12" />
-              <line x1="12" y1="16" x2="12.01" y2="16" />
-            </svg>
-            <span>{errorMsg}</span>
+      {/* Checklist Progress Header */}
+      <GSTDocChecklistHeader
+        completedCount={completedCount}
+        totalCount={totalCount}
+        progressPercent={progressPercent}
+      />
+
+      {/* Validation Alert */}
+      {validationError && (
+        <div className="gst-docs-validation-alert" role="alert">
+          <AlertCircleIcon className="gst-docs-alert-icon" />
+          <span>{validationError}</span>
+        </div>
+      )}
+
+      {/* Categorized Document Proof Sections */}
+      {SECTION_CONFIG.map(({ key, title }) => (
+        <section key={key} className="gst-docs-section">
+          <h3 className="gst-docs-section-heading">{title}</h3>
+          <div className="gst-docs-list">
+            {groupedDocs[key].map((doc) => (
+              <GSTDocCard
+                key={doc.id}
+                doc={doc}
+                isReplacing={replacingDocId === doc.id}
+                onTriggerCamera={handleTriggerCamera}
+                onTriggerUpload={handleTriggerUpload}
+                onStartReplace={handleStartReplace}
+                onCancelReplace={handleCancelReplace}
+                onDelete={handleDelete}
+                onView={handleView}
+                onAddressProofChange={handleAddressProofTypeChange}
+              />
+            ))}
           </div>
+
         )}
 
         {/* Dropzone */}
@@ -221,7 +149,12 @@ export const GSTStepDocuments = ({ onBack, onNext }: GSTStepDocumentsProps) => {
               fileInputRef.current?.click()
             }}
           >
-            Browse files
+            <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ width: '18px', height: '18px', marginRight: '6px' }}>
+              <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" />
+              <path d="M12 12v9" />
+              <path d="m16 16-4-4-4 4" />
+            </svg>
+            Upload File
           </button>
         </div>
 
@@ -359,27 +292,30 @@ export const GSTStepDocuments = ({ onBack, onNext }: GSTStepDocumentsProps) => {
             Back to Business
           </button>
 
-          <button
-            type="button"
-            className="gst-btn-continue"
-            onClick={handleProceed}
-          >
-            Continue to review
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="gst-btn-arrow"
-            >
-              <line x1="5" y1="12" x2="19" y2="12" />
-              <polyline points="12 5 19 12 12 19" />
-            </svg>
-          </button>
+        </section>
+      ))}
+
+
+      {/* Security and Compliance Banner */}
+      <aside className="gst-docs-security-banner" aria-label="Security and Compliance">
+        <div className="gst-docs-security-icon-circle" aria-hidden="true">
+          <SecurityShieldIcon width={18} height={18} />
         </div>
-      </div>
+        <p className="gst-docs-security-text">
+          Your documents are encrypted and safely stored in compliance with GST data protection standards.
+        </p>
+      </aside>
+
+      {/* Step Navigation Bar */}
+      <StepActionBar
+        onBack={onBack}
+        onNext={() => handleProceed(onNext)}
+        nextDisabled={completedCount < totalCount}
+        nextLabel="Continue"
+      />
+
+      {/* Document Preview Modal */}
+      <GSTDocPreviewModal previewDoc={previewDoc} onClose={handleClosePreview} />
     </div>
   )
 }

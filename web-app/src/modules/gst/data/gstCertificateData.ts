@@ -14,11 +14,15 @@ export const GST_CERTIFICATE_CUSTOMER_RECORD = {
 export const GST_CERTIFICATE_REQUEST_TYPES: CertificateRequestTypeOption[] = [
   {
     key: 'download_existing',
-    label: 'Download Existing Certificate',
+    label: 'Download Existing Certificate (Form REG-06)',
   },
   {
     key: 'request_reprint',
-    label: 'Request Reprint',
+    label: 'Request Reprint / Duplicate Copy',
+  },
+  {
+    key: 'verification_status',
+    label: 'Certificate Verification & Status Check',
   },
 ]
 

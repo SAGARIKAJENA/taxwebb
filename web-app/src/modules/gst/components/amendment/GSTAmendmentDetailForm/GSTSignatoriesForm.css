@@ -1,0 +1,157 @@
+/* Authorised Signatories Form Styling */
+
+.gst-sig-readonly-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem 2rem;
+  padding: 0.25rem 0;
+}
+
+.gst-sig-readonly-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.gst-sig-dob-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.gst-sig-date-input {
+  cursor: pointer;
+  padding-right: 2.75rem;
+}
+
+.gst-sig-date-input::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  cursor: pointer;
+}
+
+.gst-sig-calendar-btn {
+  position: absolute;
+  right: 0.75rem;
+  background: transparent;
+  border: none;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0.25rem;
+  transition: color 0.2s ease;
+}
+
+.gst-sig-calendar-btn:hover {
+  color: #2563eb;
+}
+
+.gst-sig-calendar-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Sidebar Cards */
+.gst-sig-accepted-proofs-card {
+  background-color: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.gst-sig-info-card {
+  background-color: #eff6ff;
+  border: 1px solid #dbeafe;
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.gst-sig-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-bottom: 0.75rem;
+}
+
+.gst-sig-orange-icon-box {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #ea580c;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.gst-sig-orange-icon-box svg {
+  width: 14px;
+  height: 14px;
+}
+
+.gst-sig-blue-icon-box {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #2563eb;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.gst-sig-blue-icon-box svg {
+  width: 14px;
+  height: 14px;
+}
+
+.gst-sig-card-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.gst-sig-card-title.orange-title {
+  color: #9a3412;
+}
+
+.gst-sig-card-title.blue-title {
+  color: #1e40af;
+}
+
+.gst-sig-proofs-list,
+.gst-sig-info-list {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+.gst-sig-proofs-list {
+  color: #9a3412;
+}
+
+.gst-sig-info-list {
+  color: #1e40af;
+}
+
+.gst-sig-proofs-list li::marker {
+  color: #ea580c;
+}
+
+.gst-sig-info-list li::marker {
+  color: #2563eb;
+}
+
+@media (max-width: 768px) {
+  .gst-sig-readonly-grid {
+    grid-template-columns: 1fr;
+  }
+}

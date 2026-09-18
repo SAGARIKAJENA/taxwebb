@@ -121,7 +121,7 @@
   height: 40px;
   border-radius: var(--radius-pill, 9999px);
   border: none;
-  background-color: var(--taxedge-success-feature, #059669);
+  background-color: #f97316;
   color: #ffffff;
   cursor: pointer;
   transition: all var(--transition-fast, 150ms ease);
@@ -132,11 +132,11 @@
 .chat-msg-input-bar__btn-send--active {
   opacity: 1;
   transform: scale(1.02);
-  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.3);
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
 }
 
 .chat-msg-input-bar__btn-send:hover:not(:disabled) {
-  background-color: var(--taxedge-success, #16a34a);
+  background-color: #ea580c;
   transform: scale(1.05);
 }
 

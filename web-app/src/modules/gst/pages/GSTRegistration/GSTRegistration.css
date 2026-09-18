@@ -16,6 +16,30 @@
   margin-bottom: 1.25rem;
 }
 
+.gst-reg-back-to-app-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 9999px;
+  padding: 0.5rem 1.25rem;
+  margin-bottom: 12px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #0f172a;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.gst-reg-back-to-app-btn:hover {
+  background-color: #f8fafc;
+  border-color: #94a3b8;
+  color: #0f172a;
+  transform: translateY(-1px);
+}
+
 .gst-reg-header-titles {
   display: flex;
   flex-direction: column;
@@ -49,6 +73,11 @@
   grid-template-columns: 1fr 340px;
   gap: 1.75rem;
   align-items: start;
+}
+
+.gst-reg-content-grid--full-width {
+  grid-template-columns: 1fr;
+  max-width: 100%;
 }
 
 .gst-reg-main-content {

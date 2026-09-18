@@ -80,9 +80,9 @@
 
 /* Completed Step */
 .gst-reg-stepper__step--completed .gst-reg-stepper__circle {
-  background-color: #10b981;
+  background-color: #0b3b60;
   color: #ffffff;
-  border: 1.5px solid #10b981;
+  border: 1.5px solid #0b3b60;
 }
 
 .gst-reg-stepper__step--completed .gst-reg-stepper__label {
@@ -111,7 +111,7 @@
 }
 
 .gst-reg-stepper__line--completed {
-  background-color: #10b981;
+  background-color: #0b3b60;
 }
 
 @media (max-width: 640px) {

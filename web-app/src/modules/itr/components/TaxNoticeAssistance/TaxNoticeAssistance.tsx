@@ -15,6 +15,7 @@ import {
   NoticeStep4View,
   NoticeStep5View,
 } from './TaxNoticeAssistanceSteps'
+import { NoticeSidePanel } from './NoticeSidePanel'
 import { FlowStepper } from '@shared/components/FlowStepper'
 import './TaxNoticeAssistance.css'
 
@@ -46,7 +47,6 @@ export const TaxNoticeAssistance = () => {
     NOTICE_STEPS_METADATA.filter((s) => s.stepNumber === currentStep)[0] ||
     NOTICE_STEPS_METADATA[0]
 
-  // File validation helper (checks format and 10MB limit)
   const validateFile = (file: File): boolean => {
     const validExtensions = ['pdf', 'jpg', 'jpeg', 'png']
     const ext = file.name.split('.').pop()?.toLowerCase() || ''
@@ -75,7 +75,6 @@ export const TaxNoticeAssistance = () => {
       : `${Math.round(bytes / 1024)} KB`
   }
 
-  // Screen 1 upload handlers
   const handleNoticeFileSelect = (file: File) => {
     if (!validateFile(file)) return
     const fileInfo: UploadedFileInfo = {
@@ -95,7 +94,6 @@ export const TaxNoticeAssistance = () => {
     pushToast('Notice document removed', 'info')
   }
 
-  // Screen 3 upload handlers
   const handleChecklistFileSelect = (id: string, file: File) => {
     if (!validateFile(file)) return
     const fileInfo: UploadedFileInfo = {
@@ -120,7 +118,6 @@ export const TaxNoticeAssistance = () => {
   }
 
   const handleNextStep = () => {
-    // Screen 1 validation: Must upload notice document and provide Notice Number
     if (currentStep === 1) {
       let hasError = false
       if (!noticeDocUploaded && !uploadedNoticeFile) {
@@ -144,7 +141,6 @@ export const TaxNoticeAssistance = () => {
       if (hasError) return
     }
 
-    // Screen 3 validation: Must upload at least one document
     if (currentStep === 3) {
       const uploadedCount = NOTICE_CHECKLIST_DOCS.filter((d) => uploadedDocs[d.id]).length
       if (uploadedCount === 0) {
@@ -175,7 +171,7 @@ export const TaxNoticeAssistance = () => {
 
   return (
     <div className="notice-flow-page">
-      {/* 1. Top Meta & Stepper */}
+      {/* Top Meta & Stepper */}
       <div className="notice-flow-topbar">
         <div className="notice-flow-top-meta">
           <span className="notice-flow-section-tag">SECTION 6 · TAX NOTICE ASSISTANCE</span>
@@ -189,7 +185,6 @@ export const TaxNoticeAssistance = () => {
           ariaLabel="Tax Notice Assistance Steps"
         />
 
-        {/* Top Note Box (Screen 1 only) */}
         {currentStep === 1 && (
           <div className="notice-top-note-box">
             <div className="notice-top-note-header">
@@ -197,15 +192,13 @@ export const TaxNoticeAssistance = () => {
               <strong className="notice-top-note-title">Note</strong>
             </div>
             <p className="notice-top-note-text">
-              Also listed by name only in the requirements. The flow below follows standard
-              practice for helping a customer respond to an Income Tax Department notice, and
-              should be confirmed with the client before development.
+              Also listed by name only in the requirements. The flow below follows standard practice for helping a customer respond to an Income Tax Department notice.
             </p>
           </div>
         )}
       </div>
 
-      {/* 2. Main 2-Column Grid */}
+      {/* Main 2-Column Grid */}
       <div className="notice-flow-layout">
         {/* Left Column: Main Card */}
         <div className="notice-flow-main-card">
@@ -213,19 +206,11 @@ export const TaxNoticeAssistance = () => {
 
           {currentStep === 1 && (
             <NoticeStep1View
-              noticeDocUploaded={noticeDocUploaded}
-              uploadedFile={uploadedNoticeFile}
-              onFileSelect={handleNoticeFileSelect}
-              onRemoveFile={handleRemoveNoticeFile}
-              noticeNumber={noticeNumber}
-              setNoticeNumber={(val) => {
-                setNoticeNumber(val)
-                if (val.trim()) setNoticeNumberError('')
-              }}
-              noticeDate={noticeDate}
-              setNoticeDate={setNoticeDate}
-              uploadError={uploadError}
-              noticeNumberError={noticeNumberError}
+              noticeDocUploaded={noticeDocUploaded} uploadedFile={uploadedNoticeFile}
+              onFileSelect={handleNoticeFileSelect} onRemoveFile={handleRemoveNoticeFile}
+              noticeNumber={noticeNumber} noticeDate={noticeDate} setNoticeDate={setNoticeDate}
+              setNoticeNumber={(val) => { setNoticeNumber(val); if (val.trim()) setNoticeNumberError('') }}
+              uploadError={uploadError} noticeNumberError={noticeNumberError}
             />
           )}
 
@@ -233,13 +218,9 @@ export const TaxNoticeAssistance = () => {
 
           {currentStep === 3 && (
             <NoticeStep3View
-              uploadedDocs={uploadedDocs}
-              uploadedFiles={checklistFiles}
-              onFileSelect={handleChecklistFileSelect}
-              onRemoveDoc={handleRemoveChecklistDoc}
-              explanation={explanation}
-              setExplanation={setExplanation}
-              checklistError={checklistError}
+              uploadedDocs={uploadedDocs} uploadedFiles={checklistFiles}
+              onFileSelect={handleChecklistFileSelect} onRemoveDoc={handleRemoveChecklistDoc}
+              explanation={explanation} setExplanation={setExplanation} checklistError={checklistError}
             />
           )}
 
@@ -254,12 +235,17 @@ export const TaxNoticeAssistance = () => {
 
           {/* Bottom Action Bar */}
           <div className="notice-flow-bottom-bar">
+
+            <button type="button" className="notice-bottom-back-btn" onClick={handlePrevStep}>← Back</button>
+            <button type="button" className="notice-bottom-next-btn" onClick={handleNextStep}>
+              {currentStep < 5 ? 'Next →' : 'Finish flow ✓'}
+
             <button
               type="button"
               className="notice-bottom-back-btn"
               onClick={handlePrevStep}
             >
-              ← Back
+              Back
             </button>
 
             <button
@@ -267,12 +253,14 @@ export const TaxNoticeAssistance = () => {
               className="notice-bottom-next-btn"
               onClick={handleNextStep}
             >
-              {currentStep < 5 ? 'Next →' : 'Finish flow ✓'}
+              {currentStep < 5 ? 'Continue' : 'Finish'}
+
             </button>
           </div>
         </div>
 
         {/* Right Column: Side Explanatory Panel */}
+
         <aside className="notice-flow-side-panel">
           <div className="notice-side-card">
             <div className="notice-side-card-tag">WHAT THE CUSTOMER SEES</div>
@@ -290,9 +278,7 @@ export const TaxNoticeAssistance = () => {
               {NOTICE_STEPS_METADATA.map((s) => (
                 <div
                   key={s.stepNumber}
-                  className={`notice-flow-item ${
-                    s.stepNumber === currentStep ? 'notice-flow-item--active' : ''
-                  }`}
+                  className={`notice-flow-item ${s.stepNumber === currentStep ? 'notice-flow-item--active' : ''}`}
                   onClick={() => setCurrentStep(s.stepNumber)}
                 >
                   <span className="notice-flow-num">{s.stepNumber}</span>
@@ -302,6 +288,13 @@ export const TaxNoticeAssistance = () => {
             </div>
           </div>
         </aside>
+
+        <NoticeSidePanel
+          currentStep={currentStep}
+          activeMeta={activeMeta}
+          onSelectStep={(step) => setCurrentStep(step)}
+        />
+
       </div>
     </div>
   )

@@ -1,0 +1,1036 @@
+/* ==========================================================================
+   ITR Filing - Step 1: Personal & Filing Info (Desktop Web View)
+   Theme: Navy Blue (#083B75) & TaxEdge Orange (#F97316)
+   ========================================================================== */
+
+.itr-personal-view-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 0 3.5rem 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* --------------------------------------------------------------------------
+   Step Header & Connected 5-Step Stepper
+   -------------------------------------------------------------------------- */
+
+.itr-personal-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1.5px solid #e2e8f0;
+  width: 100%;
+}
+
+.itr-personal-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.itr-personal-title {
+  margin: 0;
+  font-size: 1.95rem;
+  font-weight: 800;
+  color: #083b75; /* Navy Blue */
+  letter-spacing: -0.02em;
+}
+
+.itr-personal-subtitle-label {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #f97316; /* Orange accent */
+}
+
+/* 5-Step Desktop Stepper Track - Full Width Responsive */
+.itr-stepper-track {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 100%;
+  margin: 0.75rem 0 0 0;
+  padding: 0 0.5rem;
+  box-sizing: border-box;
+}
+
+.itr-stepper-step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.itr-stepper-dot {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  font-weight: 800;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+  user-select: none;
+}
+
+.itr-stepper-dot--active {
+  background: #f97316;
+  color: #ffffff;
+  border: 2.5px solid #f97316;
+  box-shadow: 0 4px 14px rgba(249, 115, 22, 0.42);
+  transform: scale(1.06);
+}
+
+.itr-stepper-dot--completed {
+  background: #083b75;
+  color: #ffffff;
+  border: 2.5px solid #083b75;
+  box-shadow: 0 4px 14px rgba(8, 59, 117, 0.35);
+}
+
+.itr-stepper-dot--inactive {
+  background: #ffffff;
+  color: #94a3b8;
+  border: 2px solid #cbd5e1;
+}
+
+.itr-stepper-line {
+  flex: 1;
+  height: 2.5px;
+  background: #e2e8f0;
+  margin: 0 0.75rem;
+  margin-bottom: 1.45rem;
+  transition: background 0.3s ease;
+  z-index: 1;
+}
+
+.itr-stepper-line--completed {
+  background: #083b75;
+}
+
+.itr-stepper-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #64748b;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.itr-stepper-label--active {
+  color: #f97316;
+  font-weight: 700;
+}
+
+@media (max-width: 680px) {
+  .itr-stepper-track {
+    overflow-x: auto;
+    justify-content: flex-start;
+    gap: 1.25rem;
+    padding-bottom: 0.5rem;
+  }
+  .itr-stepper-line {
+    display: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Desktop 2-Column Responsive Layout
+   -------------------------------------------------------------------------- */
+
+.itr-personal-layout {
+  display: grid;
+  grid-template-columns: minmax(440px, 1.15fr) minmax(0, 1.25fr);
+  gap: 1.75rem;
+  align-items: start;
+}
+
+@media (max-width: 1060px) {
+  .itr-personal-layout {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+.itr-personal-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.itr-personal-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   Common Info Card Design
+   -------------------------------------------------------------------------- */
+
+.itr-info-card {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 1.6rem 1.85rem;
+  box-shadow: 0 2px 10px rgba(8, 59, 117, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.itr-info-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 6px 18px rgba(8, 59, 117, 0.06);
+}
+
+.itr-info-card__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.itr-info-card__title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.itr-info-card__icon-wrap {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #eff6ff;
+  border: 1.5px solid #dbeafe;
+  color: #083b75; /* Navy Blue */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.itr-info-card__title {
+  margin: 0;
+  font-size: 1.22rem;
+  font-weight: 800;
+  color: #083b75; /* Navy Blue */
+  letter-spacing: -0.01em;
+}
+
+.itr-info-card__desc {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.itr-card-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.itr-badge-optional {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #64748b;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  padding: 0.2rem 0.65rem;
+  border-radius: 9999px;
+  letter-spacing: 0.02em;
+}
+
+.itr-badge-verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #083b75; /* Navy Blue */
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.3rem 0.8rem;
+  border-radius: 9999px;
+}
+
+.itr-btn-accordion-toggle {
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.itr-btn-accordion-toggle:hover {
+  background: #f8fafc;
+  color: #083b75;
+  border-color: #cbd5e1;
+}
+
+.itr-btn-accordion-toggle svg {
+  transition: transform 0.2s ease;
+}
+
+.itr-btn-accordion-toggle--open svg {
+  transform: rotate(180deg);
+}
+
+/* --------------------------------------------------------------------------
+   Card 1: Filing Type Options List (Matches Mobile Screenshot)
+   -------------------------------------------------------------------------- */
+
+.itr-filing-options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+.itr-filing-option-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.95rem;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 1.05rem 1.25rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.itr-filing-option-card:hover {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+}
+
+.itr-filing-option-card--active {
+  background: #fffaf5;
+  border-color: #f97316;
+  box-shadow: 0 0 0 1px #f97316;
+}
+
+.itr-radio-outer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.15rem;
+  flex-shrink: 0;
+}
+
+.itr-filing-radio-input {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  cursor: pointer;
+}
+
+.itr-custom-radio {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #cbd5e1;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.itr-custom-radio--checked {
+  border-color: #f97316;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
+}
+
+.itr-custom-radio--checked::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #f97316;
+}
+
+.itr-filing-option-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.itr-filing-option-title {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.itr-filing-option-desc {
+  font-size: 0.84rem;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+/* --------------------------------------------------------------------------
+   Card 2: Refund Bank Account (Matches Mobile Screenshot)
+   -------------------------------------------------------------------------- */
+
+.itr-bank-empty-box {
+  background: #f8fafc;
+  border: 1.5px dashed #cbd5e1;
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.itr-bank-accounts-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.itr-bank-account-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 1.1rem 1.35rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.itr-bank-account-card:hover {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+}
+
+.itr-bank-account-card--selected {
+  background: #fffaf5;
+  border-color: #f97316;
+  box-shadow: 0 0 0 1px #f97316;
+}
+
+.itr-bank-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.itr-bank-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.itr-bank-title-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.itr-bank-name {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #083b75;
+}
+
+.itr-bank-type {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #64748b;
+  letter-spacing: 0.04em;
+}
+
+.itr-bank-badge-validated {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #083b75;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  white-space: nowrap;
+}
+
+.itr-bank-card-details {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  background: #f8fafc;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+}
+
+.itr-bank-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.itr-bank-field-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.itr-bank-field-val {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.itr-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: 0.03em;
+}
+
+.itr-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* Add Another Bank Account Button (Screenshot Style) */
+.itr-add-bank-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.25rem;
+}
+
+.itr-btn-add-bank {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #083b75;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 0.65rem 1.65rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  max-width: 320px;
+  justify-content: center;
+}
+
+.itr-btn-add-bank:hover {
+  background: #f8fafc;
+  border-color: #f97316;
+  color: #f97316;
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.12);
+}
+
+/* Inline Add Bank Account Form */
+.itr-add-bank-form {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 1.35rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.itr-add-bank-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #083b75;
+}
+
+.itr-bank-form-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.65rem 0.95rem;
+  border-radius: 8px;
+}
+
+.itr-bank-inputs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.95rem;
+}
+
+@media (max-width: 600px) {
+  .itr-bank-inputs-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.itr-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.itr-input-group--full {
+  grid-column: 1 / -1;
+}
+
+.itr-input-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+.itr-text-input,
+.itr-select-input {
+  width: 100%;
+  padding: 0.65rem 0.9rem;
+  font-size: 0.9rem;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #0f172a;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.itr-text-input:focus,
+.itr-select-input:focus {
+  outline: none;
+  border-color: #f97316;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
+}
+
+.itr-add-bank-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+/* Strictly Orange #f97316 Button per User Mandate */
+.itr-btn-save-bank {
+  background: #f97316;
+  color: #ffffff;
+  border: none;
+  border-radius: 9999px;
+  padding: 0.65rem 1.6rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
+}
+
+.itr-btn-save-bank:hover {
+  background: #ea580c;
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
+}
+
+.itr-btn-cancel-bank {
+  background: #ffffff;
+  color: #64748b;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 9999px;
+  padding: 0.65rem 1.35rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.itr-btn-cancel-bank:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+/* --------------------------------------------------------------------------
+   Full-Width Previous ITR Data Card
+   -------------------------------------------------------------------------- */
+
+.itr-info-card--full-width {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.itr-bank-inputs-grid--tri {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+@media (max-width: 920px) {
+  .itr-bank-inputs-grid--tri {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Previous ITR Data Import Box */
+.itr-prev-import-card {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 1.25rem 1.5rem;
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.itr-prev-import-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+}
+
+.itr-prev-import-title {
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.itr-prev-custom-checkbox {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  border: 2px solid #cbd5e1;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.itr-prev-custom-checkbox--checked {
+  background: #f97316;
+  border-color: #f97316;
+}
+
+.itr-prev-import-body {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.itr-prev-import-subtitle {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.itr-prev-import-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.itr-prev-option-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.itr-prev-option-checkbox {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 1.5px solid #cbd5e1;
+  accent-color: #f97316;
+  cursor: pointer;
+  margin: 0;
+}
+
+.itr-prev-option-label {
+  font-size: 0.92rem;
+  color: #334155;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.itr-prev-option-item:hover .itr-prev-option-label {
+  color: #0f172a;
+}
+
+.itr-import-action-row {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 0.25rem;
+}
+
+/* Strictly Orange #f97316 Button per User Mandate */
+.itr-btn-import-records {
+  background: #f97316;
+  color: #ffffff;
+  border: none;
+  border-radius: 9999px;
+  padding: 0.7rem 1.65rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
+}
+
+.itr-btn-import-records:hover {
+  background: #ea580c;
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
+}
+
+.itr-import-alert {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #083b75;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.65rem 0.95rem;
+  border-radius: 8px;
+}
+
+/* --------------------------------------------------------------------------
+   Sidebar Cards: Taxpayer Identity, AY, Residential Status
+   -------------------------------------------------------------------------- */
+
+/* Taxpayer Details Key-Value Box */
+.itr-taxpayer-details-box {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 1.15rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.itr-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.25rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed #e2e8f0;
+}
+
+.itr-detail-row:last-of-type {
+  border-bottom: none;
+}
+
+.itr-detail-label {
+  font-size: 0.88rem;
+  color: #64748b;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.itr-detail-val {
+  font-size: 0.92rem;
+  color: #083b75;
+  font-weight: 700;
+  text-align: right;
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+.itr-detail-val--mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: 0.02em;
+}
+
+.itr-detail-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 0.4rem;
+}
+
+.itr-profile-link {
+  background: none;
+  border: none;
+  color: #083b75;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s ease;
+}
+
+.itr-profile-link:hover {
+  color: #f97316;
+}
+
+/* Assessment Year (AY) Buttons Grid */
+.itr-ay-buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.itr-ay-btn {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 0.85rem 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.itr-ay-btn:hover {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+}
+
+.itr-ay-btn--active {
+  background: #fffaf5;
+  border-color: #f97316;
+  box-shadow: 0 0 0 1px #f97316;
+}
+
+.itr-ay-main {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #083b75;
+}
+
+.itr-ay-btn--active .itr-ay-main {
+  color: #f97316;
+}
+
+.itr-ay-sub {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #64748b;
+  letter-spacing: 0.02em;
+}
+
+.itr-ay-btn--active .itr-ay-sub {
+  color: #c2410c;
+}
+
+/* Residential Status */
+.itr-status-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.itr-status-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+@media (max-width: 480px) {
+  .itr-status-buttons,
+  .itr-ay-buttons-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.itr-status-btn {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 0.85rem 0.5rem;
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.itr-status-btn:hover {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+}
+
+.itr-status-btn--active {
+  background: #fffaf5;
+  border-color: #f97316;
+  color: #f97316;
+  box-shadow: 0 0 0 1px #f97316;
+}
+
+.itr-info-callout {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 0.9rem 1.15rem;
+  display: block;
+  font-size: 0.88rem;
+  color: #334155;
+  line-height: 1.5;
+}
+
+.itr-info-callout strong {
+  color: #083b75;
+  font-weight: 700;
+}
+
+/* --------------------------------------------------------------------------
+   StepActionBar Overrides & Global Orange Button Mandate (#f97316)
+   -------------------------------------------------------------------------- */
+
+/* Ensure any action bar or button in ITR filing uses Orange #f97316 and White */
+.itr-personal-view-container button[type="submit"],
+.itr-personal-view-container .step-action-bar__next,
+.itr-personal-view-container .step-action-next-btn {
+  background: #f97316 !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+.itr-personal-view-container button[type="submit"]:hover,
+.itr-personal-view-container .step-action-bar__next:hover,
+.itr-personal-view-container .step-action-next-btn:hover {
+  background: #ea580c !important;
+  color: #ffffff !important;
+}

@@ -5,8 +5,10 @@ import './GSTDocumentRow.css'
 interface GSTDocumentRowProps {
   item: DocumentItemDef
   uploadedFile?: UploadedFileInfo
+  isNotApplicable?: boolean
   onFileUpload: (id: string, file: File) => void
   onFileRemove: (id: string) => void
+  onToggleNotApplicable?: (id: string) => void
 }
 
 const DocumentIcon: React.FC<{ type: DocumentItemDef['iconType'] }> = ({ type }) => {
@@ -113,8 +115,10 @@ const DocumentIcon: React.FC<{ type: DocumentItemDef['iconType'] }> = ({ type })
 export const GSTDocumentRow: React.FC<GSTDocumentRowProps> = ({
   item,
   uploadedFile,
+  isNotApplicable,
   onFileUpload,
   onFileRemove,
+  onToggleNotApplicable,
 }) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null)
 
@@ -175,11 +179,24 @@ export const GSTDocumentRow: React.FC<GSTDocumentRowProps> = ({
               </svg>
               <span>Uploaded</span>
             </div>
+          ) : isNotApplicable ? (
+            <>
+              <div className="gst-doc-row__na-badge">
+                <span>Not Applicable</span>
+              </div>
+              <button
+                type="button"
+                className="gst-doc-row__na-undo"
+                onClick={() => onToggleNotApplicable?.(item.id)}
+              >
+                Change
+              </button>
+            </>
           ) : (
             <>
               <div className="gst-doc-row__tag">
                 <span className="gst-doc-row__tag-dot" />
-                <span>{item.badge}</span>
+                <span>{item.isRequired ? 'Required' : 'If applicable'}</span>
               </div>
 
               <button
@@ -198,6 +215,7 @@ export const GSTDocumentRow: React.FC<GSTDocumentRowProps> = ({
           )}
         </div>
       </div>
+
 
       {/* Uploaded Actions Footer Bar: View Document | Replace | Trash */}
       {uploadedFile && (

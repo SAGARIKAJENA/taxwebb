@@ -1,15 +1,33 @@
-import type { ApplicationStatus, Timestamped } from '@shared/types'
+import type { ApplicationStatus } from '@shared/types'
 
-/** Replace with the real Applications model once the API contract is agreed. */
-export interface ApplicationsItem extends Timestamped {
+export type ApplicationCategory = 'All' | 'GST' | 'ITR' | 'Loans' | 'Business' | 'Insurance'
+
+export type ApplicationOverviewFilter = 'ALL' | 'IN_PROGRESS' | 'COMPLETED' | 'UNDER_VERIFICATION'
+
+export interface ApplicationsItem {
   id: string
   reference: string
   title: string
-  status: ApplicationStatus
+  category: 'GST' | 'ITR' | 'Loans' | 'Business' | 'Insurance'
+  status: ApplicationStatus | string
+  statusLabel: string
+  date: string
+  tag?: string
   amount?: number
+  to?: string
+  createdAt?: string
+  updatedAt?: string
 }
 
 export interface ApplicationsFilters {
-  status?: ApplicationStatus
+  category?: ApplicationCategory
+  overviewStatus?: ApplicationOverviewFilter
   search?: string
+}
+
+export interface ApplicationOverviewStats {
+  total: number
+  inProgress: number
+  completed: number
+  underVerification: number
 }

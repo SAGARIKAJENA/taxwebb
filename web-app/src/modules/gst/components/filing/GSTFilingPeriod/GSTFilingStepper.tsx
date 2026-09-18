@@ -8,22 +8,33 @@ interface Step {
 
 interface GSTFilingStepperProps {
   currentStep?: number
+  onStepClick?: (stepId: number) => void
 }
 
 const STEPS: Step[] = [
-  { id: 1, label: 'Select Service' },
-  { id: 2, label: 'Filing Period' },
-  { id: 3, label: 'Documents' },
-  { id: 4, label: 'Review & File' },
+  { id: 1, label: 'Filing Period' },
+  { id: 2, label: 'Documents' },
+
+  { id: 3, label: 'Review & File' },
+  { id: 4, label: 'Payment' },
 ]
 
-export const GSTFilingStepper: React.FC<GSTFilingStepperProps> = ({ currentStep = 2 }) => {
+export const GSTFilingStepper: React.FC<GSTFilingStepperProps> = ({ currentStep = 1, onStepClick }) => {
+
+  { id: 3, label: 'Review' },
+  { id: 4, label: 'Payment' },
+  { id: 5, label: 'Success' },
+]
+
+export const GSTFilingStepper: React.FC<GSTFilingStepperProps> = ({ currentStep = 1 }) => {
+
   return (
     <nav className="gst-filing-stepper" aria-label="Filing Progress">
       {STEPS.map((step, index) => {
         const isCompleted = step.id < currentStep
         const isActive = step.id === currentStep
         const isLast = index === STEPS.length - 1
+        const isClickable = isCompleted && Boolean(onStepClick)
 
         let badgeClass = 'gst-filing-stepper__badge--pending'
         let labelClass = 'gst-filing-stepper__label--pending'
@@ -38,7 +49,23 @@ export const GSTFilingStepper: React.FC<GSTFilingStepperProps> = ({ currentStep 
 
         return (
           <React.Fragment key={step.id}>
-            <div className="gst-filing-stepper__item" aria-current={isActive ? 'step' : undefined}>
+            <div
+              className={`gst-filing-stepper__item ${isClickable ? 'gst-filing-stepper__item--clickable' : ''}`}
+              aria-current={isActive ? 'step' : undefined}
+              role={isClickable ? 'button' : undefined}
+              tabIndex={isClickable ? 0 : undefined}
+              onClick={isClickable ? () => onStepClick?.(step.id) : undefined}
+              onKeyDown={
+                isClickable
+                  ? (e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault()
+                        onStepClick?.(step.id)
+                      }
+                    }
+                  : undefined
+              }
+            >
               <div className={`gst-filing-stepper__badge ${badgeClass}`}>
                 {isCompleted ? (
                   <svg
@@ -58,7 +85,14 @@ export const GSTFilingStepper: React.FC<GSTFilingStepperProps> = ({ currentStep 
               </div>
               <span className={`gst-filing-stepper__label ${labelClass}`}>{step.label}</span>
             </div>
-            {!isLast && <div className="gst-filing-stepper__line" aria-hidden="true" />}
+            {!isLast && (
+              <div
+                className={`gst-filing-stepper__line ${
+                  isCompleted ? 'gst-filing-stepper__line--completed' : ''
+                }`}
+                aria-hidden="true"
+              />
+            )}
           </React.Fragment>
         )
       })}

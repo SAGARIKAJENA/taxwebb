@@ -5,7 +5,6 @@ import { gstService } from '../../services/gstService'
 import type { GstCertificatePayload, GstCertificateRecord } from '../../types/gst.types'
 import { useAppStore } from '@store/index'
 import {
-  GSTCertificateHeader,
   GSTCertificateForm,
   GSTCertificateSubmitted,
 } from '../../components/certificate'
@@ -29,7 +28,6 @@ export default function GSTCertificate() {
       pushToast('GST Certificate request submitted successfully (GST-2026-00135)', 'success')
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } catch {
-      // In case of error, fallback record
       setSubmittedRecord({
         id: `cert_${Date.now()}`,
         reference: 'GST-2026-00135',
@@ -55,10 +53,8 @@ export default function GSTCertificate() {
     return (
       <GSTCertificateSubmitted
         applicationId="GST-2026-00135"
-        serviceName="GST Certificate"
         gstin={submittedRecord.gstin || '27AXTPD4419K1ZP'}
-        fieldsCaptured={3}
-        status="New Request"
+        requestType={submittedRecord.requestType}
         onBackToForm={handleBackToForm}
         onAllForms={handleAllFormsClick}
       />
@@ -67,7 +63,21 @@ export default function GSTCertificate() {
 
   return (
     <div className="gst-certificate-page">
-      <GSTCertificateHeader onBackToAllForms={handleAllFormsClick} />
+      <div className="gst-cert-page-header">
+        <div className="gst-cert-page-title-row">
+          <div className="gst-cert-page-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <line x1="16" y1="13" x2="8" y2="13" />
+              <line x1="16" y1="17" x2="8" y2="17" />
+              <line x1="10" y1="9" x2="8" y2="9" />
+            </svg>
+          </div>
+          <h1 className="gst-cert-page-title">GST Certificate</h1>
+        </div>
+        <p className="gst-cert-page-subtitle">Download your GST Registration Certificate (Form REG-06)</p>
+      </div>
       <main className="gst-certificate-main">
         <GSTCertificateForm
           isSubmitting={isSubmitting}

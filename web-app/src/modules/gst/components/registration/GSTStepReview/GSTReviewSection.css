@@ -1,0 +1,142 @@
+/* Review Section Card */
+.gst-review-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 22px 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.gst-review-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.gst-review-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.gst-review-card__header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.gst-review-card__icon-badge {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.gst-review-card__title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.gst-review-card__edit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.gst-review-card__edit-btn:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+/* Fields List */
+.gst-review-fields-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+}
+
+.gst-review-field-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 0.92rem;
+  gap: 16px;
+}
+
+.gst-review-field-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.gst-review-field-label {
+  margin: 0;
+  color: #64748b;
+  font-weight: 500;
+  flex: 0 0 42%;
+  max-width: 42%;
+}
+
+.gst-review-field-value {
+  margin: 0;
+  color: #0f172a;
+  font-weight: 600;
+  text-align: right;
+  flex: 1;
+  word-break: break-word;
+}
+
+.gst-review-contact-val {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.gst-review-contact-email {
+  font-size: 0.82rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+@media (max-width: 640px) {
+  .gst-review-card {
+    padding: 16px;
+  }
+
+  .gst-review-field-row {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .gst-review-field-label {
+    max-width: 100%;
+  }
+
+  .gst-review-field-value {
+    text-align: left;
+  }
+
+  .gst-review-contact-val {
+    align-items: flex-start;
+  }
+}
