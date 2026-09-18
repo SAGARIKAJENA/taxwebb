@@ -1,0 +1,214 @@
+.gst-amend-contact-container {
+  width: 100%;
+}
+
+.gst-amend-contact-readonly-card {
+  background-color: #eff6ff;
+  border: 1px solid #dbeafe;
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+}
+
+.gst-amend-contact-readonly-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 1rem 0;
+}
+
+.gst-amend-contact-readonly-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.gst-amend-contact-readonly-item {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+.gst-amend-contact-readonly-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #3b82f6;
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.gst-amend-contact-readonly-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.gst-amend-contact-readonly-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.gst-amend-contact-readonly-label {
+  font-size: 0.8125rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.gst-amend-contact-readonly-val {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* Input wrappers for New details */
+.gst-amend-contact-input-wrapper {
+  display: flex;
+  align-items: center;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background-color: #ffffff;
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.gst-amend-contact-input-wrapper:focus-within {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.gst-amend-contact-prefix {
+  padding: 0.65rem 1rem;
+  background-color: #f8fafc;
+  border-right: 1px solid #e2e8f0;
+  font-weight: 700;
+  color: #1e293b;
+  font-size: 0.9375rem;
+}
+
+.gst-amend-contact-email-icon {
+  padding: 0.65rem 0.875rem;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gst-amend-contact-email-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.gst-amend-contact-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 0.65rem 1rem;
+  font-size: 0.9375rem;
+  color: #0f172a;
+  background: transparent;
+}
+
+.gst-amend-contact-input--email {
+  padding-left: 0.25rem;
+}
+
+.gst-amend-contact-input::placeholder {
+  color: #94a3b8;
+}
+
+.gst-amend-contact-input.has-error {
+  background-color: #fef2f2;
+}
+
+/* Proof Grid (2 Column) */
+.gst-amend-contact-proof-grid {
+  margin-top: 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  align-items: stretch;
+}
+
+.gst-amend-contact-proof-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.gst-amend-contact-accepted-card {
+  background-color: #fff8f1;
+  border: 1px solid #fed7aa;
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.gst-amend-contact-accepted-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.gst-amend-contact-accepted-icon {
+  color: #ea580c;
+  display: flex;
+  align-items: center;
+}
+
+.gst-amend-contact-accepted-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.gst-amend-contact-accepted-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.gst-amend-contact-accepted-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.gst-amend-contact-accepted-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.gst-amend-contact-check-icon {
+  color: #ea580c;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.gst-amend-contact-check-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.gst-amend-contact-item-text {
+  font-size: 0.875rem;
+  color: #334155;
+  line-height: 1.45;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .gst-amend-contact-readonly-grid,
+  .gst-amend-contact-proof-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,9 +1,9 @@
 .gst-filing-stepper {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   width: 100%;
-  margin: 0 0 24px 0;
+  margin: 0 auto 24px auto;
   padding: 0;
 }
 
@@ -12,6 +12,14 @@
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
+}
+
+.gst-filing-stepper__item--clickable {
+  cursor: pointer;
+}
+
+.gst-filing-stepper__item--clickable:hover .gst-filing-stepper__label--completed {
+  color: #0f172a;
 }
 
 .gst-filing-stepper__badge {

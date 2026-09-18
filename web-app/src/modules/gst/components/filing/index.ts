@@ -1,5 +1,6 @@
 export { GSTFilingPeriod } from './GSTFilingPeriod/GSTFilingPeriod'
 export type { FilingPeriodData } from './GSTFilingPeriod/GSTFilingPeriod'
+export { GSTFilingStepper } from './GSTFilingPeriod/GSTFilingStepper'
 export { GSTFilingDocuments } from './GSTFilingDocuments/GSTFilingDocuments'
 export { GSTFilingReview } from './GSTFilingReview/GSTFilingReview'
 export { GSTFilingPayment } from './GSTFilingPayment/GSTFilingPayment'

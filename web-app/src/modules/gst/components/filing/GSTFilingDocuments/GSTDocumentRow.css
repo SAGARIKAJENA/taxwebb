@@ -9,25 +9,20 @@
   transition: all 0.2s ease;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
 }
-
 .gst-doc-row:hover {
   border-color: #cbd5e1;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
 }
-
 .gst-doc-row--uploaded {
   border-color: #e2e8f0;
   background-color: #ffffff;
 }
-
-/* Top Row: Details & Upload/Badge */
 .gst-doc-row__main {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
 }
-
 .gst-doc-row__left {
   display: flex;
   align-items: center;
@@ -35,7 +30,6 @@
   flex: 1;
   min-width: 0;
 }
-
 .gst-doc-row__icon-wrap {
   width: 44px;
   height: 44px;
@@ -45,24 +39,24 @@
   justify-content: center;
   flex-shrink: 0;
 }
-
 .gst-doc-row__icon-wrap svg {
   width: 20px;
   height: 20px;
 }
 
+
 /* Icon thematic background & stroke colors */
-.gst-doc-row__icon-wrap--invoice { background-color: #e0f2fe; color: #0284c7; }
+.gst-doc-row__icon-wrap--invoice,
+.gst-doc-row__icon-wrap--eway,
+.gst-doc-row__icon-wrap--arn { background-color: #e0f2fe; color: #0284c7; }
 .gst-doc-row__icon-wrap--credit-note { background-color: #ffedd5; color: #ea580c; }
-.gst-doc-row__icon-wrap--debit-note { background-color: #fef3c7; color: #d97706; }
+.gst-doc-row__icon-wrap--debit-note,
+.gst-doc-row__icon-wrap--bank { background-color: #fef3c7; color: #d97706; }
 .gst-doc-row__icon-wrap--irn { background-color: #e0e7ff; color: #4f46e5; }
-.gst-doc-row__icon-wrap--eway { background-color: #e0f2fe; color: #0284c7; }
-.gst-doc-row__icon-wrap--purchase { background-color: #dcfce7; color: #16a34a; }
+.gst-doc-row__icon-wrap--purchase,
 .gst-doc-row__icon-wrap--gstr2b { background-color: #dcfce7; color: #16a34a; }
 .gst-doc-row__icon-wrap--expense { background-color: #f3e8ff; color: #9333ea; }
-.gst-doc-row__icon-wrap--bank { background-color: #fef3c7; color: #d97706; }
 .gst-doc-row__icon-wrap--prev-returns { background-color: #dbeafe; color: #2563eb; }
-.gst-doc-row__icon-wrap--arn { background-color: #e0f2fe; color: #0284c7; }
 .gst-doc-row__icon-wrap--other { background-color: #f1f5f9; color: #475569; }
 
 .gst-doc-row__details {
@@ -95,14 +89,12 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
 .gst-doc-row__filename {
   font-size: 13px;
   color: #94a3b8;
   font-weight: 500;
   margin: 0;
 }
-
 .gst-doc-row__right {
   display: flex;
   align-items: center;
@@ -110,7 +102,6 @@
   flex-shrink: 0;
   margin-left: 16px;
 }
-
 .gst-doc-row__tag {
   display: inline-flex;
   align-items: center;
@@ -124,7 +115,6 @@
   font-weight: 500;
   white-space: nowrap;
 }
-
 .gst-doc-row__tag-dot {
   width: 7px;
   height: 7px;
@@ -133,7 +123,6 @@
   display: inline-block;
 }
 
-/* Cloud Upload Button */
 .gst-doc-row__upload-btn {
   display: inline-flex;
   align-items: center;
@@ -150,20 +139,66 @@
   transition: all 0.2s ease;
   box-shadow: 0 1px 3px rgba(255, 87, 34, 0.2);
 }
-
 .gst-doc-row__upload-btn:hover {
   background-color: #f4511e;
   transform: translateY(-1px);
   box-shadow: 0 4px 10px rgba(255, 87, 34, 0.3);
 }
-
 .gst-doc-row__upload-btn:active {
   transform: translateY(0);
 }
-
 .gst-doc-row__cloud-icon {
   width: 17px;
   height: 17px;
+}
+
+.gst-doc-row__na-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 9999px;
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.gst-doc-row__na-btn:hover {
+  background-color: #f8fafc;
+  color: #334155;
+  border-color: #94a3b8;
+}
+
+.gst-doc-row__na-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #f8fafc;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+  border-radius: 9999px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.gst-doc-row__na-undo {
+  background: none;
+  border: none;
+  color: #2563eb;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.gst-doc-row__na-undo:hover {
+  text-decoration: underline;
 }
 
 /* Uploaded Pill Badge */
@@ -222,24 +257,10 @@
   border-radius: 4px;
   transition: all 0.15s ease;
 }
-
-.gst-doc-row__action-link:hover {
-  color: #2563eb;
-  background-color: #f8fafc;
-}
-
-.gst-doc-row__action-link svg {
-  width: 15px;
-  height: 15px;
-}
-
-.gst-doc-row__action-link--replace {
-  color: #475569;
-}
-
-.gst-doc-row__action-link--replace:hover {
-  color: #0f172a;
-}
+.gst-doc-row__action-link:hover { color: #2563eb; background-color: #f8fafc; }
+.gst-doc-row__action-link svg { width: 15px; height: 15px; }
+.gst-doc-row__action-link--replace { color: #475569; }
+.gst-doc-row__action-link--replace:hover { color: #0f172a; }
 
 .gst-doc-row__action-sep {
   color: #cbd5e1;
@@ -259,20 +280,10 @@
   justify-content: center;
   transition: all 0.15s ease;
 }
+.gst-doc-row__trash-btn:hover { background-color: #fee2e2; color: #dc2626; }
+.gst-doc-row__trash-btn svg { width: 16px; height: 16px; }
 
-.gst-doc-row__trash-btn:hover {
-  background-color: #fee2e2;
-  color: #dc2626;
-}
-
-.gst-doc-row__trash-btn svg {
-  width: 16px;
-  height: 16px;
-}
-
-.gst-doc-row__hidden-input {
-  display: none;
-}
+.gst-doc-row__hidden-input { display: none; }
 
 @media (max-width: 640px) {
   .gst-doc-row__main {
@@ -280,13 +291,11 @@
     align-items: flex-start;
     gap: 12px;
   }
-
   .gst-doc-row__right {
     width: 100%;
     justify-content: space-between;
     margin-left: 0;
   }
-
   .gst-doc-row__bottom-bar {
     justify-content: flex-start;
   }

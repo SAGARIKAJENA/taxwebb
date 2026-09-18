@@ -11,6 +11,7 @@ import {
   type FilingPeriodData,
   type PaymentResult,
 } from '../../components'
+import { type UploadedFileInfo } from '../../components/filing/GSTFilingDocuments/gstDocumentsData'
 import './GSTFiling.css'
 
 const DEFAULT_FILING_DATA: FilingPeriodData = {
@@ -21,6 +22,8 @@ const DEFAULT_FILING_DATA: FilingPeriodData = {
   selectedMonth: '',
   returnType: '',
   baseFee: 0,
+  filingType: '',
+  calculationMethod: '',
 }
 
 const DEFAULT_PAYMENT_RESULT: PaymentResult = {
@@ -37,49 +40,107 @@ export const GSTFiling = () => {
   const location = useLocation()
 
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3 | 4 | 5 | 6>(() => {
-    if (location.pathname === '/gst/file-upload') return 2
-    if (location.pathname === '/gst/file-review') return 3
-    if (location.pathname === '/gst/file-payment') return 4
-    if (location.pathname === '/gst/file-success') return 5
-    if (location.pathname === '/gst/file-receipt') return 6
+    if (location.pathname === routePaths.gst.fileUpload) return 2
+    if (location.pathname === routePaths.gst.fileReview) return 3
+    if (location.pathname === routePaths.gst.filePayment) return 4
+    if (location.pathname === routePaths.gst.fileSuccess) return 5
+    if (location.pathname === routePaths.gst.fileReceipt) return 6
     return 1
   })
 
   const [filingData, setFilingData] = useState<FilingPeriodData>(DEFAULT_FILING_DATA)
   const [paymentResult, setPaymentResult] = useState<PaymentResult>(DEFAULT_PAYMENT_RESULT)
+  const [uploadedFiles, setUploadedFiles] = useState<Record<string, UploadedFileInfo>>({})
+  const [notApplicableDocs, setNotApplicableDocs] = useState<Record<string, boolean>>({})
+
+  const handleFileUpload = (id: string, file: File) => {
+    const mb = file.size / (1024 * 1024)
+    const sizeText = mb >= 1 ? `${mb.toFixed(1)} MB` : `${Math.max(1, Math.round(file.size / 1024))} KB`
+    const fileUrl = URL.createObjectURL(file)
+    const fileInfo: UploadedFileInfo = {
+      name: file.name,
+      sizeText,
+      uploadTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      fileUrl,
+      status: 'verified',
+    }
+    setUploadedFiles((prev) => ({
+      ...prev,
+      [id]: fileInfo,
+    }))
+    setNotApplicableDocs((prev) => {
+      if (!prev[id]) return prev
+      const copy = { ...prev }
+      delete copy[id]
+      return copy
+    })
+  }
+
+  const handleFileRemove = (id: string) => {
+    setUploadedFiles((prev) => {
+      const copy = { ...prev }
+      delete copy[id]
+      return copy
+    })
+  }
+
+  const handleToggleNotApplicable = (id: string) => {
+    setNotApplicableDocs((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }))
+  }
+
 
   useEffect(() => {
-    if (location.pathname === '/gst/file-upload') setCurrentStep(2)
-    else if (location.pathname === '/gst/file-review') setCurrentStep(3)
-    else if (location.pathname === '/gst/file-payment') setCurrentStep(4)
-    else if (location.pathname === '/gst/file-success') setCurrentStep(5)
-    else if (location.pathname === '/gst/file-receipt') setCurrentStep(6)
-    else if (location.pathname === '/gst/filing' || location.pathname === '/gst/file-period') setCurrentStep(1)
+    if (location.pathname === routePaths.gst.fileUpload) setCurrentStep(2)
+    else if (location.pathname === routePaths.gst.fileReview) setCurrentStep(3)
+    else if (location.pathname === routePaths.gst.filePayment) setCurrentStep(4)
+    else if (location.pathname === routePaths.gst.fileSuccess) setCurrentStep(5)
+    else if (location.pathname === routePaths.gst.fileReceipt) setCurrentStep(6)
+    else if (location.pathname === routePaths.gst.filing || location.pathname === routePaths.gst.filePeriod) setCurrentStep(1)
   }, [location.pathname])
+
+  const handleStepClick = (stepId: number) => {
+    if (stepId === 1) {
+      setCurrentStep(1)
+      navigate(routePaths.gst.filePeriod)
+    } else if (stepId === 2) {
+      setCurrentStep(2)
+      navigate(routePaths.gst.fileUpload)
+    } else if (stepId === 3) {
+      setCurrentStep(3)
+      navigate(routePaths.gst.fileReview)
+    } else if (stepId === 4) {
+      setCurrentStep(4)
+      navigate(routePaths.gst.filePayment)
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 
   const handleStep1Continue = (data: FilingPeriodData) => {
     setFilingData(data)
     setCurrentStep(2)
-    navigate('/gst/file-upload')
+    navigate(routePaths.gst.fileUpload)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const handleStep2Next = () => {
     setCurrentStep(3)
-    navigate('/gst/file-review')
+    navigate(routePaths.gst.fileReview)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const handleStep3Approve = () => {
     setCurrentStep(4)
-    navigate('/gst/file-payment')
+    navigate(routePaths.gst.filePayment)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const handleStep4Success = (res: PaymentResult) => {
     setPaymentResult(res)
     setCurrentStep(5)
-    navigate('/gst/file-success')
+    navigate(routePaths.gst.fileSuccess)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
@@ -89,6 +150,7 @@ export const GSTFiling = () => {
       {currentStep === 1 && (
         <GSTFilingPeriod
           initialData={filingData}
+          onStepClick={handleStepClick}
           onContinue={handleStep1Continue}
           onCancel={() => navigate(routePaths.gst.root)}
         />
@@ -101,9 +163,15 @@ export const GSTFiling = () => {
           baseFee={filingData.baseFee}
           returnType={filingData.returnType}
           frequency={filingData.frequency}
+          uploadedFiles={uploadedFiles}
+          notApplicableDocs={notApplicableDocs}
+          onFileUpload={handleFileUpload}
+          onFileRemove={handleFileRemove}
+          onToggleNotApplicable={handleToggleNotApplicable}
+          onStepClick={handleStepClick}
           onBack={() => {
             setCurrentStep(1)
-            navigate('/gst/file-period')
+            navigate(routePaths.gst.filePeriod)
             window.scrollTo({ top: 0, behavior: 'smooth' })
           }}
           onNext={handleStep2Next}
@@ -116,14 +184,17 @@ export const GSTFiling = () => {
           selectedMonth={filingData.selectedMonth}
           baseFee={filingData.baseFee}
           filingData={filingData}
+          uploadedFiles={uploadedFiles}
+          notApplicableDocs={notApplicableDocs}
+          onStepClick={handleStepClick}
           onBack={() => {
             setCurrentStep(2)
-            navigate('/gst/file-upload')
+            navigate(routePaths.gst.fileUpload)
             window.scrollTo({ top: 0, behavior: 'smooth' })
           }}
           onRequestChange={() => {
             setCurrentStep(2)
-            navigate('/gst/file-upload')
+            navigate(routePaths.gst.fileUpload)
             window.scrollTo({ top: 0, behavior: 'smooth' })
           }}
           onApprove={handleStep3Approve}
@@ -133,12 +204,16 @@ export const GSTFiling = () => {
       {/* Step 4: Payment */}
       {currentStep === 4 && (
         <GSTFilingPayment
-          amount={filingData.baseFee + Math.round(filingData.baseFee * 0.18)}
+          amount={
+            (filingData.baseFee > 0 ? filingData.baseFee : 2500) +
+            Math.round((filingData.baseFee > 0 ? filingData.baseFee : 2500) * 0.18)
+          }
           applicationRef="GST-2026-00118"
-          serviceTitle={`GST Filing — ${filingData.selectedMonth}`}
+          serviceTitle={`GST Filing Service — ${filingData.selectedMonth || 'August 2026'}`}
+          onStepClick={handleStepClick}
           onBack={() => {
             setCurrentStep(3)
-            navigate('/gst/file-review')
+            navigate(routePaths.gst.fileReview)
             window.scrollTo({ top: 0, behavior: 'smooth' })
           }}
           onSuccess={handleStep4Success}
@@ -151,7 +226,7 @@ export const GSTFiling = () => {
           details={paymentResult}
           onViewReceipt={() => {
             setCurrentStep(6)
-            navigate('/gst/file-receipt')
+            navigate(routePaths.gst.fileReceipt)
             window.scrollTo({ top: 0, behavior: 'smooth' })
           }}
           onTrackApplication={() => navigate(routePaths.gst.track('GST-2026-00118'))}
@@ -165,7 +240,7 @@ export const GSTFiling = () => {
           details={paymentResult}
           onBack={() => {
             setCurrentStep(5)
-            navigate('/gst/file-success')
+            navigate(routePaths.gst.fileSuccess)
             window.scrollTo({ top: 0, behavior: 'smooth' })
           }}
         />

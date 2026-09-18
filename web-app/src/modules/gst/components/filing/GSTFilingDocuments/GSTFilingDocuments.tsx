@@ -14,6 +14,12 @@ export interface GSTFilingDocumentsProps {
   baseFee?: number
   returnType?: string
   frequency?: string
+  uploadedFiles?: Record<string, UploadedFileInfo>
+  notApplicableDocs?: Record<string, boolean>
+  onFileUpload?: (id: string, file: File) => void
+  onFileRemove?: (id: string) => void
+  onToggleNotApplicable?: (id: string) => void
+  onStepClick?: (step: number) => void
   onBack: () => void
   onNext: () => void
 }
@@ -31,10 +37,20 @@ export const GSTFilingDocuments: React.FC<GSTFilingDocumentsProps> = ({
   selectedMonth,
   returnType,
   frequency = 'Quarterly',
+  uploadedFiles: externalUploadedFiles,
+  notApplicableDocs: externalNotApplicableDocs,
+  onFileUpload: externalOnFileUpload,
+  onFileRemove: externalOnFileRemove,
+  onToggleNotApplicable: externalOnToggleNotApplicable,
+  onStepClick,
   onBack,
   onNext,
 }) => {
-  const [uploadedFiles, setUploadedFiles] = useState<Record<string, UploadedFileInfo>>({})
+  const [internalUploadedFiles, setInternalUploadedFiles] = useState<Record<string, UploadedFileInfo>>({})
+  const [internalNotApplicableDocs, setInternalNotApplicableDocs] = useState<Record<string, boolean>>({})
+
+  const uploadedFiles = externalUploadedFiles ?? internalUploadedFiles
+  const notApplicableDocs = externalNotApplicableDocs ?? internalNotApplicableDocs
 
   // Format return type and period labels to match reference screenshot
   const returnTypeDisplay =
@@ -56,6 +72,10 @@ export const GSTFilingDocuments: React.FC<GSTFilingDocumentsProps> = ({
   const totalCount = DEFAULT_DOCUMENT_ITEMS.length
 
   const handleFileUpload = (id: string, file: File) => {
+    if (externalOnFileUpload) {
+      externalOnFileUpload(id, file)
+      return
+    }
     const sizeText = formatFileSize(file.size)
     const fileUrl = URL.createObjectURL(file)
     const fileInfo: UploadedFileInfo = {
@@ -63,19 +83,48 @@ export const GSTFilingDocuments: React.FC<GSTFilingDocumentsProps> = ({
       sizeText,
       uploadTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       fileUrl,
+      status: 'verified',
     }
-    setUploadedFiles((prev) => ({
+    setInternalUploadedFiles((prev) => ({
       ...prev,
       [id]: fileInfo,
     }))
   }
 
   const handleFileRemove = (id: string) => {
-    setUploadedFiles((prev) => {
+    if (externalOnFileRemove) {
+      externalOnFileRemove(id)
+      return
+    }
+    setInternalUploadedFiles((prev) => {
       const copy = { ...prev }
       delete copy[id]
       return copy
     })
+  }
+
+  const handleToggleNotApplicable = (id: string) => {
+    if (externalOnToggleNotApplicable) {
+      externalOnToggleNotApplicable(id)
+      return
+    }
+    setInternalNotApplicableDocs((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }))
+  }
+
+  const [docError, setDocError] = useState<string | null>(null)
+
+  const handleContinue = () => {
+    const reqDocIds = ['sales-invoices', 'purchase-invoices', 'gstr2b-statement']
+    const missingCount = reqDocIds.filter((id) => !uploadedFiles[id] && !notApplicableDocs[id]).length
+    if (missingCount > 0) {
+      setDocError(`Please upload all 3 required documents (Sales Invoices, Purchase Invoices, and GSTR-2B Statement) before proceeding to Review (${3 - missingCount}/3 verified).`)
+      return
+    }
+    setDocError(null)
+    onNext()
   }
 
   return (
@@ -83,7 +132,7 @@ export const GSTFilingDocuments: React.FC<GSTFilingDocumentsProps> = ({
       {/* Stepper and Right Meta Badge */}
       <div className="gst-docs-top-bar">
         <div className="gst-docs-stepper-wrap">
-          <GSTFilingStepper currentStep={3} />
+          <GSTFilingStepper currentStep={2} onStepClick={onStepClick} />
         </div>
         <div className="gst-docs-top-meta">
           <span className="gst-docs-top-meta__label">GST Return</span>
@@ -123,8 +172,16 @@ export const GSTFilingDocuments: React.FC<GSTFilingDocumentsProps> = ({
                   key={item.id}
                   item={item}
                   uploadedFile={uploadedFiles[item.id]}
-                  onFileUpload={handleFileUpload}
+                  isNotApplicable={Boolean(notApplicableDocs[item.id])}
+                  onFileUpload={(id, file) => {
+                    setDocError(null)
+                    handleFileUpload(id, file)
+                  }}
                   onFileRemove={handleFileRemove}
+                  onToggleNotApplicable={(id) => {
+                    setDocError(null)
+                    handleToggleNotApplicable(id)
+                  }}
                 />
               ))}
             </div>
@@ -145,6 +202,12 @@ export const GSTFilingDocuments: React.FC<GSTFilingDocumentsProps> = ({
         </p>
       </div>
 
+      {docError && (
+        <div style={{ margin: '1rem 0 0 0', padding: '0.85rem 1.25rem', backgroundColor: '#fef2f2', border: '1px solid #fca5a5', borderRadius: '10px', color: '#b91c1c', fontSize: '0.88rem', fontWeight: 600 }}>
+          ⚠️ {docError}
+        </div>
+      )}
+
       {/* Bottom Action Buttons */}
       <footer className="gst-docs-actions">
         <button
@@ -157,7 +220,7 @@ export const GSTFilingDocuments: React.FC<GSTFilingDocumentsProps> = ({
         <button
           type="button"
           className="gst-docs-btn-continue"
-          onClick={onNext}
+          onClick={handleContinue}
         >
           Continue to Review →
         </button>

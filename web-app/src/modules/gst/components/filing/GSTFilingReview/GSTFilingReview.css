@@ -18,6 +18,8 @@
 
 .gst-review-stepper-wrap {
   flex: 1;
+  display: flex;
+  justify-content: center;
 }
 
 .gst-review-top-meta {

@@ -1,0 +1,95 @@
+/* Bank Accounts Form Specific Styling */
+
+.gst-amend-bank-container {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Readonly 2x2 Grid for Bank Details */
+.gst-amend-bank-readonly-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem 2rem;
+  padding: 0.25rem 0;
+}
+
+.gst-amend-bank-readonly-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+/* Supporting Proof Card Wrapper + Embedded Banner */
+.gst-amend-bank-proof-wrapper {
+  margin-bottom: 1.5rem;
+}
+
+.gst-amend-bank-proof-wrapper .gst-amend-card-box {
+  margin-bottom: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.gst-amend-bank-accepted-proofs-banner {
+  background-color: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-top: none;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  padding: 1.125rem 1.5rem;
+}
+
+.gst-amend-bank-banner-header {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-bottom: 0.5rem;
+}
+
+.gst-amend-bank-banner-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background-color: #f97316;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.gst-amend-bank-banner-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.gst-amend-bank-banner-title {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #9a3412;
+}
+
+.gst-amend-bank-banner-desc {
+  font-size: 0.8125rem;
+  color: #64748b;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Action Row (Right aligned Review Changes button) */
+.gst-amend-bank-actions-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+.gst-amend-bank-submit-btn {
+  padding: 0.75rem 2rem;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 640px) {
+  .gst-amend-bank-readonly-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -87,16 +87,6 @@ export const Itr = () => {
           Filed by a CA, not a form wizard. We pull your AIS and TIS, reconcile them against your
           books, and show you the computation before anything is submitted.
         </p>
-
-        <div className="itr-hero-banner__actions">
-          <button
-            type="button"
-            className="itr-hero-btn-accent"
-            onClick={() => navigate(routePaths.itr.taxComputation)}
-          >
-            View Tax Computation →
-          </button>
-        </div>
       </section>
 
       {/* 2. Four Stats Cards Row */}

@@ -1,0 +1,76 @@
+/* Form Grid Rows */
+.gst-amend-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+/* Select Wrapper */
+.gst-amend-select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.gst-amend-select-input {
+  width: 100%;
+  padding: 0.75rem 2.25rem 0.75rem 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 0.9375rem;
+  color: #0f172a;
+  background-color: #ffffff;
+  appearance: none;
+  -webkit-appearance: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.gst-amend-select-input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.gst-amend-select-input.has-error {
+  border-color: #ef4444;
+  background-color: #fef2f2;
+}
+
+.gst-amend-select-chevron {
+  position: absolute;
+  right: 0.875rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  color: #64748b;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gst-amend-select-chevron svg {
+  width: 18px;
+  height: 18px;
+}
+
+.gst-amend-subrow-hint {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.375rem;
+}
+
+.gst-amend-counter-hint {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-weight: 500;
+  margin-left: auto;
+}
+
+@media (max-width: 900px) {
+  .gst-amend-form-row {
+    grid-template-columns: 1fr;
+  }
+}

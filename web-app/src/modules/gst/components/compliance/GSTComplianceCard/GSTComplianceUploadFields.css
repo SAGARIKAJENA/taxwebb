@@ -1,0 +1,228 @@
+.gst-comp-doc-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  margin-top: 1.5rem;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.gst-comp-doc-header {
+  background-color: #eff6ff;
+  padding: 0.875rem 1.25rem;
+  border-bottom: 1px solid #dbeafe;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.gst-comp-doc-header-icon { display: flex; align-items: center; }
+.gst-comp-doc-header-icon svg { width: 20px; height: 20px; }
+.gst-comp-doc-header-title { font-size: 1.05rem; font-weight: 800; color: #083b75; margin: 0; }
+
+.gst-comp-doc-body {
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.gst-comp-doc-row {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.15rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.gst-comp-doc-info { display: flex; align-items: center; gap: 0.875rem; flex: 1; min-width: 260px; }
+.gst-comp-doc-type-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background-color: #eff6ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.gst-comp-doc-type-icon svg { width: 22px; height: 22px; }
+.gst-comp-doc-text { display: flex; flex-direction: column; gap: 0.2rem; }
+.gst-comp-doc-title-wrapper { display: flex; align-items: center; gap: 0.625rem; }
+.gst-comp-doc-name { font-size: 0.95rem; font-weight: 700; color: #0f172a; margin: 0; }
+
+.gst-comp-req-badge {
+  background-color: #fee2e2;
+  color: #dc2626;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+  letter-spacing: 0.04em;
+}
+.gst-comp-doc-sub { font-size: 0.8125rem; color: #64748b; margin: 0; }
+.gst-comp-doc-actions { display: flex; align-items: center; }
+.gst-comp-upload-cta { display: flex; flex-direction: column; align-items: flex-end; gap: 0.35rem; }
+
+.gst-comp-upload-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.25);
+  white-space: nowrap;
+}
+.gst-comp-upload-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(249, 115, 22, 0.35); }
+.gst-comp-upload-btn svg { width: 16px; height: 16px; }
+.gst-comp-format-hint { font-size: 0.75rem; color: #64748b; font-weight: 500; }
+
+/* Date Inputs & Icon Label */
+.gst-comp-date-wrapper { position: relative; width: 100%; }
+.gst-comp-date-icon {
+  position: absolute;
+  left: 0.875rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+}
+.gst-comp-date-icon svg { width: 18px; height: 18px; }
+.gst-comp-date-input {
+  width: 100%;
+  padding: 0.7rem 1rem 0.7rem 2.6rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  color: #0f172a;
+  background-color: #ffffff;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+  font-family: inherit;
+}
+.gst-comp-date-input:focus { border-color: #2563eb; }
+
+.gst-comp-label-with-icon {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.45rem;
+}
+.gst-comp-label-icon { width: 18px; height: 18px; color: #2563eb; }
+
+.gst-comp-upload-box {
+  background-color: #f8fafc;
+  border: 1.5px dashed #cbd5e1;
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+}
+.gst-comp-upload-btn-full {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 320px;
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+}
+.gst-comp-upload-btn-full:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(249, 115, 22, 0.4); }
+.gst-comp-upload-btn-full svg { width: 18px; height: 18px; }
+
+/* Uploaded File Bar & Controls */
+.gst-comp-uploaded-file-bar {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+.gst-comp-file-details { display: flex; align-items: center; gap: 0.4rem; }
+.gst-comp-file-check { color: #16a34a; font-weight: 800; font-size: 1rem; }
+.gst-comp-file-name {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #0f172a;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.gst-comp-file-size { font-size: 0.8125rem; color: #64748b; font-weight: 500; }
+.gst-comp-file-controls { display: flex; align-items: center; gap: 0.5rem; }
+
+.gst-comp-replace-btn,
+.gst-comp-delete-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.gst-comp-replace-btn { background-color: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; }
+.gst-comp-replace-btn:hover { background-color: #dbeafe; }
+.gst-comp-delete-btn { background-color: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+.gst-comp-delete-btn:hover { background-color: #fee2e2; }
+.gst-comp-replace-btn svg, .gst-comp-delete-btn svg { width: 14px; height: 14px; }
+
+/* Extra Fields: Input & Textarea */
+.gst-comp-extra-field { width: 100%; }
+.gst-comp-textarea-wrapper { position: relative; width: 100%; }
+.gst-comp-textarea {
+  width: 100%;
+  padding: 0.75rem 1rem 1.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  color: #0f172a;
+  background-color: #ffffff;
+  outline: none;
+  box-sizing: border-box;
+  resize: vertical;
+  min-height: 80px;
+  font-family: inherit;
+  transition: border-color 0.2s ease;
+}
+.gst-comp-textarea:focus { border-color: #2563eb; }
+.gst-comp-char-counter {
+  position: absolute;
+  right: 0.875rem;
+  bottom: 0.5rem;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-weight: 600;
+}
+

@@ -197,9 +197,7 @@ export const TaxNoticeAssistance = () => {
               <strong className="notice-top-note-title">Note</strong>
             </div>
             <p className="notice-top-note-text">
-              Also listed by name only in the requirements. The flow below follows standard
-              practice for helping a customer respond to an Income Tax Department notice, and
-              should be confirmed with the client before development.
+              Also listed by name only in the requirements. The flow below follows standard practice for helping a customer respond to an Income Tax Department notice.
             </p>
           </div>
         )}
@@ -213,19 +211,11 @@ export const TaxNoticeAssistance = () => {
 
           {currentStep === 1 && (
             <NoticeStep1View
-              noticeDocUploaded={noticeDocUploaded}
-              uploadedFile={uploadedNoticeFile}
-              onFileSelect={handleNoticeFileSelect}
-              onRemoveFile={handleRemoveNoticeFile}
-              noticeNumber={noticeNumber}
-              setNoticeNumber={(val) => {
-                setNoticeNumber(val)
-                if (val.trim()) setNoticeNumberError('')
-              }}
-              noticeDate={noticeDate}
-              setNoticeDate={setNoticeDate}
-              uploadError={uploadError}
-              noticeNumberError={noticeNumberError}
+              noticeDocUploaded={noticeDocUploaded} uploadedFile={uploadedNoticeFile}
+              onFileSelect={handleNoticeFileSelect} onRemoveFile={handleRemoveNoticeFile}
+              noticeNumber={noticeNumber} noticeDate={noticeDate} setNoticeDate={setNoticeDate}
+              setNoticeNumber={(val) => { setNoticeNumber(val); if (val.trim()) setNoticeNumberError('') }}
+              uploadError={uploadError} noticeNumberError={noticeNumberError}
             />
           )}
 
@@ -233,13 +223,9 @@ export const TaxNoticeAssistance = () => {
 
           {currentStep === 3 && (
             <NoticeStep3View
-              uploadedDocs={uploadedDocs}
-              uploadedFiles={checklistFiles}
-              onFileSelect={handleChecklistFileSelect}
-              onRemoveDoc={handleRemoveChecklistDoc}
-              explanation={explanation}
-              setExplanation={setExplanation}
-              checklistError={checklistError}
+              uploadedDocs={uploadedDocs} uploadedFiles={checklistFiles}
+              onFileSelect={handleChecklistFileSelect} onRemoveDoc={handleRemoveChecklistDoc}
+              explanation={explanation} setExplanation={setExplanation} checklistError={checklistError}
             />
           )}
 
@@ -254,19 +240,8 @@ export const TaxNoticeAssistance = () => {
 
           {/* Bottom Action Bar */}
           <div className="notice-flow-bottom-bar">
-            <button
-              type="button"
-              className="notice-bottom-back-btn"
-              onClick={handlePrevStep}
-            >
-              ← Back
-            </button>
-
-            <button
-              type="button"
-              className="notice-bottom-next-btn"
-              onClick={handleNextStep}
-            >
+            <button type="button" className="notice-bottom-back-btn" onClick={handlePrevStep}>← Back</button>
+            <button type="button" className="notice-bottom-next-btn" onClick={handleNextStep}>
               {currentStep < 5 ? 'Next →' : 'Finish flow ✓'}
             </button>
           </div>
@@ -290,9 +265,7 @@ export const TaxNoticeAssistance = () => {
               {NOTICE_STEPS_METADATA.map((s) => (
                 <div
                   key={s.stepNumber}
-                  className={`notice-flow-item ${
-                    s.stepNumber === currentStep ? 'notice-flow-item--active' : ''
-                  }`}
+                  className={`notice-flow-item ${s.stepNumber === currentStep ? 'notice-flow-item--active' : ''}`}
                   onClick={() => setCurrentStep(s.stepNumber)}
                 >
                   <span className="notice-flow-num">{s.stepNumber}</span>

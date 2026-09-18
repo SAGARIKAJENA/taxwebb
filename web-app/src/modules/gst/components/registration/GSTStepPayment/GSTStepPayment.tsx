@@ -29,7 +29,7 @@ export const GSTStepPayment = ({
 }: GSTStepPaymentProps) => {
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethodType>('upi')
   const [selectedUpiApp, setSelectedUpiApp] = useState<string>('gpay')
-  const [upiId, setUpiId] = useState<string>('anjali@okhdfcbank')
+  const [upiId, setUpiId] = useState<string>('')
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
 
   const finalPayable = amount
