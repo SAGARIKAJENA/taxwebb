@@ -87,11 +87,7 @@ export const GSTFilingReview: React.FC<GSTFilingReviewProps> = ({
       {/* Stepper and Top-Right Meta Badge */}
       <div className="gst-review-top-bar">
         <div className="gst-review-stepper-wrap">
-
           <GSTFilingStepper currentStep={3} onStepClick={onStepClick} />
-
-          <GSTFilingStepper currentStep={3} />
-
         </div>
         <div className="gst-review-top-meta">
           <span className="gst-review-top-meta__label">GST Return</span>

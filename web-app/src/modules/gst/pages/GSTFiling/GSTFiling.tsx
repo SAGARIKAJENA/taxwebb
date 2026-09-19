@@ -17,14 +17,14 @@ import './GSTFiling.css'
 
 const DEFAULT_FILING_DATA: FilingPeriodData = {
   gstin: '',
-  businessName: '',
-  financialYear: '',
-  frequency: '',
-  selectedMonth: '',
-  returnType: '',
-  baseFee: 0,
-  filingType: '',
-  calculationMethod: '',
+  businessName: 'Shree Deshmukh Traders',
+  financialYear: 'FY 2026-27',
+  frequency: 'Monthly',
+  selectedMonth: 'August 2026',
+  returnType: 'combo',
+  baseFee: 2500,
+  filingType: 'regular',
+  calculationMethod: 'ca_calculate',
 }
 
 export const GSTFiling = () => {
@@ -46,7 +46,18 @@ export const GSTFiling = () => {
 
   const [filingData, setFilingData] = useState<FilingPeriodData>(DEFAULT_FILING_DATA)
 
-  const [paymentResult, setPaymentResult] = useState<PaymentResult>(DEFAULT_PAYMENT_RESULT)
+  const [paymentResult, setPaymentResult] = useState<PaymentResult>(() => ({
+    transactionId: `TXN${Date.now()}`,
+    receiptNumber: `TE/${new Date().getFullYear()}/R-${Math.floor(1000 + Math.random() * 9000)}`,
+    method: 'UPI',
+    dateText: new Intl.DateTimeFormat('en-IN', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    }).format(new Date()),
+    applicationRef: filingRef,
+    amount: 2950,
+  }))
   const [uploadedFiles, setUploadedFiles] = useState<Record<string, UploadedFileInfo>>({})
   const [notApplicableDocs, setNotApplicableDocs] = useState<Record<string, boolean>>({})
 
@@ -87,20 +98,6 @@ export const GSTFiling = () => {
       [id]: !prev[id],
     }))
   }
-
-
-  const [paymentResult, setPaymentResult] = useState<PaymentResult>(() => ({
-    transactionId: `TXN${Date.now()}`,
-    receiptNumber: `TE/${new Date().getFullYear()}/R-${Math.floor(1000 + Math.random() * 9000)}`,
-    method: 'UPI',
-    dateText: new Intl.DateTimeFormat('en-IN', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-    }).format(new Date()),
-    applicationRef: filingRef,
-    amount: 2950,
-  }))
 
 
   useEffect(() => {
@@ -227,19 +224,14 @@ export const GSTFiling = () => {
       {/* Step 4: Payment */}
       {currentStep === 4 && (
         <GSTFilingPayment
-
           amount={
-            (filingData.baseFee > 0 ? filingData.baseFee : 2500) +
-            Math.round((filingData.baseFee > 0 ? filingData.baseFee : 2500) * 0.18)
+            filingData.baseFee > 0
+              ? filingData.baseFee + Math.round(filingData.baseFee * 0.18)
+              : 2950
           }
-          applicationRef="GST-2026-00118"
-          serviceTitle={`GST Filing Service — ${filingData.selectedMonth || 'August 2026'}`}
-          onStepClick={handleStepClick}
-
-          amount={filingData.baseFee + Math.round(filingData.baseFee * 0.18)}
           applicationRef={filingRef}
           serviceTitle={`GST Filing — ${filingData.selectedMonth || 'Return'}`}
-
+          onStepClick={handleStepClick}
           onBack={() => {
             setCurrentStep(3)
             navigate(routePaths.gst.fileReview)

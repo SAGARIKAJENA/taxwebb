@@ -1,4 +1,5 @@
 import React from 'react'
+import './TdsRefundStepTracker.css'
 
 export interface TdsRefundStepTrackerProps {
   currentStep: number

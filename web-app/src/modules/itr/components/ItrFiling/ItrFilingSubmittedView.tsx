@@ -1,8 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { routePaths } from '@core/config'
-import type { FilingBankAccount } from './itrCategories.constants'
-import { PROGRESS_STAGES } from './itrProgressStages.constants'
+import { PROGRESS_STAGES, type FilingBankAccount } from './itrFiling.constants'
+import './ItrFilingSubmittedView.css'
 
 export interface ItrFilingSubmittedViewProps {
   submittedRef: string

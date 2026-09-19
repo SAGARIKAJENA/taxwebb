@@ -31,26 +31,20 @@ interface GSTFilingPeriodProps {
   onCancel: () => void
 }
 
-
-const ChevronDown: React.FC = () => (
-  <svg className="gst-filing-period__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9" /></svg>
-)
-
-
 export const GSTFilingPeriod: React.FC<GSTFilingPeriodProps> = ({
   initialData,
   onStepClick,
   onContinue,
   onCancel,
 }) => {
-  const [financialYear, setFinancialYear] = useState(initialData?.financialYear || '')
-  const [frequency, setFrequency] = useState(initialData?.frequency || '')
-  const [returnPeriod, setReturnPeriod] = useState(initialData?.selectedMonth || '')
+  const [financialYear, setFinancialYear] = useState(initialData?.financialYear || 'FY 2026-27')
+  const [frequency, setFrequency] = useState(initialData?.frequency || 'Monthly')
+  const [returnPeriod, setReturnPeriod] = useState(initialData?.selectedMonth || 'August 2026')
   const [gstin, setGstin] = useState(initialData?.gstin || '')
-  const [returnType, setReturnType] = useState<string>(initialData?.returnType || '')
-  const [filingType, setFilingType] = useState<'regular' | 'nil' | ''>(initialData?.filingType || '')
+  const [returnType, setReturnType] = useState<string>(initialData?.returnType || 'combo')
+  const [filingType, setFilingType] = useState<'regular' | 'nil' | ''>(initialData?.filingType || 'regular')
   const [calculationMethod, setCalculationMethod] = useState<'ca_calculate' | 'estimated_figures' | ''>(
-    initialData?.calculationMethod || ''
+    initialData?.calculationMethod || 'ca_calculate'
   )
   const [errors, setErrors] = useState<Record<string, string>>({})
 
@@ -80,18 +74,19 @@ export const GSTFilingPeriod: React.FC<GSTFilingPeriodProps> = ({
     if (!frequency) newErrors.frequency = 'Please select a filing frequency'
     if (!financialYear) newErrors.financialYear = 'Please select a financial year'
     if (!returnPeriod) newErrors.returnPeriod = 'Please select a return period'
-    if (!gstin.trim()) newErrors.gstin = 'Please enter a valid 15-character GSTIN'
-    if (!returnType && filingType !== 'nil') {
-      newErrors.returnType = 'Please select a return type'
+    if (!gstin.trim() || gstin.trim().length < 15) {
+      newErrors.gstin = 'Please enter a valid 15-character GSTIN'
     }
-    if (filingType === 'regular' && !calculationMethod) {
-      newErrors.calculationMethod = 'Please select a tax calculation method'
+    if (filingType === 'regular') {
+      if (!returnType) newErrors.returnType = 'Please select a return type'
+      if (!calculationMethod) newErrors.calculationMethod = 'Please select a tax calculation method'
     }
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors)
       return
     }
+
     const calculatedBaseFee = filingType === 'nil' ? 500 : returnType === 'gstr1' ? 1500 : 2500
     onContinue({
       gstin: gstin.toUpperCase().trim(),
@@ -111,18 +106,16 @@ export const GSTFilingPeriod: React.FC<GSTFilingPeriodProps> = ({
     financialYear &&
     returnPeriod &&
     gstin.trim().length >= 15 &&
-    (filingType === 'nil' || (returnType && (filingType !== 'regular' || calculationMethod)))
+    (
+      filingType === 'nil' ||
+      (filingType === 'regular' && returnType && calculationMethod)
+    )
   )
 
   return (
     <div className="gst-filing-period-container">
-
-      {/* 4-Step Progress Stepper */}
+      {/* Step Progress Stepper */}
       <GSTFilingStepper currentStep={1} onStepClick={onStepClick} />
-
-      {/* 5-Step Progress Stepper */}
-      <GSTFilingStepper currentStep={1} />
-
 
       {/* Main Page Title and Subtitle */}
       <header className="gst-filing-period__header">

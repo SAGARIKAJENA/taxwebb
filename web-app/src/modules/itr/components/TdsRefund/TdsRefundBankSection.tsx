@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { TdsIcons } from './tdsRefund.constants'
 import { fetchIfscDetails } from './ifscLookup'
+import './TdsRefundBankSection.css'
 
 export interface TdsBankDetails {
   accountHolder: string

@@ -1,5 +1,6 @@
 import type { FC } from 'react'
 import { UPI_APPS } from './gstPayment.types'
+import { PhonePeIcon, GPayIcon, PaytmIcon, BhimIcon } from './GSTPaymentIcons'
 import './GSTPaymentForms.css'
 
 interface GSTPaymentUpiFormProps {
@@ -8,6 +9,21 @@ interface GSTPaymentUpiFormProps {
   error?: string
   onUpiIdChange: (val: string) => void
   onSelectUpiApp: (appId: string) => void
+}
+
+const renderUpiIcon = (id: string) => {
+  switch (id) {
+    case 'phonepe':
+      return <PhonePeIcon />
+    case 'gpay':
+      return <GPayIcon />
+    case 'paytm':
+      return <PaytmIcon />
+    case 'bhim':
+      return <BhimIcon />
+    default:
+      return null
+  }
 }
 
 export const GSTPaymentUpiForm: FC<GSTPaymentUpiFormProps> = ({
@@ -58,7 +74,9 @@ export const GSTPaymentUpiForm: FC<GSTPaymentUpiFormProps> = ({
                 aria-pressed={isAppSelected}
               >
                 <div className="gst-upi-app-tile__icon-wrap">
-                  <img src={app.iconSrc} width={28} height={28} alt={app.name} />
+                  {renderUpiIcon(app.id) || (
+                    <img src={app.iconSrc} width={28} height={28} alt={app.name} />
+                  )}
                 </div>
                 <span className="gst-upi-app-tile__name">{app.name}</span>
               </button>

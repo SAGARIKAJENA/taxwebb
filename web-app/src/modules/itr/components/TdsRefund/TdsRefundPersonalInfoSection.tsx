@@ -1,5 +1,6 @@
 import React from 'react'
 import { TdsIcons, type TdsTaxpayerProfile } from './tdsRefund.constants'
+import './TdsRefundPersonalInfoSection.css'
 
 export interface TdsRefundPersonalInfoSectionProps {
   profile: TdsTaxpayerProfile

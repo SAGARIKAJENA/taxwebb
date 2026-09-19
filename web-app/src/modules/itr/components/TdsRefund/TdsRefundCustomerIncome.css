@@ -146,23 +146,40 @@
 }
 
 /* Personal info grid - 3 columns */
-.tds-personal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem 2.25rem; }
-.tds-data-row { display: flex; flex-direction: column; gap: 0.25rem; }
-.tds-data-row--full { grid-column: span 3; }
+.tds-personal-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem 1.25rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+.tds-data-row { display: flex; flex-direction: column; gap: 0.25rem; min-width: 0; }
+.tds-data-row--full,
+.tds-form-group--full { grid-column: 1 / -1; width: 100%; }
 .tds-data-label { font-size: 0.82rem; font-weight: 600; color: #64748b; }
-.tds-data-value { font-size: 0.95rem; font-weight: 700; color: #0f172a; }
+.tds-data-value { font-size: 0.95rem; font-weight: 700; color: #0f172a; word-break: break-word; }
 .tds-data-value--mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; letter-spacing: 0.05em; }
-.tds-input-inline { height: 36px; border: 1.5px solid #ea580c; border-radius: 8px; padding: 0 0.65rem; font-size: 0.92rem; font-weight: 700; }
+.tds-input-inline { height: 36px; border: 1.5px solid #ea580c; border-radius: 8px; padding: 0 0.65rem; font-size: 0.92rem; font-weight: 700; width: 100%; box-sizing: border-box; }
 
 /* Bank Account form */
-.tds-bank-form { display: flex; flex-direction: column; gap: 1.15rem; }
-.tds-form-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
-.tds-form-group { display: flex; flex-direction: column; gap: 0.35rem; }
+.tds-bank-form { display: flex; flex-direction: column; gap: 1.15rem; width: 100%; box-sizing: border-box; }
+.tds-form-grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; width: 100%; box-sizing: border-box; }
+.tds-form-group { display: flex; flex-direction: column; gap: 0.35rem; width: 100%; min-width: 0; box-sizing: border-box; }
 .tds-label { font-size: 0.84rem; font-weight: 700; color: #1e293b; }
 .tds-required { color: #ef4444; }
 .tds-input {
-  height: 44px; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 0 0.85rem;
-  font-size: 0.92rem; color: #0f172a; outline: none; background: #ffffff; transition: all 0.2s;
+  width: 100%;
+  max-width: 100%;
+  height: 44px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 0 0.85rem;
+  font-size: 0.92rem;
+  color: #0f172a;
+  outline: none;
+  background: #ffffff;
+  transition: all 0.2s;
+  box-sizing: border-box;
 }
 .tds-input:focus { border-color: #f97316; box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15); }
 .tds-input--upper { text-transform: uppercase; font-weight: 700; letter-spacing: 0.04em; }
@@ -246,14 +263,14 @@
   .tds-step1-sidebar { position: static; }
 }
 @media (max-width: 1024px) {
-  .tds-personal-grid { grid-template-columns: repeat(2, 1fr); }
-  .tds-data-row--full { grid-column: span 2; }
+  .tds-personal-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tds-data-row--full, .tds-form-group--full { grid-column: 1 / -1; }
   .tds-stepper-track { overflow-x: auto; padding: 0.5rem 0.25rem; }
   .tds-stepper-line { margin: 0 0.75rem; }
 }
 @media (max-width: 768px) {
   .tds-personal-grid, .tds-form-grid-2 { grid-template-columns: 1fr; }
-  .tds-data-row--full { grid-column: span 1; }
+  .tds-data-row--full, .tds-form-group--full { grid-column: 1 / -1; }
   .tds-prelim-card { flex-direction: column; text-align: center; }
   .tds-prelim-tag-row { justify-content: center; }
 }

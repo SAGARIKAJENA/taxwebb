@@ -1,12 +1,88 @@
 import React, { useState, useRef } from 'react'
 import { TDS_DOCUMENTS, DocIcons, type TdsDocumentConfig } from './tdsRefundDocuments.constants'
 import { StepActionBar } from '@shared/components'
-import { TdsRefundDocumentsSidebar } from './TdsRefundDocumentsSidebar'
 import './TdsRefundDocuments.css'
 
 export interface UploadedFileMeta {
   name: string
   size: string
+}
+
+export const TdsRefundDocumentsSidebar: React.FC = () => {
+  return (
+    <aside className="tds-docs-sidebar" aria-label="Document verification and guidelines">
+      {/* 1. Stage 2 Progression Card */}
+      <div className="tds-progression-card">
+        <span className="tds-progression-badge">Stage 2 in Progress</span>
+        <h3 className="tds-progression-title">Document Verification</h3>
+        <p className="tds-progression-desc">
+          Uploaded files are securely scanned and matched with ITD records for refund accuracy.
+        </p>
+
+        <div className="tds-progression-checklist">
+          <div className="tds-progression-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+            <span>256-bit Bank Grade Security</span>
+          </div>
+          <div className="tds-progression-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+            <span>Reconciliation with 26AS &amp; AIS</span>
+          </div>
+          <div className="tds-progression-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+            <span>Next: Senior CA Review &amp; Filing</span>
+          </div>
+        </div>
+
+        <div className="tds-progression-security">
+          <div className="tds-prog-sec-row">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+            <span>ISO 27001 Certified Vault</span>
+          </div>
+          <div className="tds-prog-sec-row">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+            </svg>
+            <span>Instant CA validation upon filing</span>
+          </div>
+        </div>
+      </div>
+
+      {/* 2. Expert CA Review Trust Card */}
+      <div className="tds-sidebar-card tds-sidebar-trust-card">
+        <div className="tds-trust-icon-box">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+        </div>
+        <div>
+          <h4 className="tds-trust-title">Dedicated Tax Expert Review</h4>
+          <p className="tds-trust-desc">
+            A Senior Chartered Accountant checks all deductions and validates proofs before ITD submission.
+          </p>
+        </div>
+      </div>
+
+      {/* 3. Document Guidelines Checklist Card */}
+      <div className="tds-sidebar-card tds-sidebar-tip-card">
+        <h4 className="tds-tip-title">Document Guidelines</h4>
+        <ul className="tds-tip-list">
+          <li>Supported: PDF, JPG, PNG (up to 25MB).</li>
+          <li>Password-protected PDFs accepted (standard ITD format).</li>
+          <li>Form 16 &amp; AIS can be downloaded from ITD portal.</li>
+          <li>Clear scans prevent verification delays.</li>
+        </ul>
+      </div>
+    </aside>
+  )
 }
 
 export interface TdsRefundDocumentsProps {
@@ -43,140 +119,141 @@ export const TdsRefundDocuments: React.FC<TdsRefundDocumentsProps> = ({
     const file = e.target.files?.[0]
     if (!file) return
 
-    const sizeInMb = (file.size / (1024 * 1024)).toFixed(1)
-    setUploads((prev) => {
-      const next = {
-        ...prev,
-        [docId]: {
-          name: file.name,
-          size: `${sizeInMb}MB`,
-        },
-      }
-      onUploadsChange?.(next)
-      return next
-    })
+    const sizeStr = file.size > 1024 * 1024
+      ? `${(file.size / (1024 * 1024)).toFixed(1)} MB`
+      : `${Math.round(file.size / 1024)} KB`
+
+    const newUploads = {
+      ...uploads,
+      [docId]: {
+        name: file.name,
+        size: sizeStr,
+      },
+    }
+    setUploads(newUploads)
+    onUploadsChange?.(newUploads)
   }
 
   const handleRemove = (docId: string) => {
-    setUploads((prev) => {
-      const updated = { ...prev }
-      delete updated[docId]
-      onUploadsChange?.(updated)
-      return updated
-    })
-    const inputEl = fileInputRefs.current[docId]
-    if (inputEl) inputEl.value = ''
+    const updated = { ...uploads }
+    delete updated[docId]
+    setUploads(updated)
+    onUploadsChange?.(updated)
+    if (fileInputRefs.current[docId]) {
+      fileInputRefs.current[docId]!.value = ''
+    }
   }
 
   const triggerUpload = (docId: string) => {
     fileInputRefs.current[docId]?.click()
   }
 
-  const isStep2Valid = TDS_DOCUMENTS.every(
-    (doc) => !doc.required || Boolean(uploads[doc.id])
-  )
+  const isStep2Valid = Boolean(uploads['pan'] && uploads['aadhaar'])
 
   return (
     <div className="tds-docs-page">
-      {/* 5-Step Stepper Track Centered at Top */}
+      {/* Centered Stepper Track */}
       <div className="tds-docs-stepper-wrap">
-        <div className="tds-stepper-track" aria-label="Step progress" data-testid="tds-stepper-track">
+        <div className="tds-stepper-track" aria-label="Step progress">
           {STEPS.map((s, idx) => {
-            const isDotCompleted = s.num < 2
-            const isDotActive = s.num === 2
-            const dotClass = isDotCompleted
+            const isCompleted = s.num < 2
+            const isActive = s.num === 2
+            const dotClass = isCompleted
               ? 'tds-stepper-dot tds-stepper-dot--completed'
-              : isDotActive
+              : isActive
               ? 'tds-stepper-dot tds-stepper-dot--active'
               : 'tds-stepper-dot tds-stepper-dot--inactive'
-            const lineClass = isDotCompleted ? 'tds-stepper-line tds-stepper-line--completed' : 'tds-stepper-line'
+            const lineClass = isCompleted
+              ? 'tds-stepper-line tds-stepper-line--completed'
+              : 'tds-stepper-line'
             return (
               <React.Fragment key={s.num}>
-                <div className={dotClass} data-testid={`tds-step-${s.num}`} title={`Step ${s.num}: ${s.label}`}>{s.num}</div>
-                {idx < STEPS.length - 1 && <div className={lineClass} data-testid={`tds-line-${s.num}`} />}
+                <div className={dotClass} title={`Step ${s.num}: ${s.label}`}>
+                  {s.num}
+                </div>
+                {idx < STEPS.length - 1 && <div className={lineClass} />}
               </React.Fragment>
             )
           })}
         </div>
       </div>
 
+      {/* 2-Column Desktop Grid Layout */}
       <div className="tds-docs-layout">
-        {/* Left / Main Column */}
+        {/* Main Document List Column */}
         <main className="tds-docs-main">
-          {/* Progress Tracker */}
-          <div className="tds-docs-progress-card" data-testid="tds-docs-progress">
+          {/* Progress Card */}
+          <div className="tds-docs-progress-card">
             <div className="tds-docs-progress-labels">
-              <span className="tds-docs-progress-count" data-testid="tds-docs-count">
-                {uploadedCount} of {totalCount} uploaded
+              <span className="tds-docs-progress-count">
+                <strong>{uploadedCount}</strong> of <strong>{totalCount}</strong> documents uploaded
               </span>
-              <span className="tds-docs-progress-percent" data-testid="tds-docs-percent">
-                {percent}%
-              </span>
+              <span className="tds-docs-progress-percent">{percent}% Completed</span>
             </div>
             <div className="tds-docs-progress-bar-track">
               <div
                 className="tds-docs-progress-bar-fill"
                 style={{ width: `${percent}%` }}
-                data-testid="tds-docs-progress-bar"
               />
             </div>
           </div>
 
-          {/* Document Cards List */}
-          <div className="tds-docs-list" role="list">
+          {/* List of Documents */}
+          <div className="tds-docs-list">
             {TDS_DOCUMENTS.map((doc: TdsDocumentConfig) => {
-              const isUploaded = Boolean(uploads[doc.id])
-              const fileData = uploads[doc.id]
-              const IconComp = DocIcons[doc.id]
+              const uploaded = uploads[doc.id]
+              const IconComp = DocIcons[doc.id] || DocIcons.pan
 
               return (
                 <div
                   key={doc.id}
-                  className={`tds-doc-card ${isUploaded ? 'tds-doc-card--uploaded' : ''}`}
+                  className={`tds-doc-card ${uploaded ? 'tds-doc-card--uploaded' : ''}`}
                   data-testid={`tds-doc-card-${doc.id}`}
                 >
                   <input
                     type="file"
-                    accept={doc.accept}
-                    style={{ display: 'none' }}
                     ref={(el) => {
                       fileInputRefs.current[doc.id] = el
                     }}
+                    style={{ display: 'none' }}
                     onChange={(e) => handleFileChange(doc.id, e)}
-                    data-testid={`file-input-${doc.id}`}
+                    accept=".pdf,.jpg,.jpeg,.png"
                   />
 
+                  {/* Left Info */}
                   <div className="tds-doc-info-wrap">
-                    <div className="tds-doc-icon-box" style={{ background: doc.bgColor }}>
-                      {IconComp ? <IconComp color={doc.iconColor} /> : null}
+                    <div
+                      className="tds-doc-icon-box"
+                      style={{ background: doc.bgColor, color: doc.iconColor }}
+                    >
+                      <IconComp />
                     </div>
                     <div className="tds-doc-texts">
                       <div className="tds-doc-title-row">
                         <span className="tds-doc-title">{doc.title}</span>
                         {doc.required ? (
-                          <span className="tds-doc-required-star" title="Required">*</span>
+                          <span className="tds-doc-required-star" title="Mandatory document">*</span>
                         ) : (
-                          <span className="tds-doc-optional-tag">(optional)</span>
+                          <span className="tds-doc-optional-tag">(Optional)</span>
                         )}
                       </div>
-                      <span className="tds-doc-subtitle" title={doc.subtitle}>
-                        {doc.subtitle}
-                      </span>
+                      <span className="tds-doc-subtitle">{doc.subtitle}</span>
                     </div>
                   </div>
 
+                  {/* Right Action */}
                   <div className="tds-doc-action">
-                    {isUploaded ? (
+                    {uploaded ? (
                       <div className="tds-doc-uploaded-state">
-                        <span className="tds-doc-uploaded-pill" title={fileData?.name}>
-                          ✓ {fileData?.name}
+                        <span className="tds-doc-uploaded-pill" title={uploaded.name}>
+                          ✓ {uploaded.name}
                         </span>
                         <button
                           type="button"
                           className="tds-doc-remove-btn"
                           onClick={() => handleRemove(doc.id)}
-                          aria-label={`Remove ${doc.title}`}
                           title="Remove file"
+                          data-testid={`remove-btn-${doc.id}`}
                         >
                           ✕
                         </button>

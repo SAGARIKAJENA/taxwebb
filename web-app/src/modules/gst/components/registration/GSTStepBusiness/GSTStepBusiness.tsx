@@ -51,7 +51,7 @@ export const GSTStepBusiness = ({
   }
 
   return (
-    <form className="gst-step-business" onSubmit={handleSubmit} noValidate>
+    <form className="gst-step-business gst-step-business-container" onSubmit={handleSubmit} noValidate>
       {/* 1. Business Details Section */}
       <GSTBusinessDetails
         data={data}
@@ -77,33 +77,66 @@ export const GSTStepBusiness = ({
       />
 
       {/* 4. Aadhaar Authentication Consent Section */}
-      <div className="gst-step-business__section gst-step-business__consent-section">
-        <h3 className="gst-step-business__section-title">
-          4. Aadhaar Authentication Consent
-        </h3>
-        <p className="gst-step-business__section-desc">
-          Mandatory consent for biometric / OTP-based Aadhaar verification as per GST Rules
-        </p>
+      <div className="gst-form-card gst-consent-card">
+        <div className="gst-form-card__header">
+          <div className="gst-form-card__icon-badge gst-form-card__icon-badge--green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              <path d="m9 12 2 2 4-4" />
+            </svg>
+          </div>
+          <div>
+            <h2 className="gst-form-card__title">Aadhaar Authentication Consent</h2>
+            <p className="gst-consent-subtitle">
+              Mandatory consent for biometric / OTP-based Aadhaar verification as per GST Rules
+            </p>
+          </div>
+        </div>
 
-        <label
-          className={`gst-step-business__checkbox-label ${
-            errors.aadhaarConsent ? 'has-error' : ''
-          }`}
-        >
-          <input
-            id="gst-step-business-aadhaar-consent"
-            type="checkbox"
-            checked={data.aadhaarConsent}
-            onChange={handleConsentChange}
-            className="gst-step-business__checkbox"
-          />
-          <span className="gst-step-business__checkbox-text">
-            I hereby give consent to use my Aadhaar details for GST registration authentication and OTP verification with UIDAI. *
-          </span>
-        </label>
-        {errors.aadhaarConsent && (
-          <span className="gst-step-business__field-error">{errors.aadhaarConsent}</span>
-        )}
+        <div className="gst-form-card__body">
+          <div
+            className={`gst-consent-box ${
+              data.aadhaarConsent ? 'gst-consent-box--checked' : ''
+            } ${errors.aadhaarConsent ? 'gst-consent-box--error' : ''}`}
+          >
+            <label
+              htmlFor="aadhaarConsent"
+              className="gst-consent-checkbox-wrapper"
+            >
+              <input
+                id="aadhaarConsent"
+                name="aadhaarConsent"
+                type="checkbox"
+                checked={data.aadhaarConsent}
+                onChange={handleConsentChange}
+                className="gst-consent-checkbox"
+                aria-invalid={Boolean(errors.aadhaarConsent)}
+              />
+              <span className="gst-consent-text">
+                I hereby give consent to use my Aadhaar details for GST registration authentication and OTP verification with UIDAI. <span className="gst-required-star">*</span>
+              </span>
+            </label>
+
+            {errors.aadhaarConsent && (
+              <div className="gst-consent-error" role="alert">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="gst-consent-error-icon">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+                <span>{errors.aadhaarConsent}</span>
+              </div>
+            )}
+
+            <div className="gst-consent-security-note">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="gst-consent-shield-icon">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+              <span>UIDAI Compliant: Aadhaar details are encrypted and utilized solely for identity authentication as mandated under GST Rule 8.</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Action Buttons */}

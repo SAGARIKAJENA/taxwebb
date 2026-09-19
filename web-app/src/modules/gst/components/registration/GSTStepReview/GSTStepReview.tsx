@@ -1,6 +1,11 @@
 import { useState, type FC } from 'react'
 import type { GSTStepReviewProps, ReviewField } from './gstReview.types'
 import { INITIAL_DOCUMENTS } from '../GSTStepDocuments/gstDocuments.constants'
+import {
+  BusinessRegIcon,
+  BankProofIcon,
+  UserSignatoryIcon,
+} from '../GSTStepDocuments/GSTDocIcons'
 import { GSTReviewSection } from './GSTReviewSection'
 import { GSTReviewDocsList } from './GSTReviewDocsList'
 import { GSTReviewDeclaration } from './GSTReviewDeclaration'
@@ -102,9 +107,7 @@ export const GSTStepReview: FC<GSTStepReviewProps> = ({
       {/* 1. Business Details Section */}
       <GSTReviewSection
         title="Business Details"
-        icon={
-          <img src="/assets/icons/gst/business-reg.svg" width={20} height={20} alt="" aria-hidden="true" />
-        }
+        icon={<BusinessRegIcon width={20} height={20} />}
         iconBg="#ffedd5"
         fields={businessFields}
         onEdit={() => onEdit('business')}
@@ -113,9 +116,7 @@ export const GSTStepReview: FC<GSTStepReviewProps> = ({
       {/* 2. Bank Details Section */}
       <GSTReviewSection
         title="Bank Details"
-        icon={
-          <img src="/assets/icons/gst/bank-proof.svg" width={20} height={20} alt="" aria-hidden="true" />
-        }
+        icon={<BankProofIcon width={20} height={20} />}
         iconBg="#dcfce7"
         fields={bankFields}
         onEdit={() => onEdit('bank')}
@@ -124,9 +125,7 @@ export const GSTStepReview: FC<GSTStepReviewProps> = ({
       {/* 3. Authorised Signatory Section */}
       <GSTReviewSection
         title="Authorised Signatory"
-        icon={
-          <img src="/assets/icons/gst/user-signatory.svg" width={20} height={20} alt="" aria-hidden="true" />
-        }
+        icon={<UserSignatoryIcon width={20} height={20} />}
         iconBg="#f3e8ff"
         fields={signatoryFields}
         onEdit={() => onEdit('signatory')}

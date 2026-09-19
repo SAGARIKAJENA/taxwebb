@@ -3,7 +3,8 @@ import {
   BankCardIcon,
   PlusCircleIcon,
   type FilingBankAccount,
-} from './itrCategories.constants'
+} from './itrFiling.constants'
+import './ItrRefundBankSection.css'
 
 export interface ItrRefundBankSectionProps {
   bankAccounts: FilingBankAccount[]

@@ -6,6 +6,7 @@ import {
   ADDITIONAL_DOCUMENTS,
   TdsIcons,
 } from './tdsRefund.constants'
+import './TdsRefundOverview.css'
 
 export interface TdsRefundOverviewProps {
   onStart: () => void

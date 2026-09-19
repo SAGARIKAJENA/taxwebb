@@ -18,6 +18,25 @@
   margin-bottom: 0.95rem;
 }
 
+.gst-docs-checklist-card__info {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.gst-docs-checklist-card__icon-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 9px;
+  background-color: var(--gst-doc-peach-bg, #fff7ed);
+  border: 1.5px solid var(--gst-doc-peach-border, #fed7aa);
+  color: var(--gst-doc-orange, #f97316);
+  flex-shrink: 0;
+}
+
 .gst-docs-checklist-card__title {
   margin: 0;
   font-size: 1.05rem;

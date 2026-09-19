@@ -1,4 +1,5 @@
 import React from 'react'
+import './tdsRefundDocuments.constants.css'
 
 export interface TdsDocumentConfig {
   id: string

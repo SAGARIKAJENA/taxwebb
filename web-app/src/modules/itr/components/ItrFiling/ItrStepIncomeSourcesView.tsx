@@ -1,7 +1,6 @@
 import React from 'react'
 import { StepActionBar } from '@shared/components'
-import './ItrFilingSteps.css'
-import './ItrPersonalInfo.css'
+import './ItrStepIncomeSourcesView.css'
 import {
   ALL_SOURCES,
   ITR_STEPS,
@@ -10,14 +9,22 @@ import {
   type BusinessDetails,
   type CapitalGainsDetails,
   type OtherSourcesDetails,
-} from './itrIncomeSources.constants'
-import { ItrSalaryIncomeCard } from './ItrSalaryIncomeCard'
-import { ItrHousePropertyCard } from './ItrHousePropertyCard'
-import { ItrBusinessIncomeCard } from './ItrBusinessIncomeCard'
-import { ItrCapitalGainsCard } from './ItrCapitalGainsCard'
-import { ItrOtherSourcesCard } from './ItrOtherSourcesCard'
+} from './itrFiling.constants'
+import {
+  ItrSalaryIncomeCard,
+  ItrHousePropertyCard,
+  ItrBusinessIncomeCard,
+  ItrCapitalGainsCard,
+  ItrOtherSourcesCard,
+} from './ItrIncomeSourceCards'
 
-export * from './itrIncomeSources.constants'
+export type {
+  SalaryDetails,
+  HousePropertyDetails,
+  BusinessDetails,
+  CapitalGainsDetails,
+  OtherSourcesDetails,
+}
 
 export interface ItrStepIncomeSourcesViewProps {
   onBack: () => void
@@ -62,24 +69,22 @@ export const ItrStepIncomeSourcesView: React.FC<ItrStepIncomeSourcesViewProps> =
     }
   }
 
-  const isSalarySelected = selectedSources.includes('salary')
-  const isHousePropertySelected = selectedSources.includes('house_property')
-  const isBusinessSelected = selectedSources.includes('business')
-  const isCapitalGainsSelected = selectedSources.includes('capital_gains')
-  const isOtherSourcesSelected = selectedSources.includes('other_sources')
 
   const isStep2Valid = Boolean(
     selectedSources.length > 0 &&
     (!selectedSources.includes('salary') ||
-      (salaryDetails.employerName?.trim() && salaryDetails.grossSalary?.trim())) &&
+      Boolean(salaryDetails.grossSalary?.trim() || salaryDetails.employerName?.trim())) &&
     (!selectedSources.includes('house_property') ||
       (housePropertyDetails.propertyType === 'self_occupied' ||
         Boolean(housePropertyDetails.annualRentReceived?.trim()))) &&
     (!selectedSources.includes('business') ||
-      (businessDetails.grossTurnover?.trim() && businessDetails.declaredNetProfit?.trim())) &&
+      Boolean(businessDetails.grossTurnover?.trim() || businessDetails.declaredNetProfit?.trim())) &&
     (!selectedSources.includes('capital_gains') ||
-      (capitalGainsDetails.assetTypes.length > 0 &&
-        (capitalGainsDetails.stcg?.trim() || capitalGainsDetails.ltcg?.trim()))) &&
+      Boolean(
+        capitalGainsDetails.stcg?.trim() ||
+        capitalGainsDetails.ltcg?.trim() ||
+        capitalGainsDetails.assetTypes.length > 0
+      )) &&
     (!selectedSources.includes('other_sources') ||
       Boolean(
         otherSourcesDetails.interestIncome?.trim() ||
@@ -195,46 +200,58 @@ export const ItrStepIncomeSourcesView: React.FC<ItrStepIncomeSourcesViewProps> =
         </div>
       </div>
 
-      {/* Income Source Cards */}
-      {isSalarySelected && (
-        <ItrSalaryIncomeCard
-          salaryDetails={salaryDetails}
-          onSalaryDetailsChange={onSalaryDetailsChange}
-          onToggle={() => toggleSource('salary')}
-        />
-      )}
-
-      {isHousePropertySelected && (
-        <ItrHousePropertyCard
-          housePropertyDetails={housePropertyDetails}
-          onHousePropertyDetailsChange={onHousePropertyDetailsChange}
-          onToggle={() => toggleSource('house_property')}
-        />
-      )}
-
-      {isBusinessSelected && (
-        <ItrBusinessIncomeCard
-          businessDetails={businessDetails}
-          onBusinessDetailsChange={onBusinessDetailsChange}
-          onToggle={() => toggleSource('business')}
-        />
-      )}
-
-      {isCapitalGainsSelected && (
-        <ItrCapitalGainsCard
-          capitalGainsDetails={capitalGainsDetails}
-          onCapitalGainsDetailsChange={onCapitalGainsDetailsChange}
-          onToggle={() => toggleSource('capital_gains')}
-        />
-      )}
-
-      {isOtherSourcesSelected && (
-        <ItrOtherSourcesCard
-          otherSourcesDetails={otherSourcesDetails}
-          onOtherSourcesDetailsChange={onOtherSourcesDetailsChange}
-          onToggle={() => toggleSource('other_sources')}
-        />
-      )}
+      {/* Income Source Cards (Rendered dynamically in the order selected by the user) */}
+      {selectedSources.map((sourceId) => {
+        switch (sourceId) {
+          case 'salary':
+            return (
+              <ItrSalaryIncomeCard
+                key="salary"
+                salaryDetails={salaryDetails}
+                onSalaryDetailsChange={onSalaryDetailsChange}
+                onToggle={() => toggleSource('salary')}
+              />
+            )
+          case 'house_property':
+            return (
+              <ItrHousePropertyCard
+                key="house_property"
+                housePropertyDetails={housePropertyDetails}
+                onHousePropertyDetailsChange={onHousePropertyDetailsChange}
+                onToggle={() => toggleSource('house_property')}
+              />
+            )
+          case 'business':
+            return (
+              <ItrBusinessIncomeCard
+                key="business"
+                businessDetails={businessDetails}
+                onBusinessDetailsChange={onBusinessDetailsChange}
+                onToggle={() => toggleSource('business')}
+              />
+            )
+          case 'capital_gains':
+            return (
+              <ItrCapitalGainsCard
+                key="capital_gains"
+                capitalGainsDetails={capitalGainsDetails}
+                onCapitalGainsDetailsChange={onCapitalGainsDetailsChange}
+                onToggle={() => toggleSource('capital_gains')}
+              />
+            )
+          case 'other_sources':
+            return (
+              <ItrOtherSourcesCard
+                key="other_sources"
+                otherSourcesDetails={otherSourcesDetails}
+                onOtherSourcesDetailsChange={onOtherSourcesDetailsChange}
+                onToggle={() => toggleSource('other_sources')}
+              />
+            )
+          default:
+            return null
+        }
+      })}
 
       {/* Navigation */}
       <StepActionBar

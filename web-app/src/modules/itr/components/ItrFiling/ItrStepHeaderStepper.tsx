@@ -1,5 +1,6 @@
 import React from 'react'
-import { ITR_STEPS } from './itrDocuments.constants'
+import { ITR_STEPS } from './itrFiling.constants'
+import './ItrStepHeaderStepper.css'
 
 export interface ItrStepHeaderStepperProps {
   currentStepId: number

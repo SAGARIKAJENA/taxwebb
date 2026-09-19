@@ -3,23 +3,6 @@ import { routePaths } from '@core/config'
 import { useAppStore } from '@store/index'
 import { userStorage } from '@core/storage/userStorage'
 import { useDraftBlocker } from '@shared/hooks'
-import type {
-  ItrCategoryId,
-  AssessmentYearOption,
-  ResidentialStatusOption,
-  FilingTypeOption,
-  FilingBankAccount,
-  PreviousItrInfo,
-} from './itrCategories.constants'
-import type {
-  SalaryDetails,
-  HousePropertyDetails,
-  BusinessDetails,
-  CapitalGainsDetails,
-  OtherSourcesDetails,
-} from './ItrStepIncomeSourcesView'
-import type { DeductionsData } from './ItrStepRegimeDeductionsView'
-import type { UploadedDocInfo } from './ItrStepDocumentsView'
 import {
   DEFAULT_PREVIOUS_ITR,
   DEFAULT_SALARY_DETAILS,
@@ -29,7 +12,20 @@ import {
   DEFAULT_OTHER_SOURCES_DETAILS,
   DEFAULT_DEDUCTIONS,
   ITR_STEP_LABELS,
-} from './itrFiling.defaults'
+  type ItrCategoryId,
+  type AssessmentYearOption,
+  type ResidentialStatusOption,
+  type FilingTypeOption,
+  type FilingBankAccount,
+  type PreviousItrInfo,
+  type SalaryDetails,
+  type HousePropertyDetails,
+  type BusinessDetails,
+  type CapitalGainsDetails,
+  type OtherSourcesDetails,
+  type DeductionsData,
+  type UploadedDocInfo,
+} from './itrFiling.constants'
 
 export function useItrFilingState() {
   const pushToast = useAppStore((state) => state.pushToast)

@@ -1,5 +1,6 @@
 import type { FC, ReactNode } from 'react'
 import type { ReviewField } from './gstReview.types'
+import { EditPencilIcon } from '../GSTStepDocuments/GSTDocIcons'
 import './GSTReviewSection.css'
 
 interface GSTReviewSectionProps {
@@ -33,12 +34,9 @@ export const GSTReviewSection: FC<GSTReviewSectionProps> = ({
           onClick={onEdit}
           aria-label={`Edit ${title}`}
         >
-          <img
-            src="/assets/icons/gst/edit-pencil.svg"
+          <EditPencilIcon
             width={14}
             height={14}
-            alt=""
-            aria-hidden="true"
             className="gst-review-card__edit-icon"
           />
           <span>Edit</span>

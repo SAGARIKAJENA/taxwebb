@@ -64,19 +64,9 @@ export const GSTRegistration = () => {
 
   return (
     <div className="gst-reg-page">
-      {/* Top Header with Back to Application option on unsubmitted pages (hidden on payment page) */}
+      {/* Top Header */}
       {currentStep <= 4 && (
         <div className="gst-reg-top-header">
-          {currentStep !== 4 && (
-            <button
-              type="button"
-              className="gst-reg-back-to-app-btn"
-              onClick={handleCancel}
-              aria-label="Back to Application"
-            >
-              <span aria-hidden="true">←</span> Back to Application
-            </button>
-          )}
           <div className="gst-reg-header-titles">
             <h1 className="gst-reg-title">{getHeaderTitle()}</h1>
             <p className="gst-reg-subtitle">{getHeaderSubtitle()}</p>

@@ -1,4 +1,5 @@
 import type { FC } from 'react'
+import { DocChecklistIcon } from './GSTDocIcons'
 import './GSTDocChecklistHeader.css'
 
 interface GSTDocChecklistHeaderProps {
@@ -16,10 +17,15 @@ export const GSTDocChecklistHeader: FC<GSTDocChecklistHeaderProps> = ({
     <section className="gst-docs-checklist-card" aria-label="Upload Progress">
       <div className="gst-docs-checklist-card__header">
         <div className="gst-docs-checklist-card__info">
-          <h2 className="gst-docs-checklist-card__title">Document Checklist</h2>
-          <p className="gst-docs-checklist-card__subtitle">
-            Upload original clear photos or scanned copies
-          </p>
+          <div className="gst-docs-checklist-card__icon-badge">
+            <DocChecklistIcon width={20} height={20} />
+          </div>
+          <div>
+            <h2 className="gst-docs-checklist-card__title">Document Checklist</h2>
+            <p className="gst-docs-checklist-card__subtitle">
+              Upload original clear photos or scanned copies
+            </p>
+          </div>
         </div>
         <div className="gst-docs-checklist-card__badge">
           {completedCount}/{totalCount} Completed

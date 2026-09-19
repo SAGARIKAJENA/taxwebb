@@ -1,4 +1,5 @@
 import type { FC } from 'react'
+import { DocChecklistIcon } from '../GSTStepDocuments/GSTDocIcons'
 import './GSTPaymentSummaryCard.css'
 
 interface GSTPaymentSummaryCardProps {
@@ -18,13 +19,7 @@ export const GSTPaymentSummaryCard: FC<GSTPaymentSummaryCardProps> = ({
     <div className="gst-payment-summary-card">
       <div className="gst-payment-summary-card__top">
         <div className="gst-payment-summary-card__service-badge">
-          <img
-            src="/assets/icons/gst/doc-checklist.svg"
-            width={16}
-            height={16}
-            alt=""
-            aria-hidden="true"
-          />
+          <DocChecklistIcon width={16} height={16} />
           <span>GST REGISTRATION</span>
         </div>
         <span className="gst-payment-summary-card__applicant">{applicantName}</span>

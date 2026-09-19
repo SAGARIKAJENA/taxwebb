@@ -3,7 +3,8 @@ import {
   HistoryDocIcon,
   ChevronDownIcon,
   type PreviousItrInfo,
-} from './itrCategories.constants'
+} from './itrFiling.constants'
+import './ItrPreviousItrSection.css'
 
 export interface ItrPreviousItrSectionProps {
   previousItr: PreviousItrInfo

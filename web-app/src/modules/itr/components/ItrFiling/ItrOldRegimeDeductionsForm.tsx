@@ -1,22 +1,8 @@
 import React from 'react'
+import type { DeductionsData } from './itrFiling.constants'
+import './ItrOldRegimeDeductionsForm.css'
 
-export interface DeductionsData {
-  epf: string
-  ppf: string
-  lic: string
-  elss: string
-  childrenTuition: string
-  housingLoanPrincipal: string
-  selfInsurance: string
-  parentInsurance: string
-  parentsSeniorCitizen: boolean
-  homeLoanInterest24b: string
-  section80CTotal: string
-  section80D: string
-  otherDeductions: string
-  section80C: string
-  homeLoanInterest: string
-}
+export type { DeductionsData }
 
 export interface ItrOldRegimeDeductionsFormProps {
   claimDeductions: boolean | null
@@ -25,35 +11,40 @@ export interface ItrOldRegimeDeductionsFormProps {
   onChange: (field: keyof DeductionsData, val: string | boolean) => void
 }
 
+interface CurrencyInputProps {
+  id: string
+  placeholder: string
+  field: keyof DeductionsData
+  value: string
+  onChange: (field: keyof DeductionsData, val: string | boolean) => void
+}
+
+const CurrencyInput: React.FC<CurrencyInputProps> = ({
+  id,
+  placeholder,
+  field,
+  value,
+  onChange,
+}) => (
+  <div className="itr-input-currency-wrap">
+    <span className="itr-currency-prefix">₹</span>
+    <input
+      id={id}
+      type="text"
+      className="itr-input-currency"
+      placeholder={placeholder}
+      value={value}
+      onChange={(e) => onChange(field, e.target.value)}
+    />
+  </div>
+)
+
 export const ItrOldRegimeDeductionsForm: React.FC<ItrOldRegimeDeductionsFormProps> = ({
   claimDeductions,
   setClaimDeductions,
   deductions,
   onChange,
 }) => {
-  const CurrencyInput = ({
-    id,
-    placeholder,
-    field,
-    value,
-  }: {
-    id: string
-    placeholder: string
-    field: keyof DeductionsData
-    value: string
-  }) => (
-    <div className="itr-input-currency-wrap">
-      <span className="itr-currency-prefix">₹</span>
-      <input
-        id={id}
-        type="text"
-        className="itr-input-currency"
-        placeholder={placeholder}
-        value={value}
-        onChange={(e) => onChange(field, e.target.value)}
-      />
-    </div>
-  )
 
   return (
     <>
@@ -113,6 +104,7 @@ export const ItrOldRegimeDeductionsForm: React.FC<ItrOldRegimeDeductionsFormProp
                   placeholder="e.g. 45,000"
                   field="epf"
                   value={deductions.epf || ''}
+                  onChange={onChange}
                 />
               </div>
               <div className="itr-form-group">
@@ -124,6 +116,7 @@ export const ItrOldRegimeDeductionsForm: React.FC<ItrOldRegimeDeductionsFormProp
                   placeholder="e.g. 50,000"
                   field="ppf"
                   value={deductions.ppf || ''}
+                  onChange={onChange}
                 />
               </div>
               <div className="itr-form-group">
@@ -135,6 +128,7 @@ export const ItrOldRegimeDeductionsForm: React.FC<ItrOldRegimeDeductionsFormProp
                   placeholder="e.g. 25,000"
                   field="lic"
                   value={deductions.lic || ''}
+                  onChange={onChange}
                 />
               </div>
               <div className="itr-form-group">
@@ -146,6 +140,7 @@ export const ItrOldRegimeDeductionsForm: React.FC<ItrOldRegimeDeductionsFormProp
                   placeholder="Mutual fund ELSS"
                   field="elss"
                   value={deductions.elss || ''}
+                  onChange={onChange}
                 />
               </div>
               <div className="itr-form-group">
@@ -157,6 +152,7 @@ export const ItrOldRegimeDeductionsForm: React.FC<ItrOldRegimeDeductionsFormProp
                   placeholder="School fees"
                   field="childrenTuition"
                   value={deductions.childrenTuition || ''}
+                  onChange={onChange}
                 />
               </div>
               <div className="itr-form-group">
@@ -168,6 +164,7 @@ export const ItrOldRegimeDeductionsForm: React.FC<ItrOldRegimeDeductionsFormProp
                   placeholder="Principal repaid"
                   field="housingLoanPrincipal"
                   value={deductions.housingLoanPrincipal || ''}
+                  onChange={onChange}
                 />
               </div>
             </div>
@@ -188,6 +185,7 @@ export const ItrOldRegimeDeductionsForm: React.FC<ItrOldRegimeDeductionsFormProp
                 placeholder="Max 25,000"
                 field="selfInsurance"
                 value={deductions.selfInsurance || ''}
+                onChange={onChange}
               />
             </div>
             <div className="itr-form-group">
@@ -199,6 +197,7 @@ export const ItrOldRegimeDeductionsForm: React.FC<ItrOldRegimeDeductionsFormProp
                 placeholder="Max 25,000 (50k for senior)"
                 field="parentInsurance"
                 value={deductions.parentInsurance || ''}
+                onChange={onChange}
               />
             </div>
             <div
@@ -231,6 +230,7 @@ export const ItrOldRegimeDeductionsForm: React.FC<ItrOldRegimeDeductionsFormProp
                 placeholder="Interest paid on self-occupied property"
                 field="homeLoanInterest24b"
                 value={deductions.homeLoanInterest24b || ''}
+                onChange={onChange}
               />
             </div>
           </div>

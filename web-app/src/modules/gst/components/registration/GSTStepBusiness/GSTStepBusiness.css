@@ -1,4 +1,5 @@
 /* Step 1: Business Form Container */
+.gst-step-business,
 .gst-step-business-container {
   display: flex;
   flex-direction: column;
@@ -37,6 +38,7 @@
 .gst-form-card__icon-badge svg { width: 18px; height: 18px; }
 .gst-form-card__icon-badge--orange { background: #fff7ed; border: 1px solid #ffedd5; color: #ea580c; }
 .gst-form-card__icon-badge--blue { background: #f0f9ff; border: 1px solid #e0f2fe; color: #0284c7; }
+.gst-form-card__icon-badge--green { background: #ecfdf5; border: 1px solid #d1fae5; color: #059669; }
 
 .gst-form-card__title {
   margin: 0;
@@ -172,41 +174,113 @@
 }
 
 /* Aadhaar Consent Section */
-.gst-consent-section {
+.gst-consent-card {
+  margin-top: 0.25rem;
+}
+
+.gst-consent-subtitle {
+  margin: 0.25rem 0 0 0;
+  font-size: 0.85rem;
+  color: #64748b;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.gst-consent-box {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.25rem 1.4rem;
+  transition: all 0.2s ease;
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
-  padding: 0.5rem 0;
+  gap: 0.9rem;
+}
+
+.gst-consent-box--checked {
+  background: #f0fdf4;
+  border-color: #86efac;
+  box-shadow: 0 1px 3px rgba(16, 185, 129, 0.08);
+}
+
+.gst-consent-box--error {
+  background: #fef2f2;
+  border-color: #fca5a5;
+  box-shadow: 0 1px 3px rgba(239, 68, 68, 0.08);
 }
 
 .gst-consent-checkbox-wrapper {
   display: flex;
-  align-items: center;
-  gap: 0.65rem;
+  align-items: flex-start;
+  gap: 0.85rem;
   cursor: pointer;
   user-select: none;
-  max-width: 600px;
 }
 
 .gst-consent-checkbox {
-  width: 18px;
-  height: 18px;
+  width: 19px;
+  height: 19px;
+  margin-top: 2px;
   border-radius: 4px;
   border: 1.5px solid #cbd5e1;
-  accent-color: #f97316;
+  accent-color: #059669;
   cursor: pointer;
   flex-shrink: 0;
+  transition: transform 0.15s ease;
+}
+
+.gst-consent-checkbox:hover {
+  transform: scale(1.05);
 }
 
 .gst-consent-text {
-  font-size: 0.835rem;
-  color: #334155;
-  line-height: 1.4;
+  font-size: 0.885rem;
+  color: #1e293b;
+  line-height: 1.5;
   font-weight: 500;
 }
 
+.gst-consent-box--checked .gst-consent-text {
+  color: #065f46;
+}
+
 .gst-consent-error {
-  padding: 0 0.15rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.82rem;
+  color: #dc2626;
+  font-weight: 600;
+  margin-left: 2rem;
+}
+
+.gst-consent-error-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.gst-consent-security-note {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  color: #64748b;
+  padding-top: 0.65rem;
+  border-top: 1px dashed #e2e8f0;
+  line-height: 1.4;
+}
+
+.gst-consent-box--checked .gst-consent-security-note {
+  border-top-color: #bbf7d0;
+  color: #047857;
+}
+
+.gst-consent-shield-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  color: #10b981;
 }
 
 /* Action Buttons Container */

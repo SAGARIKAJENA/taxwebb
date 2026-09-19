@@ -12,7 +12,7 @@ import {
   HomeCategoryIcon,
   DocumentCategoryIcon,
   LinkCategoryIcon,
-} from './itrCategories.constants'
+} from './itrFiling.constants'
 import './ItrCategorySelection.css'
 
 /* --- Recommendation Banner --- */

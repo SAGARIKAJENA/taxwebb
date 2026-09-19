@@ -1,3 +1,4 @@
+import './tdsRefund.constants.css'
 
 export interface WhyChooseItem {
   id: string

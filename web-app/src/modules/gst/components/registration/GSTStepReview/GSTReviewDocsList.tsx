@@ -1,5 +1,10 @@
 import type { FC } from 'react'
 import type { DocumentItem } from '../GSTStepDocuments/gstDocuments.types'
+import {
+  DocChecklistIcon,
+  CheckCircleIcon,
+  ViewEyeIcon,
+} from '../GSTStepDocuments/GSTDocIcons'
 import './GSTReviewDocsList.css'
 
 interface GSTReviewDocsListProps {
@@ -15,14 +20,8 @@ export const GSTReviewDocsList: FC<GSTReviewDocsListProps> = ({ documents, onVie
     <div className="gst-review-card">
       <div className="gst-review-card__header">
         <div className="gst-review-card__header-left">
-          <div className="gst-review-card__icon-badge" style={{ backgroundColor: '#e0f2fe' }}>
-            <img
-              src="/assets/icons/gst/doc-checklist.svg"
-              width={20}
-              height={20}
-              alt=""
-              aria-hidden="true"
-            />
+          <div className="gst-review-card__icon-badge" style={{ backgroundColor: '#e0f2fe', color: '#0284c7' }}>
+            <DocChecklistIcon width={20} height={20} />
           </div>
           <h3 className="gst-review-card__title">Uploaded Documents</h3>
         </div>
@@ -46,12 +45,7 @@ export const GSTReviewDocsList: FC<GSTReviewDocsListProps> = ({ documents, onVie
                 <div className="gst-review-doc-item__left">
                   <div className="gst-review-doc-item__check">
                     {isUploaded ? (
-                      <img
-                        src="/assets/icons/gst/check-circle.svg"
-                        width={16}
-                        height={16}
-                        alt="Uploaded"
-                      />
+                      <CheckCircleIcon width={16} height={16} style={{ color: '#059669' }} />
                     ) : (
                       <span className="gst-review-doc-item__pending-bullet" />
                     )}
@@ -69,13 +63,7 @@ export const GSTReviewDocsList: FC<GSTReviewDocsListProps> = ({ documents, onVie
                     onClick={() => onViewDoc(doc.title, fileName)}
                     aria-label={`View ${doc.title}`}
                   >
-                    <img
-                      src="/assets/icons/gst/view-eye.svg"
-                      width={14}
-                      height={14}
-                      alt=""
-                      aria-hidden="true"
-                    />
+                    <ViewEyeIcon width={14} height={14} />
                     <span>View</span>
                   </button>
                 ) : (

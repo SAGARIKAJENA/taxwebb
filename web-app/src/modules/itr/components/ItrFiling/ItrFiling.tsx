@@ -7,7 +7,7 @@ import { ItrStepDocumentsView } from './ItrStepDocumentsView'
 import { ItrStepReviewView } from './ItrStepReviewView'
 import { ItrFilingSubmittedView } from './ItrFilingSubmittedView'
 import { useItrFilingState } from './useItrFilingState'
-import './ItrFilingSteps.css'
+import './ItrFilingCommon.css'
 
 export const ItrFiling = () => {
   const {
