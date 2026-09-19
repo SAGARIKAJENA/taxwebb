@@ -1,278 +1,143 @@
-.gst-step-payment {
+/* ==========================================================================
+   GST Registration - Step 4 Payment (Desktop Web App View)
+   ========================================================================== */
+
+@import './GSTPaymentSummaryCard.css';
+@import './GSTPaymentMethodSelector.css';
+@import './GSTPaymentForms.css';
+
+/* Main 2-Column Desktop Grid */
+.gst-step-payment-layout {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 2rem;
+  width: 100%;
+  max-width: 1140px;
+  margin: 0 auto;
+  align-items: start;
+  box-sizing: border-box;
+}
+
+/* Left Column: Form & Action Controls */
+.gst-step-payment-main {
   display: flex;
   flex-direction: column;
+  gap: 1.5rem;
+  min-width: 0;
   width: 100%;
 }
 
-.gst-step-payment__heading-block {
-  margin-bottom: 1.5rem;
-}
-
-.gst-step-payment__title {
-  margin: 0 0 0.25rem 0;
-  font-size: 1.6rem;
-  font-weight: var(--font-weight-bold, 700);
-  color: var(--taxedge-navy, #083b75);
-}
-
-.gst-step-payment__subtitle {
-  margin: 0;
-  font-size: 0.88rem;
-  color: var(--color-text-muted, #64748b);
-}
-
-.gst-step-payment__layout {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
-.gst-payment-main {
+/* Right Column: Sticky Summary Sidebar */
+.gst-step-payment-sidebar {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  position: sticky;
+  top: calc(var(--header-height, 64px) + 1rem);
   width: 100%;
 }
 
-.gst-payment-card {
-  background-color: var(--color-surface, #ffffff);
-  border: 1px solid var(--color-border, #e2e8f0);
-  border-radius: var(--radius-lg, 16px);
-  padding: 1.5rem 1.75rem;
-  box-shadow: var(--shadow-sm);
-}
-
-.gst-payment-card__header {
+/* Trust & Security Banner */
+.gst-payment-trust-banner {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 14px;
+  padding: 14px 18px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1.25rem;
+  gap: 14px;
+  color: #166534;
+  box-sizing: border-box;
 }
 
-.gst-payment-card__title {
-  margin: 0;
-  font-size: 1.15rem;
-  font-weight: var(--font-weight-bold, 700);
-  color: var(--taxedge-navy, #083b75);
-}
-
-.gst-payment-secure-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.25rem 0.65rem;
-  font-size: 0.775rem;
-  font-weight: var(--font-weight-semibold, 600);
-  color: var(--taxedge-blue, #0b5ed7);
-  background-color: var(--taxedge-light-blue, #eaf1fe);
-  border: 1px solid rgba(11, 94, 215, 0.2);
-  border-radius: 9999px;
-}
-
-.gst-payment-secure-icon {
-  width: 13px;
-  height: 13px;
-}
-
-/* Methods List */
-.gst-payment-methods-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-  margin-bottom: 1.5rem;
-}
-
-.gst-payment-method-item {
-  border: 1.5px solid var(--color-border, #e2e8f0);
-  border-radius: var(--radius-md, 12px);
-  padding: 1rem 1.25rem;
-  background-color: var(--color-surface, #ffffff);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.gst-payment-method-item:hover {
-  border-color: #cbd5e1;
-  background-color: #fafbfc;
-}
-
-.gst-payment-method-item--active {
-  border-color: var(--taxedge-blue, #0b5ed7);
-  background-color: #ffffff;
-  box-shadow: 0 0 0 1px var(--taxedge-blue, #0b5ed7);
-}
-
-.gst-payment-method-item__header {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.gst-payment-method-item__icon-wrap {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  background-color: #f1f5f9;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--taxedge-navy, #083b75);
+.gst-payment-trust-icon {
+  width: 28px;
+  height: 28px;
+  color: #15803d;
   flex-shrink: 0;
 }
 
-.gst-payment-method-item--active .gst-payment-method-item__icon-wrap {
-  background-color: var(--taxedge-light-blue, #eaf1fe);
-  color: var(--taxedge-blue, #0b5ed7);
-}
-
-.gst-payment-method-item__icon-wrap svg {
-  width: 18px;
-  height: 18px;
-}
-
-.gst-payment-method-item__info {
-  flex: 1;
+.gst-payment-trust-text {
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
+  gap: 2px;
 }
 
-.gst-payment-method-item__title {
-  font-size: 0.95rem;
-  font-weight: var(--font-weight-bold, 700);
-  color: var(--color-text, #172033);
+.gst-payment-trust-text strong {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #14532d;
 }
 
-.gst-payment-method-item__desc {
-  font-size: 0.8rem;
-  color: var(--color-text-muted, #64748b);
+.gst-payment-trust-text span {
+  font-size: 0.78rem;
+  color: #166534;
+  line-height: 1.35;
 }
 
-.gst-payment-radio {
+/* Action Buttons */
+.gst-payment-footer-actions {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
+  gap: 16px;
+  margin-top: 0.5rem;
+  padding-bottom: 2rem;
 }
 
-.gst-payment-radio__circle {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 2px solid #cbd5e1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all var(--transition-fast);
-}
-
-.gst-payment-radio__circle--checked {
-  border-color: var(--taxedge-orange, #f97316);
-  background-color: var(--taxedge-orange, #f97316);
-  box-shadow: inset 0 0 0 3px #ffffff;
-}
-
-/* UPI Pane */
-.gst-upi-details-pane {
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--grey-100, #f1f5f9);
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.gst-upi-label {
-  font-size: 0.825rem;
-  font-weight: var(--font-weight-semibold, 600);
-  color: var(--color-text, #172033);
-}
-
-.gst-upi-apps-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.75rem;
-}
-
-@media (max-width: 480px) {
-  .gst-upi-apps-row {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-.gst-upi-app-btn {
-  display: flex;
+.gst-payment-btn-back {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.6rem 0.5rem;
-  border: 1px solid var(--color-border, #e2e8f0);
-  border-radius: var(--radius-md, 8px);
   background-color: #ffffff;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.gst-upi-app-btn:hover {
-  border-color: #94a3b8;
-  background-color: #f8fafc;
-}
-
-.gst-upi-app-btn--active {
-  border-color: var(--taxedge-blue, #0b5ed7);
-  background-color: var(--taxedge-light-blue, #eaf1fe);
-}
-
-.gst-upi-app-badge {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  font-weight: var(--font-weight-bold, 700);
-}
-
-.gst-upi-app-name {
-  font-size: 0.85rem;
-  font-weight: var(--font-weight-semibold, 600);
-  color: var(--color-text, #172033);
-}
-
-.gst-upi-input {
-  max-width: 100%;
-}
-
-/* Pay Button */
-.gst-btn-pay-securely {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.85rem 1.5rem;
-  font-size: 1rem;
-  font-weight: var(--font-weight-bold, 700);
-  color: #ffffff;
-  background: linear-gradient(135deg, var(--taxedge-orange, #f97316) 0%, #ea580c 100%);
-  border: none;
+  border: 1.5px solid #cbd5e1;
+  color: #0f172a;
   border-radius: 9999px;
+  padding: 0.65rem 1.65rem;
+  font-size: 0.92rem;
+  font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(249, 115, 22, 0.35);
-  transition: all var(--transition-fast);
+  transition: all 0.2s ease;
 }
 
-.gst-btn-pay-securely:hover:not(:disabled) {
-  background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
-  box-shadow: 0 6px 18px rgba(249, 115, 22, 0.45);
+.gst-payment-btn-back:hover:not(:disabled) {
+  background-color: #f8fafc;
+  border-color: #94a3b8;
+  color: #0f172a;
   transform: translateY(-1px);
 }
 
-.gst-btn-pay-securely:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
+.gst-payment-btn-pay {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  border: 1.5px solid #ea580c;
+  color: #ffffff;
+  border-radius: 9999px;
+  padding: 12px 36px;
+  font-size: 0.98rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(234, 88, 12, 0.32);
+  transition: all 0.2s ease;
 }
+
+.gst-payment-btn-pay:hover:not(:disabled) {
+  background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+  border-color: #c2410c;
+  box-shadow: 0 6px 18px rgba(234, 88, 12, 0.42);
+  transform: translateY(-1px);
+}
+
+.gst-payment-btn-pay:disabled,
+.gst-payment-btn-back:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
 
 .gst-btn-pay-lock {
   width: 17px;
@@ -289,18 +154,67 @@
 
 
 
-.gst-payment-sidebar {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-  position: sticky;
-  top: calc(var(--header-height, 64px) + 1.25rem);
-  align-self: start;
+/* Trust & Guarantee Card in Sidebar */
+.gst-payment-guarantee-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 16px 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
 }
 
+.gst-payment-guarantee-header {
+  margin-bottom: 12px;
+}
+
+.gst-payment-guarantee-badge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #0369a1;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  display: inline-block;
+}
+
+.gst-payment-guarantee-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+
+.gst-payment-guarantee-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #334155;
+  line-height: 1.35;
+}
+
+.gst-payment-guarantee-check {
+  color: #10b981;
+  font-weight: 800;
+  font-size: 0.88rem;
+  flex-shrink: 0;
+}
+
+/* Responsive Styles for Tablets & Mobile */
 @media (max-width: 960px) {
-  .gst-payment-sidebar {
+  .gst-step-payment-layout {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .gst-step-payment-sidebar {
     position: static;
-    top: auto;
+    order: -1;
   }
 }

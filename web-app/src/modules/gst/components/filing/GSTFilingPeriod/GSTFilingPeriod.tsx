@@ -3,14 +3,12 @@ import { GSTFilingStepper } from './GSTFilingStepper'
 import { GSTCalculationMethod } from './GSTCalculationMethod'
 import { GSTFilingFrequency } from './GSTFilingFrequency'
 import { GSTFilingTypeSelector } from './GSTFilingTypeSelector'
-import { GSTVerifiedBusinessCard } from './GSTVerifiedBusinessCard'
+import { GSTPeriodFields } from './GSTPeriodFields'
 import {
-  FINANCIAL_YEAR_OPTIONS,
   MONTHLY_PERIOD_OPTIONS,
   QUARTERLY_PERIOD_OPTIONS,
   ANNUAL_PERIOD_OPTIONS,
   RETURN_PERIOD_OPTIONS,
-  RETURN_TYPE_OPTIONS,
   type SelectOption,
 } from './gstPeriodOptions'
 import './GSTFilingPeriod.css'
@@ -33,24 +31,20 @@ interface GSTFilingPeriodProps {
   onCancel: () => void
 }
 
-const ChevronDown: React.FC = () => (
-  <svg className="gst-filing-period__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9" /></svg>
-)
-
 export const GSTFilingPeriod: React.FC<GSTFilingPeriodProps> = ({
   initialData,
   onStepClick,
   onContinue,
   onCancel,
 }) => {
-  const [financialYear, setFinancialYear] = useState(initialData?.financialYear || '')
-  const [frequency, setFrequency] = useState(initialData?.frequency || '')
-  const [returnPeriod, setReturnPeriod] = useState(initialData?.selectedMonth || '')
+  const [financialYear, setFinancialYear] = useState(initialData?.financialYear || 'FY 2026-27')
+  const [frequency, setFrequency] = useState(initialData?.frequency || 'Monthly')
+  const [returnPeriod, setReturnPeriod] = useState(initialData?.selectedMonth || 'August 2026')
   const [gstin, setGstin] = useState(initialData?.gstin || '')
-  const [returnType, setReturnType] = useState<string>(initialData?.returnType || '')
-  const [filingType, setFilingType] = useState<'regular' | 'nil' | ''>(initialData?.filingType || '')
+  const [returnType, setReturnType] = useState<string>(initialData?.returnType || 'combo')
+  const [filingType, setFilingType] = useState<'regular' | 'nil' | ''>(initialData?.filingType || 'regular')
   const [calculationMethod, setCalculationMethod] = useState<'ca_calculate' | 'estimated_figures' | ''>(
-    initialData?.calculationMethod || ''
+    initialData?.calculationMethod || 'ca_calculate'
   )
   const [errors, setErrors] = useState<Record<string, string>>({})
 
@@ -68,10 +62,10 @@ export const GSTFilingPeriod: React.FC<GSTFilingPeriodProps> = ({
     frequency === 'Quarterly'
       ? QUARTERLY_PERIOD_OPTIONS
       : frequency === 'Annual'
-        ? ANNUAL_PERIOD_OPTIONS
-        : frequency === 'Monthly'
-          ? MONTHLY_PERIOD_OPTIONS
-          : RETURN_PERIOD_OPTIONS
+      ? ANNUAL_PERIOD_OPTIONS
+      : frequency === 'Monthly'
+      ? MONTHLY_PERIOD_OPTIONS
+      : RETURN_PERIOD_OPTIONS
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -80,18 +74,19 @@ export const GSTFilingPeriod: React.FC<GSTFilingPeriodProps> = ({
     if (!frequency) newErrors.frequency = 'Please select a filing frequency'
     if (!financialYear) newErrors.financialYear = 'Please select a financial year'
     if (!returnPeriod) newErrors.returnPeriod = 'Please select a return period'
-    if (!gstin.trim()) newErrors.gstin = 'Please enter a valid 15-character GSTIN'
-    if (!returnType && filingType !== 'nil') {
-      newErrors.returnType = 'Please select a return type'
+    if (!gstin.trim() || gstin.trim().length < 15) {
+      newErrors.gstin = 'Please enter a valid 15-character GSTIN'
     }
-    if (filingType === 'regular' && !calculationMethod) {
-      newErrors.calculationMethod = 'Please select a tax calculation method'
+    if (filingType === 'regular') {
+      if (!returnType) newErrors.returnType = 'Please select a return type'
+      if (!calculationMethod) newErrors.calculationMethod = 'Please select a tax calculation method'
     }
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors)
       return
     }
+
     const calculatedBaseFee = filingType === 'nil' ? 500 : returnType === 'gstr1' ? 1500 : 2500
     onContinue({
       gstin: gstin.toUpperCase().trim(),
@@ -106,9 +101,20 @@ export const GSTFilingPeriod: React.FC<GSTFilingPeriodProps> = ({
     })
   }
 
+  const isPeriodValid = Boolean(
+    frequency &&
+    financialYear &&
+    returnPeriod &&
+    gstin.trim().length >= 15 &&
+    (
+      filingType === 'nil' ||
+      (filingType === 'regular' && returnType && calculationMethod)
+    )
+  )
+
   return (
     <div className="gst-filing-period-container">
-      {/* 4-Step Progress Stepper */}
+      {/* Step Progress Stepper */}
       <GSTFilingStepper currentStep={1} onStepClick={onStepClick} />
 
       {/* Main Page Title and Subtitle */}
@@ -134,125 +140,21 @@ export const GSTFilingPeriod: React.FC<GSTFilingPeriodProps> = ({
               error={errors.frequency}
             />
 
-            {/* Financial Year */}
-            <div className="gst-filing-period__field">
-              <label htmlFor="gst-fy" className="gst-filing-period__label">
-                Financial Year *
-              </label>
-              <div className="gst-filing-period__select-wrap">
-                <select
-                  id="gst-fy"
-                  className={`gst-filing-period__select ${!financialYear ? 'gst-filing-period__select--placeholder' : ''}`}
-                  value={financialYear}
-                  onChange={(e) => {
-                    setFinancialYear(e.target.value)
-                    handleClearError('financialYear')
-                  }}
-                >
-                  <option value="">Select Financial Year</option>
-                  {FINANCIAL_YEAR_OPTIONS.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown />
-              </div>
-              {errors.financialYear && (
-                <span className="gst-filing-period__error-text">{errors.financialYear}</span>
-              )}
-            </div>
-
-            {/* Filing Period / Return Period */}
-            <div className="gst-filing-period__field">
-              <label htmlFor="gst-return-period" className="gst-filing-period__label">
-                Filing Period / Return Period *
-              </label>
-              <div className="gst-filing-period__select-wrap">
-                <input
-                  id="gst-return-period"
-                  type="text"
-                  list="gst-period-options"
-                  className="gst-filing-period__input"
-                  placeholder="e.g. August 2026 (select or type)"
-                  value={returnPeriod}
-                  onChange={(e) => {
-                    setReturnPeriod(e.target.value)
-                    handleClearError('returnPeriod')
-                  }}
-                />
-                <datalist id="gst-period-options">
-                  {periodOptions.map((opt) => (
-                    <option key={opt.value} value={opt.value} />
-                  ))}
-                </datalist>
-                <ChevronDown />
-              </div>
-              {errors.returnPeriod && (
-                <span className="gst-filing-period__error-text">{errors.returnPeriod}</span>
-              )}
-            </div>
-
-            {/* GSTIN (15-Character) */}
-            <div className="gst-filing-period__field">
-              <label htmlFor="gst-gstin" className="gst-filing-period__label">
-                GSTIN (15-Character) *
-              </label>
-              <input
-                id="gst-gstin"
-                type="text"
-                maxLength={15}
-                className="gst-filing-period__input"
-                placeholder="e.g. 29AAAAA0000A1Z5"
-                value={gstin}
-                onChange={(e) => {
-                  setGstin(e.target.value.toUpperCase())
-                  handleClearError('gstin')
-                }}
-              />
-              {errors.gstin && (
-                <span className="gst-filing-period__error-text">{errors.gstin}</span>
-              )}
-
-              {/* Verified Business Card appears when user enters GST number */}
-              {gstin.trim().length >= 3 && (
-                <GSTVerifiedBusinessCard
-                  gstin={gstin}
-                  tradeName="Shree Deshmukh Traders"
-                  legalName="Shree Deshmukh Enterprises Private Limited"
-                  scheme={filingType === 'nil' ? 'Nil Return' : 'Regular Scheme'}
-                />
-              )}
-            </div>
-
-            {/* Filing Return Type */}
-            <div className="gst-filing-period__field">
-              <label htmlFor="gst-return-type" className="gst-filing-period__label">
-                Filing Return Type *
-              </label>
-              <div className="gst-filing-period__select-wrap">
-                <select
-                  id="gst-return-type"
-                  className={`gst-filing-period__select ${!returnType ? 'gst-filing-period__select--placeholder' : ''}`}
-                  value={returnType}
-                  onChange={(e) => {
-                    setReturnType(e.target.value)
-                    handleClearError('returnType')
-                  }}
-                >
-                  <option value="">Select return type</option>
-                  {RETURN_TYPE_OPTIONS.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown />
-              </div>
-              {errors.returnType && (
-                <span className="gst-filing-period__error-text">{errors.returnType}</span>
-              )}
-            </div>
+            {/* Financial Year, Period, GSTIN, Return Type */}
+            <GSTPeriodFields
+              financialYear={financialYear}
+              setFinancialYear={setFinancialYear}
+              returnPeriod={returnPeriod}
+              setReturnPeriod={setReturnPeriod}
+              gstin={gstin}
+              setGstin={setGstin}
+              returnType={returnType}
+              setReturnType={setReturnType}
+              filingType={filingType}
+              periodOptions={periodOptions}
+              errors={errors}
+              handleClearError={handleClearError}
+            />
 
             {/* Filing Type Selection Cards */}
             <GSTFilingTypeSelector
@@ -263,7 +165,7 @@ export const GSTFilingPeriod: React.FC<GSTFilingPeriodProps> = ({
               }}
             />
 
-            {/* Tax Calculation Method (shown dynamically when Regular Return is clicked) */}
+            {/* Tax Calculation Method */}
             {filingType === 'regular' && (
               <GSTCalculationMethod
                 value={calculationMethod}
@@ -285,10 +187,14 @@ export const GSTFilingPeriod: React.FC<GSTFilingPeriodProps> = ({
               className="gst-filing-period__btn-back"
               onClick={onCancel}
             >
-              ← Back
+              Back
             </button>
-            <button type="submit" className="gst-filing-period__btn-continue">
-              Continue to Documents →
+            <button
+              type="submit"
+              className="gst-filing-period__btn-continue"
+              disabled={!isPeriodValid}
+            >
+              Continue
             </button>
           </div>
         </form>
@@ -296,3 +202,5 @@ export const GSTFilingPeriod: React.FC<GSTFilingPeriodProps> = ({
     </div>
   )
 }
+
+export default GSTFilingPeriod

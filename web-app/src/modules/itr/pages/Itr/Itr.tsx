@@ -4,10 +4,9 @@ import { routePaths } from '@core/config'
 import {
   calculateTdsRefund,
   DEFAULT_ITR_STATS,
-  INITIAL_APPLICATIONS,
   ITR_SERVICES_LIST,
 } from '../../services/itrData'
-import type { ItrApplicationItem, ItrViewKey } from '../../types/itr.types'
+import type { ItrViewKey } from '../../types/itr.types'
 import {
   BarChartIcon,
   RupeeIcon,
@@ -22,7 +21,6 @@ import './Itr.css'
 
 export const Itr = () => {
   const navigate = useNavigate()
-  const [applications] = useState<ItrApplicationItem[]>(INITIAL_APPLICATIONS)
   const [totalTdsInput, setTotalTdsInput] = useState<number>(46800)
 
   // Dynamic functional calculation
@@ -31,7 +29,7 @@ export const Itr = () => {
   const viewRouteMap: Record<ItrViewKey, string> = {
     overview: routePaths.itr.root,
     'file-itr': routePaths.itr.fileItr,
-    'track-my-return': routePaths.itr.trackMyReturn,
+    'track-my-return': routePaths.itr.root,
     'itr-filing': routePaths.itr.itrFiling,
     'tds-refund': routePaths.itr.tdsRefund,
     'previous-year-itr': routePaths.itr.previousYearItr,
@@ -195,51 +193,6 @@ export const Itr = () => {
             </p>
           </div>
         </div>
-      </section>
-
-      {/* 5. Your ITR Applications */}
-      <section className="itr-apps-section">
-        <h2 className="itr-apps-title">Your ITR applications</h2>
-
-        {applications.map((app) => (
-          <div
-            key={app.id}
-            className="itr-apps-card"
-            onClick={() => navigate(routePaths.itr.trackMyReturn)}
-          >
-            <div className="itr-apps-info">
-              <div className={`itr-apps-icon-box itr-apps-icon-box--${app.statusTone}`}>
-                {app.statusTone === 'warning' ? (
-                  <BarChartIcon size={22} strokeWidth={2.2} />
-                ) : (
-                  <RupeeIcon size={22} strokeWidth={2.2} />
-                )}
-              </div>
-              <div className="itr-apps-details">
-                <h4 className="itr-apps-name">{app.title}</h4>
-                <p className="itr-apps-meta">
-                  {app.reference} · {app.entityType} · {app.formType} · {app.caAssigned}
-                </p>
-              </div>
-            </div>
-
-            <div className="itr-apps-status-box">
-              <span className={`itr-apps-badge itr-apps-badge--${app.statusTone}`}>
-                • {app.statusLabel}
-              </span>
-              <div className="itr-apps-progress-bar">
-                <div
-                  className="itr-apps-progress-fill"
-                  style={{
-                    width: `${app.progressPercentage}%`,
-                    background: app.statusTone === 'success' ? '#10b981' : '#f97316',
-                  }}
-                />
-              </div>
-              <span className="itr-apps-progress-text">{app.progressPercentage}% complete</span>
-            </div>
-          </div>
-        ))}
       </section>
     </div>
   )

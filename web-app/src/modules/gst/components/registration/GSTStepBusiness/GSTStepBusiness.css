@@ -1,4 +1,5 @@
 /* Step 1: Business Form Container */
+.gst-step-business,
 .gst-step-business-container {
   display: flex;
   flex-direction: column;
@@ -6,7 +7,7 @@
   width: 100%;
 }
 
-/* Form Card (blends seamlessly with background) */
+/* Form Card */
 .gst-form-card {
   background: transparent;
   border-radius: 0;
@@ -14,11 +15,6 @@
   box-shadow: none;
   padding: 0;
   transition: none;
-}
-
-.gst-form-card:hover {
-  border-color: transparent;
-  box-shadow: none;
 }
 
 /* Card Header */
@@ -39,23 +35,10 @@
   height: 34px;
   border-radius: 8px;
 }
-
-.gst-form-card__icon-badge svg {
-  width: 18px;
-  height: 18px;
-}
-
-.gst-form-card__icon-badge--orange {
-  background: #fff7ed;
-  border: 1px solid #ffedd5;
-  color: #ea580c;
-}
-
-.gst-form-card__icon-badge--blue {
-  background: #f0f9ff;
-  border: 1px solid #e0f2fe;
-  color: #0284c7;
-}
+.gst-form-card__icon-badge svg { width: 18px; height: 18px; }
+.gst-form-card__icon-badge--orange { background: #fff7ed; border: 1px solid #ffedd5; color: #ea580c; }
+.gst-form-card__icon-badge--blue { background: #f0f9ff; border: 1px solid #e0f2fe; color: #0284c7; }
+.gst-form-card__icon-badge--green { background: #ecfdf5; border: 1px solid #d1fae5; color: #059669; }
 
 .gst-form-card__title {
   margin: 0;
@@ -69,30 +52,24 @@
 .gst-form-card__body {
   display: flex;
   flex-direction: column;
-  gap: 1.15rem;
+  gap: 1.25rem;
 }
 
-/* Grid Layouts */
+/* Grid Layouts - Top-aligned to prevent height-stretching disbalance */
 .gst-form-grid {
   display: grid;
-  gap: 1.15rem;
+  gap: 1.25rem;
   width: 100%;
-  align-items: stretch;
+  align-items: start;
 }
+.gst-form-grid--2col { grid-template-columns: 1fr 1fr; }
+.gst-form-grid--3col { grid-template-columns: 1fr 1fr 1fr; }
 
-.gst-form-grid--2col {
-  grid-template-columns: 1fr 1fr;
-}
-
-.gst-form-grid--3col {
-  grid-template-columns: 1fr 1fr 1fr;
-}
-
-/* Form Groups */
+/* Form Groups - Top-aligned so inputs are always horizontally level */
 .gst-form-group {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: flex-start;
   width: 100%;
 }
 
@@ -103,8 +80,8 @@
   color: #334155;
   letter-spacing: -0.005em;
   line-height: 1.35;
-  margin-bottom: auto;
-  padding-bottom: 0.45rem;
+  margin-bottom: 0.45rem;
+  padding-bottom: 0;
 }
 
 .gst-required-star {
@@ -127,7 +104,7 @@
   border: 1.5px solid #e2e8f0;
   border-radius: 8px;
   outline: none;
-  transition: all 0.18s ease;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
   box-sizing: border-box;
 }
 
@@ -156,8 +133,9 @@
   font-size: 0.76rem;
   color: #dc2626;
   font-weight: 500;
-  margin-top: 0.25rem;
-  line-height: 1.2;
+  margin-top: 0.35rem;
+  line-height: 1.25;
+  display: block;
 }
 
 /* Select Wrapper */
@@ -183,11 +161,7 @@
   display: flex;
   align-items: center;
 }
-
-.gst-select-arrow svg {
-  width: 15px;
-  height: 15px;
-}
+.gst-select-arrow svg { width: 15px; height: 15px; }
 
 /* Date Input Wrapper */
 .gst-date-input-wrapper {
@@ -200,44 +174,116 @@
 }
 
 /* Aadhaar Consent Section */
-.gst-consent-section {
+.gst-consent-card {
+  margin-top: 0.25rem;
+}
+
+.gst-consent-subtitle {
+  margin: 0.25rem 0 0 0;
+  font-size: 0.85rem;
+  color: #64748b;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.gst-consent-box {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.25rem 1.4rem;
+  transition: all 0.2s ease;
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
-  padding: 0.5rem 0;
+  gap: 0.9rem;
+}
+
+.gst-consent-box--checked {
+  background: #f0fdf4;
+  border-color: #86efac;
+  box-shadow: 0 1px 3px rgba(16, 185, 129, 0.08);
+}
+
+.gst-consent-box--error {
+  background: #fef2f2;
+  border-color: #fca5a5;
+  box-shadow: 0 1px 3px rgba(239, 68, 68, 0.08);
 }
 
 .gst-consent-checkbox-wrapper {
   display: flex;
-  align-items: center;
-  gap: 0.65rem;
+  align-items: flex-start;
+  gap: 0.85rem;
   cursor: pointer;
   user-select: none;
-  max-width: 600px;
 }
 
 .gst-consent-checkbox {
-  width: 18px;
-  height: 18px;
+  width: 19px;
+  height: 19px;
+  margin-top: 2px;
   border-radius: 4px;
   border: 1.5px solid #cbd5e1;
-  accent-color: #f97316;
+  accent-color: #059669;
   cursor: pointer;
   flex-shrink: 0;
+  transition: transform 0.15s ease;
+}
+
+.gst-consent-checkbox:hover {
+  transform: scale(1.05);
 }
 
 .gst-consent-text {
-  font-size: 0.835rem;
-  color: #334155;
-  line-height: 1.4;
+  font-size: 0.885rem;
+  color: #1e293b;
+  line-height: 1.5;
   font-weight: 500;
 }
 
-.gst-consent-error {
-  padding: 0 0.15rem;
+.gst-consent-box--checked .gst-consent-text {
+  color: #065f46;
 }
 
-/* Action Buttons Container (One row: Back on left, Continue on right) */
+.gst-consent-error {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.82rem;
+  color: #dc2626;
+  font-weight: 600;
+  margin-left: 2rem;
+}
+
+.gst-consent-error-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.gst-consent-security-note {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  color: #64748b;
+  padding-top: 0.65rem;
+  border-top: 1px dashed #e2e8f0;
+  line-height: 1.4;
+}
+
+.gst-consent-box--checked .gst-consent-security-note {
+  border-top-color: #bbf7d0;
+  color: #047857;
+}
+
+.gst-consent-shield-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  color: #10b981;
+}
+
+/* Action Buttons Container */
 .gst-form-actions {
   display: flex;
   align-items: center;
@@ -249,20 +295,18 @@
   box-sizing: border-box;
 }
 
-/* Back Button */
 .gst-btn-back {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
   background-color: #ffffff;
-  color: #334155;
+  color: #0f172a;
   border: 1.5px solid #cbd5e1;
-  padding: 0.72rem 1.45rem;
+  padding: 0.65rem 1.65rem;
   border-radius: 9999px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -274,21 +318,11 @@
   transform: translateY(-1px);
 }
 
-.gst-btn-back:active {
-  transform: translateY(0);
-}
-
 .gst-btn-back-arrow {
   width: 17px;
   height: 17px;
-  transition: transform 0.2s ease;
 }
 
-.gst-btn-back:hover .gst-btn-back-arrow {
-  transform: translateX(-2px);
-}
-
-/* Continue Button */
 .gst-btn-continue {
   display: inline-flex;
   align-items: center;
@@ -301,7 +335,6 @@
   border-radius: 9999px;
   font-size: 0.92rem;
   font-weight: 700;
-  font-family: inherit;
   cursor: pointer;
   box-shadow: 0 4px 14px rgba(249, 115, 22, 0.35);
   transition: all 0.2s ease;
@@ -311,10 +344,6 @@
   background-color: #ea580c;
   transform: translateY(-1px);
   box-shadow: 0 6px 18px rgba(249, 115, 22, 0.45);
-}
-
-.gst-btn-continue:active {
-  transform: translateY(0);
 }
 
 .gst-btn-continue__icon {
@@ -329,24 +358,13 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-  .gst-form-card {
-    padding: 1.25rem 1.15rem;
-  }
-
   .gst-form-grid--2col,
   .gst-form-grid--3col {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
 
-  .gst-form-bottom-bar {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 1.25rem;
-  }
-
   .gst-btn-continue {
     width: 100%;
-    margin-left: 0;
   }
 }

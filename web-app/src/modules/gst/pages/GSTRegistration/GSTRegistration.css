@@ -16,6 +16,7 @@
   margin-bottom: 1.25rem;
 }
 
+
 .gst-reg-header-titles {
   display: flex;
   flex-direction: column;
@@ -49,6 +50,11 @@
   grid-template-columns: 1fr 340px;
   gap: 1.75rem;
   align-items: start;
+}
+
+.gst-reg-content-grid--full-width {
+  grid-template-columns: 1fr;
+  max-width: 100%;
 }
 
 .gst-reg-main-content {

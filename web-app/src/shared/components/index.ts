@@ -18,4 +18,6 @@ export { DraftConfirmModal } from './DraftConfirmModal/DraftConfirmModal'
 export type { DraftConfirmModalProps } from './DraftConfirmModal/DraftConfirmModal'
 export { CompleteProfileModal } from './CompleteProfileModal/CompleteProfileModal'
 export type { CompleteProfileModalProps } from './CompleteProfileModal/CompleteProfileModal'
+export * from './StepActionBar'
+export * from './PaymentCheckout'
 

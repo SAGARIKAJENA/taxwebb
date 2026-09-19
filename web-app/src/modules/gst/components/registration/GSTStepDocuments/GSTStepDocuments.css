@@ -1,170 +1,31 @@
-.gst-step-documents {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-.gst-step-documents-card {
-  background-color: transparent;
-  border: none;
-  border-radius: 0;
-  padding: 0;
-  box-shadow: none;
-}
-.gst-step-documents-card__header {
-  margin-bottom: 1.5rem;
-}
-.gst-step-documents-card__title {
-  margin: 0 0 0.25rem 0;
-  font-size: 1.35rem;
-  font-weight: var(--font-weight-bold, 700);
-  color: var(--taxedge-navy, #083b75);
-}
-.gst-step-documents-card__subtitle {
-  margin: 0;
-  font-size: 0.875rem;
-  color: var(--color-text-muted, #64748b);
+/* ==========================================================================
+   GST Registration - Document Upload Step Styles
+   ========================================================================== */
+
+:root {
+  --gst-doc-orange: #f97316;
+  --gst-doc-orange-hover: #ea580c;
+  --gst-doc-peach-bg: #fff7ed;
+  --gst-doc-peach-border: #fed7aa;
+  --gst-doc-orange-glow: rgba(249, 115, 22, 0.35);
+  --gst-doc-border: #e2e8f0;
+  --gst-doc-border-hover: #cbd5e1;
+  --gst-doc-text-main: #0f172a;
+  --gst-doc-text-muted: #64748b;
+  --gst-doc-card-bg: #ffffff;
+  --gst-doc-radius: 12px;
 }
 
-/* Dropzone */
-.gst-dropzone {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 2.25rem 1.5rem;
-  background-color: #f8fafc;
-  border: 2px dashed #cbd5e1;
-  border-radius: var(--radius-lg, 16px);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  margin-bottom: 1.75rem;
-  text-align: center;
-}
-.gst-dropzone:hover,
-.gst-dropzone--active {
-  border-color: var(--taxedge-blue, #0b5ed7);
-  background-color: #f0f7ff;
-}
-.gst-dropzone__file-input { display: none; }
-.gst-dropzone__icon-circle {
-  width: 52px;
-  height: 52px;
-  border-radius: 16px;
-  background-color: var(--taxedge-light-blue, #eaf1fe);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 0.85rem;
-  color: var(--taxedge-blue, #0b5ed7);
-  transition: all var(--transition-fast);
-}
-.gst-dropzone:hover .gst-dropzone__icon-circle {
-  background-color: #dbeafe;
-  color: var(--taxedge-navy, #083b75);
-}
-.gst-dropzone__icon { width: 24px; height: 24px; }
-.gst-dropzone__heading {
-  margin: 0 0 0.35rem 0;
-  font-size: 1.05rem;
-  font-weight: var(--font-weight-bold, 700);
-  color: var(--color-text, #172033);
-}
-.gst-dropzone__sub {
-  margin: 0 0 1rem 0;
-  font-size: 0.85rem;
-  color: var(--color-text-muted, #64748b);
+.gst-docs-page {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  font-family: inherit;
 }
 
-.gst-btn-browse {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.65rem 1.6rem;
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: #ffffff;
-  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-  border: none;
-  border-radius: 9999px;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
-  transition: all 0.15s ease;
-}
-.gst-btn-browse:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(249, 115, 22, 0.4);
-}
-
-/* Document List */
-.gst-doc-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-.gst-doc-item {
-  border: 1px solid var(--color-border, #e2e8f0);
-  border-radius: var(--radius-md, 12px);
-  padding: 1.15rem 1.25rem;
-  background-color: var(--color-surface, #ffffff);
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-}
-.gst-doc-item--rejected { background-color: #fffbfb; border-color: #fecaca; }
-.gst-doc-item__main { display: flex; align-items: flex-start; gap: 1rem; }
-.gst-doc-item__icon-wrapper {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-.gst-doc-item__icon-wrapper svg { width: 18px; height: 18px; }
-.gst-doc-item__icon-wrapper--verified { background-color: #ecfdf5; color: #059669; }
-.gst-doc-item__icon-wrapper--uploading { background-color: #fff7ed; color: #f97316; }
-.gst-doc-item__icon-wrapper--rejected { background-color: #fef2f2; color: #dc2626; }
-.gst-doc-item__info { flex: 1; min-width: 0; }
-.gst-doc-item__name-row { display: flex; align-items: center; gap: 0.5rem; }
-.gst-doc-item__filename { font-size: 0.925rem; font-weight: 600; color: #172033; word-break: break-all; }
-.gst-doc-item__meta { margin: 0.2rem 0 0 0; font-size: 0.8rem; color: #64748b; }
-.gst-doc-item__error-text { margin: 0.2rem 0 0 0; font-size: 0.8rem; color: #dc2626; font-weight: 500; }
-.gst-doc-item__actions { display: flex; align-items: center; gap: 0.5rem; }
-.gst-doc-item__action-group { display: flex; align-items: center; gap: 0.65rem; }
-.gst-doc-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.25rem 0.65rem;
-  font-size: 0.775rem;
-  font-weight: 600;
-  border-radius: 9999px;
-}
-.gst-doc-badge--verified { background-color: #ecfdf5; color: #059669; border: 1px solid rgba(5, 150, 105, 0.2); }
-.gst-doc-badge--uploading { background-color: #fff7ed; color: #f97316; border: 1px solid rgba(249, 115, 22, 0.2); }
-.gst-doc-badge--rejected { background-color: #fef2f2; color: #dc2626; border: 1px solid rgba(220, 38, 38, 0.2); }
-
-.gst-btn-doc-action {
-  padding: 0.3rem 0.75rem;
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: #172033;
-  background-color: #ffffff;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
-  cursor: pointer;
-}
-.gst-btn-doc-action:hover { background-color: #f1f5f9; border-color: #94a3b8; }
-
-/* Progress bar */
-.gst-doc-item__progress-bar { width: 100%; height: 4px; background-color: #e2e8f0; border-radius: 9999px; overflow: hidden; }
-.gst-doc-item__progress-fill { height: 100%; border-radius: 9999px; transition: width 0.3s ease; }
-.gst-doc-item__progress-fill--verified { background-color: #059669; }
-.gst-doc-item__progress-fill--uploading { background-color: #f97316; }
-
-/* Error Banner */
-.gst-doc-error-banner {
+/* Validation Alert */
+.gst-docs-validation-alert {
   display: flex;
   align-items: center;
   gap: 0.65rem;
@@ -175,6 +36,175 @@
   border-radius: 10px;
   font-size: 0.86rem;
   font-weight: 500;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
 }
-.gst-doc-error-banner svg { width: 18px; height: 18px; flex-shrink: 0; color: #dc2626; }
+
+.gst-docs-alert-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  color: #dc2626;
+}
+
+/* Document Sections */
+.gst-docs-section {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.75rem;
+  width: 100%;
+}
+
+.gst-docs-section-heading {
+  margin: 0 0 0.85rem 0;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #475569;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.gst-docs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  width: 100%;
+}
+
+/* Security & Compliance Banner */
+.gst-docs-security-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background-color: #eff6ff;
+  border: 1px solid #dbeafe;
+  border-radius: 8px;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.gst-docs-security-icon-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.gst-docs-security-text {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: #1e40af;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* Step Navigation Action Bar */
+.gst-docs-action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 0.5rem;
+}
+
+.gst-docs-btn-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #0f172a;
+  font-size: 0.92rem;
+  font-weight: 700;
+  padding: 0.65rem 1.65rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.gst-docs-btn-back:hover {
+  background-color: #f8fafc;
+  border-color: #94a3b8;
+  color: #0f172a;
+  transform: translateY(-1px);
+}
+
+.gst-docs-action-bar .gst-docs-btn-continue,
+.gst-docs-btn-continue {
+  background-color: #f97316;
+  border: 1.5px solid #f97316;
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.65rem 1.85rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.35);
+}
+
+.gst-docs-action-bar .gst-docs-btn-continue:hover,
+.gst-docs-btn-continue:hover {
+  background-color: #ea580c;
+  border-color: #ea580c;
+  box-shadow: 0 4px 16px rgba(249, 115, 22, 0.45);
+}
+
+/* Modal Preview Styles */
+.gst-doc-modal__title-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.gst-doc-modal__title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--gst-doc-text-main, #0f172a);
+}
+
+.gst-doc-modal__filename {
+  font-size: 0.775rem;
+  color: var(--gst-doc-text-muted, #64748b);
+  font-weight: 400;
+  margin-top: 0.15rem;
+}
+
+.gst-doc-modal__preview-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.5rem;
+  padding: 2rem 1rem;
+}
+
+.gst-doc-modal__preview-text {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.gst-doc-modal__preview-sub {
+  font-size: 0.775rem;
+  color: #94a3b8;
+}
+
+.gst-doc-modal__btn-secondary {
+  background-color: #f1f5f9;
+  border: none;
+  color: #334155;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding: 0.45rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.gst-doc-modal__btn-secondary:hover {
+  background-color: #e2e8f0;
+}
+

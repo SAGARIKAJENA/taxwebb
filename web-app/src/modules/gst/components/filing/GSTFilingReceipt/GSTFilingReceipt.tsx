@@ -142,11 +142,7 @@ export const GSTFilingReceipt = ({ details, onBack }: GSTFilingReceiptProps) => 
       {/* 3. Bottom Action Buttons */}
       <div className="gst-receipt-bottom-bar">
         <button type="button" className="gst-receipt-btn-back" onClick={onBack}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="gst-receipt-icon-sm">
-            <line x1="19" y1="12" x2="5" y2="12" />
-            <polyline points="12 19 5 12 12 5" />
-          </svg>
-          Back
+          <span aria-hidden="true">←</span> Back
         </button>
         <div className="gst-receipt-top-actions">
           <button type="button" className="gst-receipt-btn-primary" onClick={handleDownload}>

@@ -5,6 +5,7 @@ export interface GSTComplianceSubmittedProps {
   applicationId?: string
   gstin: string
   requestType?: string
+  fieldsCount?: number
   onBackToForm: () => void
   onAllForms: () => void
 }

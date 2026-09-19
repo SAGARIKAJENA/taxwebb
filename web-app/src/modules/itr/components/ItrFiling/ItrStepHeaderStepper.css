@@ -1,0 +1,130 @@
+/* ==========================================================================
+   ITR Filing - Step Header & Connected 5-Step Stepper
+   Theme: Navy Blue (#083B75) & TaxEdge Orange (#F97316)
+   ========================================================================== */
+
+.itr-personal-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1.5px solid #e2e8f0;
+  width: 100%;
+}
+
+.itr-personal-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.itr-personal-title {
+  margin: 0;
+  font-size: 1.95rem;
+  font-weight: 800;
+  color: #083b75; /* Navy Blue */
+  letter-spacing: -0.02em;
+}
+
+.itr-personal-subtitle-label {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #f97316; /* Orange accent */
+}
+
+/* 5-Step Desktop Stepper Track - Full Width Responsive */
+.itr-stepper-track {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 100%;
+  margin: 0.75rem 0 0 0;
+  padding: 0 0.5rem;
+  box-sizing: border-box;
+}
+
+.itr-stepper-step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.itr-stepper-dot {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  font-weight: 800;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+  user-select: none;
+}
+
+.itr-stepper-dot--active {
+  background: #f97316;
+  color: #ffffff;
+  border: 2.5px solid #f97316;
+  box-shadow: 0 4px 14px rgba(249, 115, 22, 0.42);
+  transform: scale(1.06);
+}
+
+.itr-stepper-dot--completed {
+  background: #083b75;
+  color: #ffffff;
+  border: 2.5px solid #083b75;
+  box-shadow: 0 4px 14px rgba(8, 59, 117, 0.35);
+}
+
+.itr-stepper-dot--inactive {
+  background: #ffffff;
+  color: #94a3b8;
+  border: 2px solid #cbd5e1;
+}
+
+.itr-stepper-line {
+  flex: 1;
+  height: 2.5px;
+  background: #e2e8f0;
+  margin: 0 0.75rem;
+  margin-bottom: 1.45rem;
+  transition: background 0.3s ease;
+  z-index: 1;
+}
+
+.itr-stepper-line--completed {
+  background: #083b75;
+}
+
+.itr-stepper-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #64748b;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.itr-stepper-label--active {
+  color: #f97316;
+  font-weight: 700;
+}
+
+@media (max-width: 680px) {
+  .itr-stepper-track {
+    overflow-x: auto;
+    justify-content: flex-start;
+    gap: 1.25rem;
+    padding-bottom: 0.5rem;
+  }
+  .itr-stepper-line {
+    display: none;
+  }
+}

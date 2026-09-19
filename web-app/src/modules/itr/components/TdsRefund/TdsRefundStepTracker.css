@@ -1,0 +1,71 @@
+/* TDS Refund Step Tracker */
+.tds-stepper-track {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0.5rem 0.25rem;
+  width: 100%;
+  max-width: 620px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.tds-stepper-dot {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  font-weight: 800;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+  user-select: none;
+}
+
+.tds-stepper-dot--active {
+  background: #f97316;
+  color: #ffffff;
+  border: 2px solid #f97316;
+  box-shadow: 0 4px 14px rgba(249, 115, 22, 0.42);
+}
+
+.tds-stepper-dot--completed {
+  background: #022145;
+  color: #ffffff;
+  border: 2px solid #083b75;
+  box-shadow: 0 4px 14px rgba(2, 33, 69, 0.35);
+}
+
+.tds-stepper-dot--inactive {
+  background: #ffffff;
+  color: #94a3b8;
+  border: 1.5px solid #e2e8f0;
+  box-shadow: none;
+}
+
+.tds-stepper-line {
+  flex: 1;
+  height: 2px;
+  background: #e2e8f0;
+  margin: 0 1.5rem;
+  transition: background 0.3s ease;
+}
+
+.tds-stepper-line--completed {
+  background: #022145;
+}
+
+@media (max-width: 1024px) {
+  .tds-stepper-track {
+    overflow-x: auto;
+    padding: 0.5rem 0.25rem;
+  }
+  .tds-stepper-line {
+    margin: 0 0.75rem;
+  }
+}

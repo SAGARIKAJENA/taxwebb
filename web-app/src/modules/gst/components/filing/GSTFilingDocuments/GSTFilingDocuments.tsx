@@ -215,14 +215,14 @@ export const GSTFilingDocuments: React.FC<GSTFilingDocumentsProps> = ({
           className="gst-docs-btn-back"
           onClick={onBack}
         >
-          ← Back
+          Back
         </button>
         <button
           type="button"
           className="gst-docs-btn-continue"
           onClick={handleContinue}
         >
-          Continue to Review →
+          Continue
         </button>
       </footer>
     </div>

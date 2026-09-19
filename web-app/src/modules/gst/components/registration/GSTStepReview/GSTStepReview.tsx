@@ -1,197 +1,155 @@
-import { useState } from 'react'
-import type { GstBusinessFormData } from '../GSTStepBusiness/GSTStepBusiness'
+import { useState, type FC } from 'react'
+import type { GSTStepReviewProps, ReviewField } from './gstReview.types'
+import { INITIAL_DOCUMENTS } from '../GSTStepDocuments/gstDocuments.constants'
+import {
+  BusinessRegIcon,
+  BankProofIcon,
+  UserSignatoryIcon,
+} from '../GSTStepDocuments/GSTDocIcons'
+import { GSTReviewSection } from './GSTReviewSection'
+import { GSTReviewDocsList } from './GSTReviewDocsList'
+import { GSTReviewDeclaration } from './GSTReviewDeclaration'
+import { GSTDocPreviewModal } from '../GSTStepDocuments/GSTDocPreviewModal'
+import type { DocPreviewState } from '../GSTStepDocuments/gstDocuments.types'
+import { StepActionBar } from '@shared/components'
 import './GSTStepReview.css'
 
-interface GSTStepReviewProps {
-  businessData: GstBusinessFormData
-  onEdit: () => void
-  onBack: () => void
-  onProceed: () => void
-}
-
-const ATTACHED_DOCS = [
-  'PAN of business / proprietor',
-  'Aadhaar of proprietor',
-  'Proof of place of business',
-  'Cancelled cheque / Bank statement',
-]
-
-export const GSTStepReview = ({
+export const GSTStepReview: FC<GSTStepReviewProps> = ({
   businessData,
+  documents = INITIAL_DOCUMENTS,
   onEdit,
   onBack,
   onProceed,
-}: GSTStepReviewProps) => {
-  const [decl1, setDecl1] = useState(true)
-  const [decl2, setDecl2] = useState(true)
+}) => {
+  const [isDeclared, setIsDeclared] = useState<boolean>(false)
+  const [declarationError, setDeclarationError] = useState<boolean>(false)
+  const [previewDoc, setPreviewDoc] = useState<DocPreviewState | null>(null)
 
-  const canProceed = decl1 && decl2
+  const handleDeclarationChange = (checked: boolean) => {
+    setIsDeclared(checked)
+    if (checked) setDeclarationError(false)
+  }
 
-  const businessFields = [
-    { label: 'Legal Name (as per PAN)', value: businessData.legalName || 'Shree Enterprises' },
-    { label: 'Trade Name', value: businessData.tradeName || 'Shree Enterprises' },
-    { label: 'Constitution of Business', value: businessData.constitution || 'Proprietorship' },
-    { label: 'Nature of Business', value: businessData.natureOfBusiness || 'Retail Business' },
-    { label: 'Date of Commencement', value: businessData.commencementDate || '2024-04-01' },
-    { label: 'Reason for Registration', value: businessData.registrationReason || 'Crossing the Threshold Limit' },
-    { label: 'Composition Scheme', value: businessData.compositionScheme || 'No' },
-    { label: 'Place of business', value: businessData.placeOfBusiness || 'Owned' },
+  const handleProceedClick = () => {
+    if (!isDeclared) {
+      setDeclarationError(true)
+      return
+    }
+    onProceed()
+  }
+
+  const handleViewDoc = (title: string, fileName: string) => {
+    setPreviewDoc({ title, fileName })
+  }
+
+  const locationString = [businessData.city, businessData.district, businessData.state, businessData.pinCode ? `- ${businessData.pinCode}` : '']
+    .filter(Boolean)
+    .join(', ')
+
+  const businessFields: ReviewField[] = [
+    { label: 'Legal Name', value: businessData.legalName || '—' },
+    { label: 'Trade Name', value: businessData.tradeName || businessData.legalName || '—' },
+    { label: 'Constitution', value: businessData.constitution || '—' },
+    { label: 'Nature of Business', value: businessData.natureOfBusiness || '—' },
+    { label: 'Date of Commencement', value: businessData.commencementDate || '—' },
+    { label: 'Reason for Reg.', value: businessData.registrationReason || '—' },
     {
-      label: 'Business address',
-      value: [
-        businessData.businessAddress || 'Shop 14, Laxmi Complex, FC Road',
-        businessData.city || 'Pune',
-        businessData.district,
-        businessData.state ? `${businessData.state} - ${businessData.pinCode || '411004'}` : '',
-      ]
-        .filter(Boolean)
-        .join(', '),
+      label: 'Composition Scheme',
+      value:
+        businessData.compositionScheme === 'Yes'
+          ? 'Yes — composition scheme'
+          : businessData.compositionScheme === 'No'
+          ? 'No — regular scheme'
+          : '—',
     },
-    { label: 'Primary HSN / SAC Code', value: businessData.hsnSacCode || '998311' },
+    { label: 'Place of Business', value: businessData.placeOfBusiness || '—' },
+    { label: 'Address', value: businessData.businessAddress || '—' },
+    {
+      label: 'Location',
+      value: locationString || '—',
+    },
+    { label: 'HSN / SAC Code', value: businessData.hsnSacCode || '—' },
   ]
 
-  const bankFields = [
-    { label: 'Account Holder Name', value: businessData.accountHolderName || 'Sagarika Sharma' },
+  const bankFields: ReviewField[] = [
+    { label: 'Account Holder', value: businessData.accountHolderName || businessData.legalName || '—' },
+    { label: 'Account Number', value: businessData.accountNumber ? `••••${businessData.accountNumber.slice(-4)}` : '—' },
+    { label: 'IFSC Code', value: businessData.ifscCode || '—' },
     {
-      label: 'Bank & Account Number',
-      value: `${businessData.bankName || 'HDFC Bank'} · A/C: ${businessData.accountNumber || '••••••••5678'}`,
+      label: 'Bank & Branch',
+      value: businessData.bankName
+        ? `${businessData.bankName}${businessData.branch ? ` (${businessData.branch})` : ''}`
+        : '—',
     },
-    {
-      label: 'IFSC & Branch',
-      value: `${businessData.ifscCode || 'HDFC0000412'} · ${businessData.branch || 'Madurai Main'}`,
-    },
-    { label: 'Account Type', value: businessData.accountType || 'Current' },
+    { label: 'Account Type', value: businessData.accountType || '—' },
   ]
 
-  const signatoryFields = [
+  const signatoryFields: ReviewField[] = [
+    { label: 'Name', value: businessData.signatoryName || '—' },
+    { label: 'PAN', value: businessData.signatoryPan || '—' },
+    { label: 'DOB', value: businessData.dob || '—' },
+    { label: 'Designation', value: businessData.designation || '—' },
     {
-      label: 'Signatory Name & Designation',
-      value: `${businessData.signatoryName || 'Sagarika Sharma'} (${businessData.designation || 'Proprietor'})`,
-    },
-    {
-      label: 'PAN & Date of Birth',
-      value: `PAN: ${businessData.signatoryPan || 'ABCDE1234F'} · DOB: ${businessData.dob || '1995-05-12'}`,
-    },
-    {
-      label: 'Contact Details',
-      value: `${businessData.signatoryMobile || '9876543210'} · ${businessData.signatoryEmail || 'sagarika@example.com'}`,
-    },
-    {
-      label: 'Aadhaar e-KYC',
-      value: businessData.aadhaarConsent ? 'Consent Confirmed (e-KYC Enabled)' : 'Pending',
+      label: 'Contact',
+      value: (
+        <div className="gst-review-contact-val">
+          <span>{businessData.signatoryMobile ? `+91 ${businessData.signatoryMobile}` : '—'}</span>
+          {businessData.signatoryEmail && (
+            <span className="gst-review-contact-email">{businessData.signatoryEmail}</span>
+          )}
+        </div>
+      ),
     },
   ]
 
   return (
-    <div className="gst-step-review">
-      {/* 1. Business Details Card */}
-      <section className="gst-review-card">
-        <div className="gst-review-card__header">
-          <div>
-            <h2 className="gst-review-card__title">Review your application</h2>
-            <p className="gst-review-card__subtitle">
-              Check all fields carefully. After submission, corrections require an amendment application.
-            </p>
-          </div>
-          <button
-            type="button"
-            className="gst-btn-edit"
-            onClick={onEdit}
-            aria-label="Edit application fields"
-          >
-            Edit Details
-          </button>
-        </div>
+    <div className="gst-step-review-container">
+      {/* 1. Business Details Section */}
+      <GSTReviewSection
+        title="Business Details"
+        icon={<BusinessRegIcon width={20} height={20} />}
+        iconBg="#ffedd5"
+        fields={businessFields}
+        onEdit={() => onEdit('business')}
+      />
 
-        <div className="gst-review-section-title">Business Details</div>
-        <div className="gst-review-grid">
-          {businessFields.map((field) => (
-            <div key={field.label} className="gst-review-row">
-              <span className="gst-review-label">{field.label}</span>
-              <span className="gst-review-value">{field.value}</span>
-            </div>
-          ))}
-        </div>
+      {/* 2. Bank Details Section */}
+      <GSTReviewSection
+        title="Bank Details"
+        icon={<BankProofIcon width={20} height={20} />}
+        iconBg="#dcfce7"
+        fields={bankFields}
+        onEdit={() => onEdit('bank')}
+      />
 
-        <div className="gst-review-section-title">Bank Details</div>
-        <div className="gst-review-grid">
-          {bankFields.map((field) => (
-            <div key={field.label} className="gst-review-row">
-              <span className="gst-review-label">{field.label}</span>
-              <span className="gst-review-value">{field.value}</span>
-            </div>
-          ))}
-        </div>
+      {/* 3. Authorised Signatory Section */}
+      <GSTReviewSection
+        title="Authorised Signatory"
+        icon={<UserSignatoryIcon width={20} height={20} />}
+        iconBg="#f3e8ff"
+        fields={signatoryFields}
+        onEdit={() => onEdit('signatory')}
+      />
 
-        <div className="gst-review-section-title">Authorised Signatory</div>
-        <div className="gst-review-grid">
-          {signatoryFields.map((field) => (
-            <div key={field.label} className="gst-review-row">
-              <span className="gst-review-label">{field.label}</span>
-              <span className="gst-review-value">{field.value}</span>
-            </div>
-          ))}
-        </div>
-      </section>
+      {/* 4. Uploaded Documents Section */}
+      <GSTReviewDocsList documents={documents} onViewDoc={handleViewDoc} />
 
-      {/* 2. Documents Attached Card */}
-      <section className="gst-review-card">
-        <h3 className="gst-review-card__section-title">Documents attached</h3>
-        <ul className="gst-review-docs-list">
-          {ATTACHED_DOCS.map((doc) => (
-            <li key={doc} className="gst-review-doc-item">
-              <span className="gst-review-doc-check">✓</span>
-              <span className="gst-review-doc-name">{doc}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
+      {/* 5. Declaration Checkbox Card */}
+      <GSTReviewDeclaration
+        checked={isDeclared}
+        onChange={handleDeclarationChange}
+        hasError={declarationError}
+      />
 
-      {/* 3. Declaration Card */}
-      <section className="gst-review-card">
-        <h3 className="gst-review-card__section-title">Declaration</h3>
-        <div className="gst-review-declarations">
-          <label className="gst-decl-label">
-            <input
-              type="checkbox"
-              checked={decl1}
-              onChange={(e) => setDecl1(e.target.checked)}
-              className="gst-decl-checkbox"
-            />
-            <span className="gst-decl-text">
-              I hereby solemnly affirm that the information provided is correct to the best of my
-              knowledge, and no material fact has been concealed.
-            </span>
-          </label>
-          <label className="gst-decl-label">
-            <input
-              type="checkbox"
-              checked={decl2}
-              onChange={(e) => setDecl2(e.target.checked)}
-              className="gst-decl-checkbox"
-            />
-            <span className="gst-decl-text">
-              I authorize TaxEdge to submit the registration application and act on our behalf with
-              the GST department.
-            </span>
-          </label>
-        </div>
-      </section>
+      {/* 6. Navigation Footer Actions */}
+      <StepActionBar
+        onBack={onBack}
+        onNext={handleProceedClick}
+        nextLabel="Continue"
+      />
 
-      {/* Action Buttons */}
-      <div className="gst-review-actions">
-        <button type="button" className="gst-btn-secondary" onClick={onBack}>
-          ← Back to Documents
-        </button>
-        <button
-          type="button"
-          className="gst-btn-primary"
-          onClick={onProceed}
-          disabled={!canProceed}
-        >
-          Proceed to Payment →
-        </button>
-      </div>
+      {/* Document Preview Modal */}
+      <GSTDocPreviewModal previewDoc={previewDoc} onClose={() => setPreviewDoc(null)} />
     </div>
   )
 }

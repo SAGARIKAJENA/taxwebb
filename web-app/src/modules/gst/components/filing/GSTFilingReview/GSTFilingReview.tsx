@@ -156,7 +156,7 @@ export const GSTFilingReview: React.FC<GSTFilingReviewProps> = ({
           className="gst-review-btn-back"
           onClick={onBack}
         >
-          ← Back
+          Back
         </button>
 
         <div className="gst-review-actions__right">
@@ -177,7 +177,7 @@ export const GSTFilingReview: React.FC<GSTFilingReviewProps> = ({
             className="gst-review-btn-approve"
             onClick={onApprove}
           >
-            <span>Proceed to Payment →</span>
+            <span>Continue</span>
           </button>
         </div>
       </footer>

@@ -1,0 +1,287 @@
+/* ==========================================================================
+   ITR Filing - Refund Bank Account Section & Modal Form
+   Theme: Navy Blue (#083B75) & TaxEdge Orange (#F97316)
+   ========================================================================== */
+
+.itr-bank-empty-box {
+  background: #f8fafc;
+  border: 1.5px dashed #cbd5e1;
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.itr-bank-accounts-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.itr-bank-account-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 1.1rem 1.35rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.itr-bank-account-card:hover {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+}
+
+.itr-bank-account-card--selected {
+  background: #fffaf5;
+  border-color: #f97316;
+  box-shadow: 0 0 0 1px #f97316;
+}
+
+.itr-bank-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.itr-bank-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.itr-bank-title-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.itr-bank-name {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #083b75;
+}
+
+.itr-bank-type {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #64748b;
+  letter-spacing: 0.04em;
+}
+
+.itr-bank-badge-validated {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #083b75;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  white-space: nowrap;
+}
+
+.itr-bank-card-details {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  background: #f8fafc;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+}
+
+.itr-bank-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.itr-bank-field-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.itr-bank-field-val {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* Add Another Bank Account Button */
+.itr-add-bank-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.25rem;
+}
+
+.itr-btn-add-bank {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #083b75;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 0.65rem 1.65rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  max-width: 320px;
+  justify-content: center;
+}
+
+.itr-btn-add-bank:hover {
+  background: #f8fafc;
+  border-color: #f97316;
+  color: #f97316;
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.12);
+}
+
+/* Inline Add Bank Account Form */
+.itr-add-bank-form {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 1.35rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.itr-add-bank-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #083b75;
+}
+
+.itr-bank-form-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.65rem 0.95rem;
+  border-radius: 8px;
+}
+
+.itr-bank-inputs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.15rem 1.25rem;
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  .itr-bank-inputs-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.itr-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.itr-input-group--full {
+  grid-column: 1 / -1;
+}
+
+.itr-input-label {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  min-height: 1.35rem;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+
+.itr-text-input,
+.itr-select-input {
+  width: 100%;
+  height: 44px;
+  padding: 0 0.85rem;
+  font-size: 0.9rem;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #0f172a;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.itr-select-input {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23334155' stroke-width='2.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px 16px;
+  padding-right: 2.2rem;
+  cursor: pointer;
+}
+
+.itr-text-input:focus,
+.itr-select-input:focus {
+  outline: none;
+  border-color: #f97316;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
+}
+
+.itr-add-bank-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.itr-btn-save-bank {
+  background: #f97316;
+  color: #ffffff;
+  border: none;
+  border-radius: 9999px;
+  padding: 0.65rem 1.6rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
+}
+
+.itr-btn-save-bank:hover {
+  background: #ea580c;
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
+}
+
+.itr-btn-cancel-bank {
+  background: #ffffff;
+  color: #64748b;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 9999px;
+  padding: 0.65rem 1.35rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.itr-btn-cancel-bank:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
